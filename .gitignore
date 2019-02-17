@@ -14,6 +14,8 @@ tmp/*/*
 *.pid
 .DS_Store
 
+dist/*
+
 .com.apple.timemachine.supported
 .rvmrc
 atlassian-ide-plugin.xml
