@@ -1,0 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+canvas {
+  background: url('../img/gamemap_2000.png') ;
+  display: block;
+  margin: 0 auto;
+}
