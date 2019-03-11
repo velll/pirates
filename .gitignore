@@ -15,6 +15,7 @@ tmp/*/*
 .DS_Store
 
 dist/*
+untracked_assets/*
 
 .com.apple.timemachine.supported
 .rvmrc
