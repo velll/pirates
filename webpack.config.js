@@ -28,4 +28,5 @@ module.exports = {
       { from: 'static'}
     ]),
   ],
+  devtool: 'source-map'
 };
