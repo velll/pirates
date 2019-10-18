@@ -24,24 +24,24 @@ class GameMap implements Map {
     this.features = features;
   }
 
-  public isPort(cell: Cell): boolean {
+  public getFeatureByCoords(coords: Coordinates): string {
+    return this.getFeature(new Cell(coords.x, coords.y));
+  }
+
+  private isPort(cell: Cell): boolean {
     return this.isFeature(cell, this.features.ports);
   }
 
-  public isRock(cell: Cell): boolean {
+  private isRock(cell: Cell): boolean {
     return this.isFeature(cell, this.features.rocks);
   }
 
-  public getFeature(cell: Cell): string {
+  private getFeature(cell: Cell): string {
     // console.log("trying for a feature at" + cell.x + "," + cell.y);
 
     if (this.isRock(cell)) { return "rock"; }
     if (this.isPort(cell)) { return "port"; }
     return "sea";
-  }
-
-  public getFeatureByCoords(coords: Coordinates): string {
-    return this.getFeature(new Cell(coords.x, coords.y));
   }
 
   private isFeature(cell: Cell, featureSet: Cell[]) {
