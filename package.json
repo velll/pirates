@@ -6,10 +6,14 @@
   "author": "Paul <paul@paulgoesdeep.com>",
   "license": "MIT",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
   "devDependencies": {
+    "@types/lodash": "^4.14.142",
     "copy-webpack-plugin": "^5.0.4",
     "ts-loader": "^6.1.2",
+    "tslint": "^5.20.0",
     "typescript": "^3.6.3",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
