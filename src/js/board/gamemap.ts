@@ -16,7 +16,7 @@ interface Map {
 // special features of the cells
 class GameMap implements Map {
   public rows: number = 25;
-  public columns: number = 37;
+  public columns: number = 39;
 
   private features: Features;
 

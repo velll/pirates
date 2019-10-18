@@ -2,25 +2,25 @@ import { map } from 'lodash';
 import { Cell } from './cell';
 
 const ports: Cell[] = map([
- [12, 1, "Newfoundland"], // France
- [5, 7, "Maryland peninsula"], // Pirates
- [9, 12, "Bermudas"], // Spain
- [1, 16, "Havana"], // Spain
- [3, 22, "Porto Bello"], // Spain
- [4, 18, "Santiago"], // Spain
- [5, 17, "Tortuga"], // pirates
- [7, 18, "Santo Domingo"], // Spain
- [11, 19, "Guadalupe"], // France
- [11, 22, "Trinidad"], // pirates
- [12, 23, "Guyana"], // Netherlands
- [36, 1, "Lands End"], // pirates
- [35, 5, "Bay of Biscay"], // Spain
- [34, 8, "Lisbon"], // Portugal
- [27, 8, "Azores"], // Portugal
- [31, 11, "Madeira"], // Portugal
- [30, 13, "Canary island"], // Spain
- [27, 19, "Cabo Verde island"], // Portugal
- [30, 20, "Cabo Verde"] // Portugal
+ [13, 1, "Newfoundland"], // France
+ [6, 7, "Maryland peninsula"], // Pirates
+ [10, 12, "Bermudas"], // Spain
+ [2, 16, "Havana"], // Spain
+ [4, 22, "Porto Bello"], // Spain
+ [5, 18, "Santiago"], // Spain
+ [6, 17, "Tortuga"], // pirates
+ [8, 18, "Santo Domingo"], // Spain
+ [12, 19, "Guadalupe"], // France
+ [12, 22, "Trinidad"], // pirates
+ [13, 23, "Guyana"], // Netherlands
+ [37, 1, "Lands End"], // pirates
+ [36, 5, "Bay of Biscay"], // Spain
+ [35, 8, "Lisbon"], // Portugal
+ [28, 8, "Azores"], // Portugal
+ [32, 11, "Madeira"], // Portugal
+ [31, 13, "Canary island"], // Spain
+ [28, 19, "Cabo Verde island"], // Portugal
+ [31, 20, "Cabo Verde"] // Portugal
 ],
 (point: [number, number, string]) => {
   return new Cell(point[0], point[1], point[2]);
