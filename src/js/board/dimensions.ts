@@ -1,6 +1,6 @@
 interface Dimensions {
-  height: number,
-  width: number
+  height: number;
+  width: number;
 }
 
-export { Dimensions }
+export { Dimensions };

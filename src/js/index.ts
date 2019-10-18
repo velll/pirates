@@ -1,18 +1,18 @@
-import { BoardBuilder } from "./boardBuilder"
-import { Board } from "./board"
+import { Board } from "./board";
+import { BoardBuilder } from "./boardBuilder";
 
-var canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById("map");
+const canvas: HTMLCanvasElement = document.getElementById("map") as HTMLCanvasElement;
 
-let canvasWidth = 2000;
-let canvasHeight = 1384;
+const canvasWidth = 2000;
+const canvasHeight = 1384;
 
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
-var ctx: CanvasRenderingContext2D = canvas.getContext("2d");
+const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
-let builder = new BoardBuilder(ctx, canvasWidth, canvasHeight);
-let board: Board  = builder.build();
+const builder = new BoardBuilder(ctx, canvasWidth, canvasHeight);
+const board: Board  = builder.build();
 
-board.drawBox(100, 100, 100, 100, "red")
+board.drawBox(100, 100, 100, 100, "red");
 board.drawGrid();
