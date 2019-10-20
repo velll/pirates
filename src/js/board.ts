@@ -1,16 +1,15 @@
 import { GameMap, Coordinates } from "./board/gamemap";
 import { Grid, Position } from "./board/grid";
 import { Dimensions } from "./board/dimensions";
-import { features } from "./board/features";
 
 class Board {
   private ctx: CanvasRenderingContext2D;
   private map: GameMap;
   private grid: Grid;
 
-  constructor(ctx: CanvasRenderingContext2D, initialDimensions: Dimensions) {
+  constructor(ctx: CanvasRenderingContext2D, map: GameMap, initialDimensions: Dimensions) {
     this.ctx = ctx;
-    this.map = new GameMap(features);
+    this.map = map;
     this.grid = new Grid (this.map, initialDimensions);
   }
 

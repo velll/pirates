@@ -1,4 +1,4 @@
-import { Features } from '../src/js/board/features'
+import { Features } from '../src/js/board/gamemap'
 import { Cell } from '../src/js/board/cell'
 
 import { GameMap } from '../src/js/board/gamemap'

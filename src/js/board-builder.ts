@@ -1,20 +1,17 @@
 import { Board } from "./board";
 import { Dimensions } from "board/dimensions";
+import { GameMap, Features } from "./board/gamemap";
 
 class BoardBuilder {
   private ctx: CanvasRenderingContext2D;
-  private initialDimensions: Dimensions;
 
-  constructor(ctx: CanvasRenderingContext2D,
-              initialWidth: number,
-              initialHeight: number) {
-
+  constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
-    this.initialDimensions = {height: initialHeight, width: initialWidth};
   }
 
-  public build(): Board {
-    const board = new Board(this.ctx, this.initialDimensions);
+  public build(features: Features, initialDimensions: Dimensions): Board {
+    const map = new GameMap(features);
+    const board = new Board(this.ctx, map, initialDimensions);
 
     return board;
   }

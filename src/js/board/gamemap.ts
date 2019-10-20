@@ -1,5 +1,4 @@
 import { filter } from 'lodash';
-import { Features } from './features';
 import { Cell } from './cell';
 
 interface Coordinates {
@@ -10,6 +9,11 @@ interface Coordinates {
 interface Map {
   rows: number;
   columns: number;
+}
+
+interface Features {
+  ports: Cell[];
+  rocks: Cell[];
 }
 
 // GameMap holds board data — how many cells in a row/column and
@@ -52,4 +56,4 @@ class GameMap implements Map {
   }
 }
 
-export { GameMap, Coordinates };
+export { GameMap, Features, Coordinates };

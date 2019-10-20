@@ -1,5 +1,6 @@
 import { map } from 'lodash';
-import { Cell } from './cell';
+import { Cell } from '../board/cell';
+import { Features } from '../board/gamemap'
 
 const ports: Cell[] = map([
  [13, 1, "Newfoundland"], // France
@@ -37,14 +38,9 @@ const rocks: Cell[] = map([
   return new Cell(point[0], point[1]);
 });
 
-interface Features {
-  ports: Cell[];
-  rocks: Cell[];
-}
-
 const features: Features = {
   ports: ports,
   rocks: rocks
 };
 
-export { features, Features };
+export { features };
