@@ -1,8 +1,8 @@
 import { Board } from "./board";
-import { BoardBuilder } from "./boardBuilder";
+import { BoardBuilder } from "./board-builder";
 
 import { Ship } from "./game/ship"
-import { GameBuilder } from "./gameBuilder";
+import { GameBuilder } from "./game-builder";
 
 import { each } from 'lodash'
 
