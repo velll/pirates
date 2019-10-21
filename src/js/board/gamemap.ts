@@ -1,10 +1,6 @@
 import { filter } from 'lodash';
 import { Cell } from './cell';
-
-interface Coordinates {
-  x: number;
-  y: number;
-}
+import { Coordinates } from '../abstract/coordinates';
 
 interface Map {
   rows: number;
@@ -56,4 +52,4 @@ class GameMap implements Map {
   }
 }
 
-export { GameMap, Features, Coordinates };
+export { GameMap, Features };

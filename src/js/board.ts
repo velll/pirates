@@ -1,37 +1,36 @@
-import { GameMap, Coordinates } from "./board/gamemap";
+import { GameMap } from "./board/gamemap";
 import { Grid, Position } from "./board/grid";
-import { Dimensions } from "./board/dimensions";
+import { Coordinates } from './abstract/coordinates';
+import { Dimensions } from "./abstract/dimensions";
 
 type ShipModelsDict = Record<string, CanvasImageSource>;
 
+interface Drawable {
+  element: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  drawBox(pos: Position, dimesions: Dimensions, color: string): void;
+  drawImage(image: CanvasImageSource, pos: Position, size: number): void;
+  drawText(text: string, pos: Position): void;
+}
+
 class Board {
-  private ctx: CanvasRenderingContext2D;
+  private canvas: Drawable;
   private map: GameMap;
   private grid: Grid;
   private shipModels: ShipModelsDict;
 
-  constructor(ctx: CanvasRenderingContext2D, map: GameMap, initialDimensions: Dimensions, shipModels: ShipModelsDict ) {
-    this.ctx = ctx;
+  private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
+
+  constructor(canvas: Drawable, map: GameMap, initialDimensions: Dimensions, shipModels: ShipModelsDict ) {
+    this.canvas = canvas;
     this.map = map;
     this.grid = new Grid (this.map, initialDimensions);
     this.shipModels = shipModels;
   }
 
-  public drawBox(x: number, y: number, l: number, h: number, color: string) {
-    // console.log("drawing " + color + " box at " +  x + ", " + y + ". dimesions: " + l + ":" + h)
-
-    this.ctx.beginPath();
-    this.ctx.rect(x, y, l, h);
-    this.ctx.strokeStyle = "grey";
-    this.ctx.stroke();
-    this.ctx.closePath();
-
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(x, y, l, h);
-  }
-
   public drawCell(pos: Position, size: number, color: string) {
-    this.drawBox(pos.left, pos.top, size, size, color);
+    this.canvas.drawBox(pos, {width: size, height: size}, color);
   }
 
   public drawGrid() {
@@ -51,24 +50,17 @@ class Board {
   public drawShip(type: string, coordinates: Coordinates) {
     const shipModel = this.shipModels[type];
     const position = this.grid.getCellPosition(coordinates);
-    const shipSize = this.grid.cellSize * 0.95; // FIXME: put it in a constant
+    const shipSize = this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
 
-    this.drawImage(shipModel, position, shipSize);
-  }
-
-  private findModel(name: string): CanvasImageSource {
-    return this.shipModels[name];
-  }
-
-  private drawImage(image: CanvasImageSource, position: Position, size: number) {
-    this.ctx.drawImage(image, position.left, position.top, size, size);
+    this.canvas.drawImage(shipModel, position, shipSize);
   }
 
   private drawCoords(pos: Position, size: number, coords: Coordinates) {
-    this.ctx.font = "15px Arial";
-    this.ctx.fillStyle = "black";
-    this.ctx.fillText(coords.x + "," + coords.y, pos.left + size / 3, pos.top + size / 3);
+    const text = coords.x + "," + coords.y;
+    const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
+
+    this.canvas.drawText(text, offsettedPosition);
   }
 }
 
-export { Board, ShipModelsDict };
+export { Board, Drawable, ShipModelsDict };

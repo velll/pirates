@@ -1,10 +1,7 @@
-import { GameMap, Coordinates } from './gamemap';
-import { Dimensions } from 'dimensions';
-
-interface Position {
-  top: number;
-  left: number;
-}
+import { Coordinates } from '../abstract/coordinates';
+import { Dimensions } from '../abstract/dimensions';
+import { Position } from '../abstract/position';
+import { GameMap } from './gamemap';
 
 interface Grid {
   map: GameMap;
@@ -17,21 +14,25 @@ interface Grid {
 
 // cell size does change, so I'm calculating it below
 class Grid {
-  private mapXOffset = 0.0065; // padding from left
-  private mapYOffset = 0.043; // padding from top
-  private mapXwidth  = 0.9; // width of active portion of the map
-  private colorCode = {sea: "rgb(0,102,0,0.1)", rock: "rgba(255,73,73,0.5)", port: "rgba(1,1,1,0.5)"};
+  private readonly X_OFFSET = 0.0065; // padding from left
+  private readonly Y_OFFSET = 0.043; // padding from top
+  private readonly X_WIDTH  = 0.9; // width of active portion of the map
+  private readonly COLOR_CODE = {
+    sea: "rgb(0,102,0,0.1)",
+    rock: "rgba(255,73,73,0.5)",
+    port: "rgba(1,1,1,0.5)"
+  };
 
   constructor(map: GameMap,
               initialDimensions: Dimensions) {
-    this.colors = this.colorCode;
+    this.colors = this.COLOR_CODE;
     this.map = map;
     this.dimensions = initialDimensions;
 
-    this.startsAt = {x: Math.round(this.dimensions.width * this.mapXOffset),
-                     y: Math.round(this.dimensions.height * this.mapYOffset)};
+    this.startsAt = {x: Math.round(this.dimensions.width * this.X_OFFSET),
+                     y: Math.round(this.dimensions.height * this.Y_OFFSET)};
 
-    this.cellSize = Math.round(this.mapXwidth * this.dimensions.width / this.map.columns);
+    this.cellSize = Math.round(this.X_WIDTH * this.dimensions.width / this.map.columns);
   }
 
   public getColor(coords: Coordinates): string {

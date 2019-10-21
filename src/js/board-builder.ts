@@ -1,17 +1,17 @@
-import { Board, ShipModelsDict } from "./board";
-import { Dimensions } from "board/dimensions";
+import { Board, Drawable, ShipModelsDict } from "./board";
+import { Dimensions } from "./abstract/dimensions";
 import { GameMap, Features } from "./board/gamemap";
 
 class BoardBuilder {
-  private ctx: CanvasRenderingContext2D;
+  private canvas: Drawable;
 
-  constructor(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx;
+  constructor(canvas: Drawable) {
+    this.canvas = canvas;
   }
 
   public build(features: Features, initialDimensions: Dimensions, shipModels: ShipModelsDict): Board {
     const map = new GameMap(features);
-    const board = new Board(this.ctx, map, initialDimensions, shipModels);
+    const board = new Board(this.canvas, map, initialDimensions, shipModels);
 
     return board;
   }

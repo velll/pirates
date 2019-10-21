@@ -1,5 +1,5 @@
+import { Coordinates } from "./abstract/coordinates";
 import { Ship } from "./game/ship";
-import { Coordinates } from "./board/gamemap";
 import { Board } from './board';
 
 import { each } from 'lodash';

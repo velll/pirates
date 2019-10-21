@@ -1,4 +1,4 @@
-import { Coordinates } from "../board/gamemap";
+import { Coordinates } from "../abstract/coordinates";
 import { Moveable } from "../game";
 
 class Ship implements Moveable {
@@ -10,9 +10,9 @@ class Ship implements Moveable {
   public status: string;
 
   constructor(type: string,
-               fleet: string,
-               name: string,
-               initialCoordinates: Coordinates) {
+              fleet: string,
+              name: string,
+              initialCoordinates: Coordinates) {
     this.type = type;
     this.fleet = fleet;
     this.name = name;
