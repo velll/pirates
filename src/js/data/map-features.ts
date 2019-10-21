@@ -1,6 +1,6 @@
 import { map } from 'lodash';
 import { Cell } from '../board/cell';
-import { Features } from '../board/gamemap'
+import { Features } from '../board/gamemap';
 
 const ports: Cell[] = map([
  [13, 1, "Newfoundland"], // France

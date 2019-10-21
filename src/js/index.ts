@@ -20,13 +20,13 @@ const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 const board = new BoardBuilder(ctx).build(
   features,
   {width: canvas.width, height: canvas.height},
-  {"galleon": galleon, "brigantine": sailboat});
+  {galleon: galleon, brigantine: sailboat});
 
 board.drawGrid();
 
 const gameBuilder = new GameBuilder();
-let game = gameBuilder.build(board, ships);
+const game = gameBuilder.build(board, ships);
 
 game.start();
 
-(<any>window).game = game;
+(window as any).game = game;

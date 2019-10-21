@@ -1,4 +1,4 @@
-import { Ship } from '../game/ship'
+import { Ship } from '../game/ship';
 
 const ships = [
   new Ship("galleon", "Spaniards", "Santa Clara", {x: 4, y: 22}),
@@ -10,6 +10,6 @@ const ships = [
   new Ship("brigantine", "Pirates", "HMS Indefatigable",  {x: 37, y: 1}),
   new Ship("brigantine", "Pirates", "Ominous",            {x: 31, y: 20}),
   new Ship("brigantine", "Pirates", "Bullshit squad",     {x: 13, y: 23})
-]
+];
 
-export { ships }
+export { ships };

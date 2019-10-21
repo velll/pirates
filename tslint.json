@@ -5,7 +5,8 @@
     ],
     "linterOptions": {
         "exclude": [
-            "webpack.config.js"
+            "webpack.config.js",
+            "jest.config.js"
         ]
     },
     "jsRules": {},

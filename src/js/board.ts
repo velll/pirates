@@ -48,20 +48,20 @@ class Board {
     }
   }
 
-  private findModel(name: string) : CanvasImageSource {
-    return this.shipModels[name];
-  }
-
-  private drawImage (image: CanvasImageSource, position: Position, size: number) {
-    this.ctx.drawImage(image, position.left, position.top, size, size);
-  }
-
   public drawShip(type: string, coordinates: Coordinates) {
-    const shipModel = this.shipModels[type]
+    const shipModel = this.shipModels[type];
     const position = this.grid.getCellPosition(coordinates);
     const shipSize = this.grid.cellSize * 0.95; // FIXME: put it in a constant
 
     this.drawImage(shipModel, position, shipSize);
+  }
+
+  private findModel(name: string): CanvasImageSource {
+    return this.shipModels[name];
+  }
+
+  private drawImage(image: CanvasImageSource, position: Position, size: number) {
+    this.ctx.drawImage(image, position.left, position.top, size, size);
   }
 
   private drawCoords(pos: Position, size: number, coords: Coordinates) {

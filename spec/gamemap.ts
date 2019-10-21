@@ -1,12 +1,12 @@
-import { Features } from '../src/js/board/gamemap'
-import { Cell } from '../src/js/board/cell'
+import { Features } from '../src/js/board/gamemap';
+import { Cell } from '../src/js/board/cell';
 
-import { GameMap } from '../src/js/board/gamemap'
+import { GameMap } from '../src/js/board/gamemap';
 
 const features: Features = {
   rocks: [ new Cell(1, 1) ],
   ports: [ new Cell(5, 10), new Cell(20, 15) ]
-}
+};
 
 const gameMap = new GameMap(features);
 
