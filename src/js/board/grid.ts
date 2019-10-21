@@ -1,6 +1,6 @@
-import { Coordinates } from '../abstract/coordinates';
-import { Dimensions } from '../abstract/dimensions';
-import { Position } from '../abstract/position';
+import { Coordinates } from '../lib/coordinates';
+import { Dimensions } from '../lib/dimensions';
+import { Position } from '../lib/position';
 import { GameMap } from './gamemap';
 
 interface Grid {

@@ -1,4 +1,4 @@
-import { Coordinates } from "../abstract/coordinates";
+import { Coordinates } from "../lib/coordinates";
 import { Moveable } from "../game";
 
 class Ship implements Moveable {

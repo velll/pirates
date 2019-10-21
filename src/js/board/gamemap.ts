@@ -1,6 +1,6 @@
 import { filter } from 'lodash';
 import { Cell } from './cell';
-import { Coordinates } from '../abstract/coordinates';
+import { Coordinates } from '../lib/coordinates';
 
 interface Map {
   rows: number;

@@ -2,10 +2,21 @@
   padding: 0;
   margin: 0;
 }
+
 canvas {
-  background: url('../img/gamemap_2000.png') ;
   display: block;
   margin: 0 auto;
+  position: absolute;
+  left: 0; top: 0;
+}
+
+canvas#background{
+  background: url('../img/gamemap_2000.png') ;
+  z-index: 0;
+}
+
+canvas#foreground{
+  z-index: 1;
 }
 
 resources {

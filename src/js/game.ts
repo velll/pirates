@@ -1,8 +1,8 @@
-import { Coordinates } from "./abstract/coordinates";
-import { Ship } from "./game/ship";
+import { Coordinates } from "./lib/coordinates";
 import { Board } from './board';
 
 import { each } from 'lodash';
+import { assert } from './lib/assert';
 
 class Game {
   public board: Board;
@@ -10,7 +10,7 @@ class Game {
   public ships: Moveable[];
   public status: string;
 
-  constructor(board: Board, ships: Ship[]) {
+  constructor(board: Board, ships: Moveable[]) {
     this.board = board;
     this.ships = ships;
 
@@ -19,9 +19,11 @@ class Game {
 
   public moveShip(ship: Moveable, to: Coordinates) {
     const from = ship.coordinates;
-    ship.move(to);
 
-//    this.board.moveShip(ship.view, from, to);
+    assert(!(from.x == to.x && from.y == to.y), "cannot move ship to the cell it's on");
+
+    ship.move(to);
+    this.board.moveShip(ship.type, from, to);
   }
 
   public start() {

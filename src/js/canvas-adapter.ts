@@ -1,5 +1,5 @@
-import { Position } from './abstract/position';
-import { Dimensions } from './abstract/dimensions';
+import { Position } from './lib/position';
+import { Dimensions } from './lib/dimensions';
 import { Drawable } from './board';
 
 class CanvasAdapter implements Drawable {
@@ -35,6 +35,10 @@ class CanvasAdapter implements Drawable {
     this.ctx.font = this.TEXT_FONT;
     this.ctx.fillStyle = this.TEXT_STYLE;
     this.ctx.fillText(text, pos.left, pos.top);
+  }
+
+  public clear(position: Position, dimensions: Dimensions) {
+    this.ctx.clearRect(position.left, position.top, dimensions.width, dimensions.height);
   }
 }
 

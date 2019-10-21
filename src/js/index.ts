@@ -9,17 +9,21 @@ import { ships } from "./data/ships";
 const canvasWidth = 2000;
 const canvasHeight = 1384;
 
-const canvas = new CanvasAdapter(document.getElementById("map") as HTMLCanvasElement);
+const canvasBG = new CanvasAdapter(document.getElementById("background") as HTMLCanvasElement);
+const canvasFG = new CanvasAdapter(document.getElementById("foreground") as HTMLCanvasElement);
 
-canvas.element.width = canvasWidth;
-canvas.element.height = canvasHeight;
+canvasBG.element.width = canvasWidth;
+canvasBG.element.height = canvasHeight;
+
+canvasFG.element.width = canvasWidth;
+canvasFG.element.height = canvasHeight;
 
 const galleon = document.getElementById("galleon") as CanvasImageSource;
 const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 
-const board = new BoardBuilder(canvas).build(
+const board = new BoardBuilder(canvasBG, canvasFG).build(
   features,
-  {width: canvas.element.width, height: canvas.element.height},
+  {width: canvasBG.element.width, height: canvasBG.element.height},
   {galleon: galleon, brigantine: sailboat});
 
 board.drawGrid();
