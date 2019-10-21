@@ -4,25 +4,6 @@ import { Coordinates } from './lib/coordinates';
 import { Dimensions } from "./lib/dimensions";
 import { MovingImage } from "./board/moving-image";
 
-type ShipModelsDict = Record<string, CanvasImageSource>;
-
-// What we expect from our canvas adapter
-interface Drawable {
-  element: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-
-  drawBox(pos: Position, dimesions: Dimensions, color: string): void;
-  drawImage(image: CanvasImageSource, pos: Position, size: number): void;
-  drawText(text: string, pos: Position): void;
-  clear(position: Position, dimensions: Dimensions): void;
-}
-
-interface ShipView {
-  model: CanvasImageSource;
-  position: Position;
-  size: number;
-}
-
 class Board {
   private canvas: Drawable;
   // map and static features are rendered in background
@@ -126,6 +107,25 @@ class Board {
 
     animation.run();
   }
+}
+
+type ShipModelsDict = Record<string, CanvasImageSource>;
+
+// What we expect from our canvas adapter
+interface Drawable {
+  element: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  drawBox(pos: Position, dimesions: Dimensions, color: string): void;
+  drawImage(image: CanvasImageSource, pos: Position, size: number): void;
+  drawText(text: string, pos: Position): void;
+  clear(position: Position, dimensions: Dimensions): void;
+}
+
+interface ShipView {
+  model: CanvasImageSource;
+  position: Position;
+  size: number;
 }
 
 export { Board, Drawable, ShipModelsDict };
