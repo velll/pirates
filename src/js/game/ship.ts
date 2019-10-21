@@ -1,6 +1,5 @@
 import { Coordinates } from "../board/gamemap";
 import { Moveable } from "../game"
-import { Dimensions } from "../board/dimensions";
 
 class Ship implements Moveable {
   public type: string;

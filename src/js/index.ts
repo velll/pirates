@@ -14,11 +14,19 @@ canvas.height = canvasHeight;
 
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
-const board = new BoardBuilder(ctx).build(features, {width: canvas.width, height: canvas.height});
+const galleon = document.getElementById("galleon") as CanvasImageSource;
+const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 
-// I'll just leave it here for now as I use it to check if canvas is working at all
-board.drawBox(100, 100, 100, 100, "red");
+const board = new BoardBuilder(ctx).build(
+  features,
+  {width: canvas.width, height: canvas.height},
+  {"galleon": galleon, "brigantine": sailboat});
+
 board.drawGrid();
 
 const gameBuilder = new GameBuilder();
 let game = gameBuilder.build(board, ships);
+
+game.start();
+
+(<any>window).game = game;

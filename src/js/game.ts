@@ -1,5 +1,8 @@
+import { Ship } from "./game/ship"
 import { Coordinates } from "./board/gamemap";
 import { Board } from './board'
+
+import { each } from 'lodash';
 
 class Game {
   public board: Board;
@@ -7,7 +10,7 @@ class Game {
   public ships: Moveable[];
   public status: string;
 
-  constructor (board: Board, ships: Moveable[]) {
+  constructor (board: Board, ships: Ship[]) {
     this.board = board;
     this.ships = ships;
 
@@ -18,15 +21,21 @@ class Game {
     const from = ship.coordinates;
     ship.move(to)
 
-    // FIXME: move the image on a board
+//    this.board.moveShip(ship.view, from, to);
+  }
+
+  public start() {
+    each(this.ships, (ship) => {
+      this.board.drawShip(ship.type, ship.coordinates)
+    });    
   }
 }
 
 interface Moveable {
   coordinates: Coordinates;
+  type: string;
 
   move(where: Coordinates): void;
 }
-
 
 export { Game, Moveable };

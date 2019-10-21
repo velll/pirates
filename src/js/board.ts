@@ -2,15 +2,19 @@ import { GameMap, Coordinates } from "./board/gamemap";
 import { Grid, Position } from "./board/grid";
 import { Dimensions } from "./board/dimensions";
 
+type ShipModelsDict = Record<string, CanvasImageSource>;
+
 class Board {
   private ctx: CanvasRenderingContext2D;
   private map: GameMap;
   private grid: Grid;
+  private shipModels: ShipModelsDict;
 
-  constructor(ctx: CanvasRenderingContext2D, map: GameMap, initialDimensions: Dimensions) {
+  constructor(ctx: CanvasRenderingContext2D, map: GameMap, initialDimensions: Dimensions, shipModels: ShipModelsDict ) {
     this.ctx = ctx;
     this.map = map;
     this.grid = new Grid (this.map, initialDimensions);
+    this.shipModels = shipModels;
   }
 
   public drawBox(x: number, y: number, l: number, h: number, color: string) {
@@ -44,6 +48,22 @@ class Board {
     }
   }
 
+  private findModel(name: string) : CanvasImageSource {
+    return this.shipModels[name];
+  }
+
+  private drawImage (image: CanvasImageSource, position: Position, size: number) {
+    this.ctx.drawImage(image, position.left, position.top, size, size);
+  }
+
+  public drawShip(type: string, coordinates: Coordinates) {
+    const shipModel = this.shipModels[type]
+    const position = this.grid.getCellPosition(coordinates);
+    const shipSize = this.grid.cellSize * 0.95; // FIXME: put it in a constant
+
+    this.drawImage(shipModel, position, shipSize);
+  }
+
   private drawCoords(pos: Position, size: number, coords: Coordinates) {
     this.ctx.font = "15px Arial";
     this.ctx.fillStyle = "black";
@@ -51,4 +71,4 @@ class Board {
   }
 }
 
-export { Board };
+export { Board, ShipModelsDict };
