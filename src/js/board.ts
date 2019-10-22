@@ -62,10 +62,10 @@ class Board {
   }
 
   public moveShip(type: string, from: Coordinates, to: Coordinates) {
-    const shipView = this.buildShipView(type, from);
-    const finish = this.grid.getCellPosition(to);
+    const startShipView = this.buildShipView(type, from);
+    const finishShipView = this.buildShipView(type, to);
 
-    this.dragImage(shipView.model, shipView.size, shipView.position, finish);
+    this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
   }
 
   // *******************
