@@ -68,6 +68,10 @@ class Board {
     this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
   }
 
+  public locateCell(position: Position): Coordinates {
+    return this.grid.locateCell(position);
+  }
+
   // *******************
   // static map features
   // *******************
@@ -98,12 +102,12 @@ class Board {
     };
   }
 
-  private dragImage(image: CanvasImageSource, size: number, start: Position, end: Position) {
+  private dragImage(image: CanvasImageSource, size: number, start: Position, finish: Position) {
     const animation = new MovingImage(this.foreground,
                                       image,
                                       size,
                                       start,
-                                      end);
+                                      finish);
 
     animation.run();
   }

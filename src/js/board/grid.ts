@@ -45,6 +45,11 @@ class Grid {
     return {left: this.startsAt.x + coords.x * this.cellSize,
             top: this.startsAt.y + coords.y * this.cellSize};
   }
+
+  public locateCell(position: Position): Coordinates {
+    return {x: Math.floor((position.left - this.startsAt.x) / this.cellSize),
+            y: Math.floor((position.top - this.startsAt.y) / this.cellSize)};
+  }
 }
 
 export { Grid, Position };

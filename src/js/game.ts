@@ -38,7 +38,7 @@ class Game {
   }
 
   public turn() {
-    this.drawAllShips();
+    this.drawAllShips(); // FIXME: dont do it
 
     const shipsTotal = size(this.ships);
     const turnNo = size(this.turns);
@@ -49,6 +49,15 @@ class Game {
 
   public getCurrentTurn() {
     return last(this.turns);
+  }
+
+  public getCurrentShip() {
+    return this.getCurrentTurn().ship;
+  }
+
+  public clickHandler(e: MouseEvent) {
+    const coordinates = this.board.locateCell({left: e.offsetX, top: e.offsetY});
+    this.moveShip(this.getCurrentShip(), coordinates);
   }
 
   private drawAllShips() {

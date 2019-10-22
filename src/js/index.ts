@@ -31,6 +31,7 @@ board.drawGrid();
 const gameBuilder = new GameBuilder();
 const game = gameBuilder.build(board, ships);
 
-game.start();
+canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 
+game.start();
 (window as any).game = game;
