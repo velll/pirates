@@ -3,4 +3,9 @@ interface Coordinates {
   y: number;
 }
 
-export { Coordinates };
+interface Move {
+  from: Coordinates;
+  to: Coordinates;
+}
+
+export { Coordinates, Move };
