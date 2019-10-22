@@ -3,7 +3,7 @@ import { Position } from '../lib/position';
 
 class MovingImage {
   private readonly FPS = 60;
-  private readonly duration = 1; // seconds
+  private readonly duration = 0.5; // seconds
 
   private canvas: Drawable;
   private image: CanvasImageSource;
@@ -29,8 +29,8 @@ class MovingImage {
       this.start = start;
       this.finish = finish;
 
-      this.dx = (this.finish.left - this.start.left) * this.duration / this.FPS;
-      this.dy = (this.finish.top - this.start.top) * this.duration / this.FPS;
+      this.dx = (this.finish.left - this.start.left) / (this.FPS * this.duration);
+      this.dy = (this.finish.top - this.start.top) / (this.FPS * this.duration);
 
       this.position = start;
   }
