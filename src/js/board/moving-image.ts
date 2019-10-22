@@ -43,9 +43,10 @@ class MovingImage {
     // Move by dx, dy
     this.position = {left: this.position.left + this.dx, top: this.position.top + this.dy};
 
-    // Exact match is unsafe, just check if close enough
-    if (Math.abs(this.position.left - this.finish.left) < this.dx ||
-        Math.abs(this.position.top - this.finish.top) < this.dy) {
+    // Check if close enough
+    if (Math.sqrt((this.position.left - this.finish.left) ** 2  +
+                  (this.position.top - this.finish.top) ** 2) <=
+       (Math.sqrt(this.dx ** 2 + this.dy ** 2))) {
           this.position = this.finish;
           more = false;
     }
