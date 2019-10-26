@@ -2,7 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Golitsin pirates</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
     <link href="css/index.css" rel="stylesheet">
 </head>
 <body>
@@ -13,6 +19,34 @@
 </resources>
 <canvas id="background" width="2000" height="1384"></canvas>
 <canvas id="foreground" width="2000" height="1384"></canvas>
+<div id="telemetry">
+    <div class="level">
+        <div class="level-item has-text-centered">
+            <div>
+            <p class="heading">Turn no</p>
+            <p class="title" id="turn-no"></p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+            <p class="heading">Active ship</p>
+            <p class="title" id="active-ship"></p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+            <p class="heading">Fleet</p>
+            <p class="title" id="active-fleet"></p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+            <p class="heading">HP</p>
+            <p class="title" id="HP">10/20</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="bundle.js"></script>
 

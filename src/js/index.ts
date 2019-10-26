@@ -26,10 +26,14 @@ const board = new BoardBuilder(canvasBG, canvasFG).build(
   {width: canvasBG.element.width, height: canvasBG.element.height},
   {galleon: galleon, brigantine: sailboat});
 
-board.drawGrid();
-
 const gameBuilder = new GameBuilder();
 const game = gameBuilder.build(board, ships);
+
+game.telemetry.switchOn();
+
+if (game.telemetry.working) {
+  board.drawGrid();
+}
 
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 

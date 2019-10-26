@@ -6,6 +6,7 @@ import { each, last, size } from 'lodash';
 import { assert } from './lib/assert';
 
 class Game {
+  public telemetry: Reportable;
 
   private board: Board;
   private ships: Moveable[];
@@ -13,9 +14,10 @@ class Game {
 
   private turns: Turn[];
 
-  constructor(board: Board, ships: Moveable[]) {
+  constructor(board: Board, ships: Moveable[], telemetry: Reportable) {
     this.board = board;
     this.ships = ships;
+    this.telemetry = telemetry;
 
     this.status = "created";
     this.turns = [];
@@ -45,6 +47,8 @@ class Game {
     const ship = this.ships[turnNo % shipsTotal];
 
     this.turns[size(this.turns)] = new Turn(turnNo, ship);
+
+    this.telemetry.report(this.getCurrentTurn());
   }
 
   public getCurrentTurn() {
@@ -69,8 +73,17 @@ class Game {
 interface Moveable {
   coordinates: Coordinates;
   type: string;
+  name: string;
+  fleet: string;
 
   move(where: Coordinates): void;
 }
 
-export { Game, Moveable };
+interface Reportable {
+  working: boolean;
+  report(turn: Turn): void;
+  switchOn(): void;
+  switchOff(): void;
+}
+
+export { Game, Moveable, Reportable };
