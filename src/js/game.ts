@@ -40,7 +40,7 @@ class Game {
   }
 
   public turn() {
-    this.drawAllShips(); // FIXME: dont do it
+    setTimeout(this.drawAllShips.bind(this), 500); // FIXME: with promises
 
     const shipsTotal = size(this.ships);
     const turnNo = size(this.turns);
