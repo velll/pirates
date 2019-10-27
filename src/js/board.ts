@@ -1,7 +1,10 @@
 import { GameMap } from "./board/gamemap";
-import { Grid, Position } from "./board/grid";
+import { Grid } from "./board/grid";
+
 import { Coordinates } from './lib/coordinates';
 import { Dimensions } from "./lib/dimensions";
+import { Position } from './lib/position';
+
 import { MovingImage } from "./board/moving-image";
 
 import { each } from 'lodash';
@@ -13,8 +16,13 @@ class Board {
   // ships and dynamic stuff is rendered in Foreground
   private layers: Layers;
 
+  // map holds data about in-game features and their in-game coordinates
   private map: GameMap;
+
+  // grid knows where to draw them
   private grid: Grid;
+
+  // Dictionary of images for different ship types
   private shipModels: ShipModelsDict;
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
@@ -23,17 +31,25 @@ class Board {
   constructor(
     layers: Layers,
     map: GameMap,
-    initialDimensions: Dimensions,
+    grid: Grid,
     shipModels: ShipModelsDict) {
     this.layers = layers;
     this.map = map;
-    this.grid = new Grid (this.map, initialDimensions);
+    this.grid = grid;
     this.shipModels = shipModels;
   }
 
-  // *************
-  // map features
-  // *************
+  // *********************
+  // Coordinate conversion
+  // *********************
+
+  public locateCell(position: Position): Coordinates {
+    return this.grid.locateCell(position);
+  }
+
+  // **************
+  // cells and grid
+  // **************
 
   public drawCell(layer: Drawable, coordinates: Coordinates, color: string) {
     const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
@@ -56,6 +72,14 @@ class Board {
     }
   }
 
+  public highlightCell(coordinates: Coordinates) {
+    this.drawCell(this.layers.highlight, coordinates, this.HIGHLIGHT_CELL_COLOR);
+  }
+
+  public highlightCells(coords: Coordinates[]) {
+    each(coords, (pair) => { this.highlightCell(pair); });
+  }
+
   // *************************
   // dynamic stuff (ships etc)
   // *************************
@@ -75,18 +99,6 @@ class Board {
     this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
   }
 
-  public locateCell(position: Position): Coordinates {
-    return this.grid.locateCell(position);
-  }
-
-  public highlightCell(coordinates: Coordinates) {
-    this.drawCell(this.layers.highlight, coordinates, this.HIGHLIGHT_CELL_COLOR);
-  }
-
-  public highlightCells(coords: Coordinates[]) {
-    each(coords, (pair) => { this.highlightCell(pair); });
-  }
-
   // *******************
   // static map features
   // *******************
@@ -101,6 +113,7 @@ class Board {
   // *********************
   // dynamic stuff (ships)
   // *********************
+
   private getShipSize() {
     return this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
   }

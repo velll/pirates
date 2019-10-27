@@ -2,25 +2,18 @@ import { filter } from 'lodash';
 import { Cell } from './cell';
 import { Coordinates } from '../lib/coordinates';
 
-interface Map {
-  rows: number;
-  columns: number;
-}
-
-interface Features {
-  ports: Cell[];
-  rocks: Cell[];
-}
-
 // GameMap holds board data — how many cells in a row/column and
 // special features of the cells
-class GameMap implements Map {
-  public rows: number = 25;
-  public columns: number = 39;
+class GameMap {
+  public rows: number;
+  public columns: number;
 
   private features: Features;
 
-  constructor(features: Features) {
+  constructor(config: MapConfig, features: Features) {
+    this.rows = config.rows;
+    this.columns = config.columns;
+
     this.features = features;
   }
 
@@ -52,4 +45,14 @@ class GameMap implements Map {
   }
 }
 
-export { GameMap, Features };
+interface MapConfig {
+  rows: number;
+  columns: number;
+}
+
+interface Features {
+  ports: Cell[];
+  rocks: Cell[];
+}
+
+export { GameMap, Features, MapConfig };

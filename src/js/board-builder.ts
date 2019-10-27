@@ -1,6 +1,7 @@
 import { Board, Drawable, ShipModelsDict } from "./board";
 import { Dimensions } from "./lib/dimensions";
-import { GameMap, Features } from "./board/gamemap";
+import { GameMap, Features, MapConfig } from "./board/gamemap";
+import { Grid, GridConfig } from "./board/grid";
 
 class BoardBuilder {
   private background: Drawable;
@@ -13,11 +14,17 @@ class BoardBuilder {
     this.foreground = foreground;
   }
 
-  public build(features: Features, initialDimensions: Dimensions, shipModels: ShipModelsDict): Board {
-    const map = new GameMap(features);
+  public build(features: Features,
+               initialDimensions: Dimensions,
+               shipModels: ShipModelsDict,
+               mapConfig: MapConfig,
+               gridConfig: GridConfig): Board {
     const layers = {background: this.background, highlight: this.highlight, foreground: this.foreground};
 
-    const board = new Board(layers, map, initialDimensions, shipModels);
+    const map = new GameMap(mapConfig, features);
+    const grid = new Grid(map, initialDimensions, gridConfig);
+
+    const board = new Board(layers, map, grid, shipModels);
 
     return board;
   }

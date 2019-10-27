@@ -1,4 +1,4 @@
-import { Features } from '../src/js/board/gamemap';
+import { Features, MapConfig } from '../src/js/board/gamemap';
 import { Cell } from '../src/js/board/cell';
 
 import { GameMap } from '../src/js/board/gamemap';
@@ -8,7 +8,12 @@ const features: Features = {
   ports: [ new Cell(5, 10), new Cell(20, 15) ]
 };
 
-const gameMap = new GameMap(features);
+const mapConfig: MapConfig = {
+  rows: 10,
+  columns: 10
+};
+
+const gameMap = new GameMap(mapConfig, features);
 
 test('map should know where rocks are', () => {
   expect(gameMap.getFeatureByCoords({x: 1, y: 1})).toEqual('rock');

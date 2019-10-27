@@ -15,6 +15,11 @@ class CanvasAdapter implements Drawable {
     this.ctx = canvas.getContext("2d");
   }
 
+  public setElementDimensions(dimensions: Dimensions) {
+    this.element.width = dimensions.width;
+    this.element.height = dimensions.height;
+  }
+
   public drawBox(pos: Position, dimensions: Dimensions, color: string) {
     this.ctx.beginPath();
     this.ctx.rect(pos.left, pos.top, dimensions.width, dimensions.height);
