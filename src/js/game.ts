@@ -2,7 +2,7 @@ import { Coordinates } from "./lib/coordinates";
 import { Board } from './board';
 import { Turn } from './game/turn';
 
-import { each, last, size } from 'lodash';
+import { each, last, size, isEqual } from 'lodash';
 import { assert } from './lib/assert';
 
 class Game {
@@ -13,6 +13,8 @@ class Game {
   private status: string;
 
   private turns: Turn[];
+
+  private readonly CADIZ: Coordinates = {x: 5, y: 21};
 
   constructor(board: Board, ships: Moveable[], telemetry: Reportable) {
     this.board = board;
@@ -31,6 +33,10 @@ class Game {
 
     ship.move(to);
     this.board.moveShip(ship.type, from, to);
+
+    if (this.isGameOver()) {
+      this.congratulate(ship.fleet);
+    }
 
     this.turn();
   }
@@ -79,6 +85,32 @@ class Game {
   private isValidMove(to: Coordinates): boolean {
     return this.getCurrentTurn().isValidMove(to);
   }
+
+  private isGameOver(): boolean {
+    const currentShip = this.getCurrentShip();
+
+    if (!currentShip.carriesGold) {
+      return false;
+    }
+
+    if (currentShip.fleet == "Spaniards") {
+      if (isEqual(currentShip.coordinates, this.CADIZ)) {
+        return true;
+      }
+    }
+
+    if (currentShip.fleet == "Pirates") {
+      if (isEqual(currentShip.coordinates, this.CADIZ)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private congratulate(fleet: string) {
+    alert("Game Over! " + fleet + " have won");
+  }
 }
 
 interface Moveable {
@@ -86,6 +118,7 @@ interface Moveable {
   type: string;
   name: string;
   fleet: string;
+  carriesGold: boolean;
 
   move(where: Coordinates): void;
 }

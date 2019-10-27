@@ -8,16 +8,19 @@ class Ship implements Moveable {
 
   public coordinates: Coordinates;
   public status: string;
+  public carriesGold: boolean;
 
   constructor(type: string,
               fleet: string,
               name: string,
-              initialCoordinates: Coordinates) {
+              initialCoordinates: Coordinates,
+              carriesGold: boolean = false) {
     this.type = type;
     this.fleet = fleet;
     this.name = name;
 
     this.coordinates = initialCoordinates;
+    this.carriesGold = carriesGold;
     this.status = "created";
   }
 

@@ -8,6 +8,7 @@ class GameBuilder {
   public build(board: Board, ships: Ship[]): Game {
     const telemetry = new Telemetry();
     const game = new Game(board, ships, telemetry);
+
     return game;
   }
 }

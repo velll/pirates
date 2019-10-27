@@ -1,7 +1,7 @@
 import { Ship } from '../game/ship';
 
 const ships = [
-  new Ship("galleon", "Spaniards", "Santa Clara", {x: 4, y: 22}),
+  new Ship("galleon", "Spaniards", "Santa Clara", {x: 4, y: 22}, true),
   new Ship("galleon", "Spaniards", "Domingo",     {x: 4, y: 21}),
   new Ship("galleon", "Spaniards", "Idalho",      {x: 2, y: 16}),
   new Ship("brigantine", "Pirates", "Black Hawk",         {x: 6, y: 17}),
