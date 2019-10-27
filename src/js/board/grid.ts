@@ -18,7 +18,7 @@ class Grid {
   private readonly Y_OFFSET = 0.043; // padding from top
   private readonly X_WIDTH  = 0.9; // width of active portion of the map
   private readonly COLOR_CODE = {
-    sea: "rgb(0,102,0,0.1)",
+    sea: "rgba(0,102,0,0.1)",
     rock: "rgba(255,73,73,0.5)",
     port: "rgba(1,1,1,0.5)"
   };
