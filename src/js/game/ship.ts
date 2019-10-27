@@ -2,15 +2,22 @@ import { Coordinates } from "../lib/coordinates";
 import { Moveable } from "../game";
 
 class Ship implements Moveable {
-  public type: string;
+  public type: ShipType;
   public fleet: string;
   public name: string;
 
   public coordinates: Coordinates;
-  public status: string;
+  public status: ShipStatus;
   public carriesGold: boolean;
 
-  constructor(type: string,
+  public HP: number;
+
+  private readonly HP_VALUES: Record<ShipType, number> = {
+    galleon: 30,
+    brigantine: 20
+  };
+
+  constructor(type: ShipType,
               fleet: string,
               name: string,
               initialCoordinates: Coordinates,
@@ -21,7 +28,9 @@ class Ship implements Moveable {
 
     this.coordinates = initialCoordinates;
     this.carriesGold = carriesGold;
-    this.status = "created";
+    this.status = ShipStatus.ready;
+
+    this.HP = this.HP_VALUES[type];
   }
 
   public move(coordinates: Coordinates) {
@@ -29,6 +38,24 @@ class Ship implements Moveable {
 
     this.coordinates = coordinates;
   }
+
+  public damage(dmg: number) {
+    this.HP -= dmg;
+
+    if (this.HP <= 0) {
+      this.status = ShipStatus.sunk;
+    }
+  }
 }
 
-export { Ship };
+enum ShipType {
+  brigantine = "brigantine",
+  galleon = "galleon"
+}
+
+enum ShipStatus {
+  ready,
+  sunk
+}
+
+export { Ship, ShipType };
