@@ -19,9 +19,8 @@ canvas#background{
   z-index: 0;
 }
 
-canvas#foreground{
-  z-index: 1;
-}
+canvas#highlight { z-index: 10; }
+canvas#foreground{ z-index: 20; }
 
 resources {
   display: none;

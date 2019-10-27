@@ -4,48 +4,53 @@ import { Coordinates } from './lib/coordinates';
 import { Dimensions } from "./lib/dimensions";
 import { MovingImage } from "./board/moving-image";
 
+import { each } from 'lodash';
+
 class Board {
-  private canvas: Drawable;
-  // map and static features are rendered in background
-  private background: Drawable;
-  // ships and dynamic stuff is rendered in foreground
-  private foreground: Drawable;
+  // Layers are just canvases
+  // map and static features are rendered in Background
+  // highlighting cells for moves and shots is done on a Highlight layer
+  // ships and dynamic stuff is rendered in Foreground
+  private layers: Layers;
+
   private map: GameMap;
   private grid: Grid;
   private shipModels: ShipModelsDict;
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
+  private readonly HIGHLIGHT_CELL_COLOR = "rgba(0,102,204, 0.5)";
 
   constructor(
-    background: Drawable,
-    foreground: Drawable,
+    layers: Layers,
     map: GameMap,
     initialDimensions: Dimensions,
     shipModels: ShipModelsDict) {
-    this.background = background;
-    this.foreground = foreground;
+    this.layers = layers;
     this.map = map;
     this.grid = new Grid (this.map, initialDimensions);
     this.shipModels = shipModels;
   }
 
-  // *******************
-  // static map features
-  // *******************
+  // *************
+  // map features
+  // *************
 
-  public drawCell(pos: Position, size: number, color: string) {
-    this.background.drawBox(pos, {width: size, height: size}, color);
+  public drawCell(layer: Drawable, coordinates: Coordinates, color: string) {
+    const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
+
+    layer.drawSquare(pos, this.grid.cellSize, color);
   }
 
   public drawGrid() {
     const cellSize = this.grid.cellSize;
+    const layer = this.layers.background;
 
     for (let row: number = 0; row < this.map.rows; row++) {
       for (let col: number = 0; col < this.map.columns; col++) {
         const color = this.grid.getColor({x: col, y: row});
-        const pos = this.grid.getCellPosition({x: col, y: row});
+        this.drawCell(layer, {x: col, y: row}, color);
 
-        this.drawCell(pos, cellSize, color);
+        const pos = this.grid.getCellPosition({x: col, y: row});
         this.drawCoords(pos, cellSize, {x: col, y: row});
       }
     }
@@ -58,10 +63,12 @@ class Board {
   public drawShip(type: string, coordinates: Coordinates) {
     const shipView = this.buildShipView(type, coordinates);
 
-    this.foreground.drawImage(shipView.model, shipView.position, shipView.size);
+    this.layers.foreground.drawImage(shipView.model, shipView.position, shipView.size);
   }
 
   public moveShip(type: string, from: Coordinates, to: Coordinates) {
+    this.layers.highlight.clearAll();
+
     const startShipView = this.buildShipView(type, from);
     const finishShipView = this.buildShipView(type, to);
 
@@ -72,6 +79,14 @@ class Board {
     return this.grid.locateCell(position);
   }
 
+  public highlightCell(coordinates: Coordinates) {
+    this.drawCell(this.layers.highlight, coordinates, this.HIGHLIGHT_CELL_COLOR);
+  }
+
+  public highlightCells(coords: Coordinates[]) {
+    each(coords, (pair) => { this.highlightCell(pair); });
+  }
+
   // *******************
   // static map features
   // *******************
@@ -80,7 +95,7 @@ class Board {
     const text = coords.x + "," + coords.y;
     const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
 
-    this.background.drawText(text, offsettedPosition);
+    this.layers.background.drawText(text, offsettedPosition);
   }
 
   // *********************
@@ -103,7 +118,7 @@ class Board {
   }
 
   private dragImage(image: CanvasImageSource, size: number, start: Position, finish: Position) {
-    const animation = new MovingImage(this.foreground,
+    const animation = new MovingImage(this.layers.foreground,
                                       image,
                                       size,
                                       start,
@@ -121,9 +136,17 @@ interface Drawable {
   ctx: CanvasRenderingContext2D;
 
   drawBox(pos: Position, dimesions: Dimensions, color: string): void;
+  drawSquare(pos: Position, width: number, color: string): void;
   drawImage(image: CanvasImageSource, pos: Position, size: number): void;
   drawText(text: string, pos: Position): void;
   clear(position: Position, dimensions: Dimensions): void;
+  clearAll(): void;
+}
+
+interface Layers {
+  background: Drawable;
+  highlight: Drawable;
+  foreground: Drawable;
 }
 
 interface ShipView {
@@ -132,4 +155,4 @@ interface ShipView {
   size: number;
 }
 
-export { Board, Drawable, ShipModelsDict };
+export { Board, Drawable, ShipModelsDict, Layers};

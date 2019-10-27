@@ -26,6 +26,10 @@ class CanvasAdapter implements Drawable {
     this.ctx.fillRect(pos.left, pos.top, dimensions.width, dimensions.height);
   }
 
+  public drawSquare(pos: Position, width: number, color: string) {
+    this.drawBox(pos, {width: width, height: width}, color);
+  }
+
   // assumes the Image is square, so only has one size
   public drawImage(image: CanvasImageSource, position: Position, size: number) {
     this.ctx.drawImage(image, position.left, position.top, size, size);
@@ -39,6 +43,10 @@ class CanvasAdapter implements Drawable {
 
   public clear(position: Position, dimensions: Dimensions) {
     this.ctx.clearRect(position.left, position.top, dimensions.width, dimensions.height);
+  }
+
+  public clearAll() {
+    this.ctx.clearRect(0, 0, this.element.width, this.element.height);
   }
 }
 

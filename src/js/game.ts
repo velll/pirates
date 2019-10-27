@@ -46,7 +46,10 @@ class Game {
     const turnNo = size(this.turns);
     const ship = this.ships[turnNo % shipsTotal];
 
-    this.turns[size(this.turns)] = new Turn(turnNo, ship);
+    const turn = new Turn(turnNo, ship);
+
+    this.turns[size(this.turns)] = turn;
+    this.board.highlightCells(turn.availableForMove);
 
     this.telemetry.report(this.getCurrentTurn());
   }
@@ -61,14 +64,22 @@ class Game {
 
   public clickHandler(e: MouseEvent) {
     const coordinates = this.board.locateCell({left: e.offsetX, top: e.offsetY});
-    this.moveShip(this.getCurrentShip(), coordinates);
+
+    if (this.isValidMove(coordinates)) {
+      this.moveShip(this.getCurrentShip(), coordinates);
+    }
   }
 
   private drawAllShips() {
     each(this.ships, (ship) => {
       this.board.drawShip(ship.type, ship.coordinates);
     });
-  }}
+  }
+
+  private isValidMove(to: Coordinates): boolean {
+    return this.getCurrentTurn().isValidMove(to);
+  }
+}
 
 interface Moveable {
   coordinates: Coordinates;

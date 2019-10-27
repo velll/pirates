@@ -10,6 +10,7 @@ const canvasWidth = 2000;
 const canvasHeight = 1384;
 
 const canvasBG = new CanvasAdapter(document.getElementById("background") as HTMLCanvasElement);
+const canvasHL = new CanvasAdapter(document.getElementById("highlight") as HTMLCanvasElement);
 const canvasFG = new CanvasAdapter(document.getElementById("foreground") as HTMLCanvasElement);
 
 canvasBG.element.width = canvasWidth;
@@ -18,10 +19,12 @@ canvasBG.element.height = canvasHeight;
 canvasFG.element.width = canvasWidth;
 canvasFG.element.height = canvasHeight;
 
+const layers = {background: canvasBG, highlight: canvasHL, foreground: canvasFG};
+
 const galleon = document.getElementById("galleon") as CanvasImageSource;
 const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 
-const board = new BoardBuilder(canvasBG, canvasFG).build(
+const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   features,
   {width: canvasBG.element.width, height: canvasBG.element.height},
   {galleon: galleon, brigantine: sailboat});
