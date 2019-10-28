@@ -11,6 +11,7 @@ class Ship implements Moveable {
   public carriesGold: boolean;
 
   public HP: number;
+  public maxHP: number;
 
   private readonly HP_VALUES: Record<ShipType, number> = {
     galleon: 30,
@@ -30,6 +31,7 @@ class Ship implements Moveable {
     this.carriesGold = carriesGold;
     this.status = ShipStatus.ready;
 
+    this.maxHP = this.HP_VALUES[type];
     this.HP = this.HP_VALUES[type];
   }
 

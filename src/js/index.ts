@@ -31,7 +31,7 @@ const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
 const game = new GameBuilder().build(board, ships);
 
 game.telemetry.switchOn();
-if (game.telemetry.working) { board.drawGrid(); }
+// if (game.telemetry.working) { board.drawGrid(); }
 
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 

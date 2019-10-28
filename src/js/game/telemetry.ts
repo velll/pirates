@@ -21,9 +21,11 @@ class Telemetry implements Reportable {
   }
 
   public report(turn: Turn) {
-    document.getElementById("turn-no").innerText = turn.no.toString();
-    document.getElementById("active-ship").innerText = turn.ship.name;
-    document.getElementById("active-fleet").innerText = turn.ship.fleet;
+    document.getElementById("telemetry-turn-no").innerText = turn.no.toString();
+    document.getElementById("telemetry-active-ship").innerText = turn.ship.name;
+    document.getElementById("telemetry-active-fleet").innerText = turn.ship.fleet;
+    document.getElementById("telemetry-HP").innerText = turn.ship.HP.toString();
+    document.getElementById("telemetry-max-HP").innerText = turn.ship.maxHP.toString();
   }
 }
 

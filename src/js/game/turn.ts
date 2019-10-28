@@ -2,6 +2,7 @@ import { Moveable } from '../game';
 import { Coordinates, Move } from '../lib/coordinates';
 
 import { findIndex, isMatch } from 'lodash';
+import { includes } from '../lib/includes';
 
 class Turn {
   public no: number;
@@ -9,16 +10,10 @@ class Turn {
   public move: Move;
   public shot: Move;
 
-  public availableForMove: Coordinates[];
-  public availableForShot: Coordinates[];
-
   constructor(no: number, ship: Moveable) {
     this.no = no;
     this.ship = ship;
     this.move = {from: ship.coordinates, to: {x: -1, y: -1}};
-
-    this.availableForMove = this.findCellsForMove();
-    this.availableForShot = this.findCellsForShot();
   }
 
   public makeMove(to: Coordinates) {
@@ -31,12 +26,13 @@ class Turn {
 
   // a move is valid if "to" is in the list of available moves
   public isValidMove(to: Coordinates): boolean {
-    return findIndex(this.availableForMove, (cell) => {
-             return isMatch(cell, to);
-           }) > -1;
+    return includes(this.getCellsForMove(), to);
+  }
+  public isValidShot(at: Coordinates): boolean {
+    return includes(this.getCellsForShot(), at);
   }
 
-  private findCellsForMove(): Coordinates[] {
+  public getCellsForMove(): Coordinates[] {
     // for now just 8 cells around the ship are available
     return [
       {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
@@ -51,9 +47,54 @@ class Turn {
     ];
   }
 
-  private findCellsForShot(): Coordinates[] {
-    // same as moves for now
-    return this.findCellsForMove();
+  public getCellsForShot(): Coordinates[] {
+    if (this.ship.type == "brigantine") {
+      return  [
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x,     y: this.ship.coordinates.y - 1},
+        // this.ship.coordinates is not available
+        {x: this.ship.coordinates.x,     y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 1}
+      ];
+    } else if (this.ship.type == "galleon") {
+      return [
+        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y - 2},
+        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y + 2},
+
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 2},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 2},
+
+        {x: this.ship.coordinates.x, y: this.ship.coordinates.y - 2},
+        {x: this.ship.coordinates.x, y: this.ship.coordinates.y - 1},
+        // this.ship.coordinates is not available
+        {x: this.ship.coordinates.x, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x, y: this.ship.coordinates.y + 2},
+
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 2},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 2},
+
+        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y - 2},
+        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y - 1},
+        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y},
+        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y + 1},
+        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y + 2}
+      ];
+    } else {
+      throw Error("Unknown ship type " + this.ship.type);
+    }
   }
 }
 

@@ -26,7 +26,6 @@ class Board {
   private shipModels: ShipModelsDict;
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
-  private readonly HIGHLIGHT_CELL_COLOR = "rgba(0,102,204, 0.5)";
 
   constructor(
     layers: Layers,
@@ -72,12 +71,12 @@ class Board {
     }
   }
 
-  public highlightCell(coordinates: Coordinates) {
-    this.drawCell(this.layers.highlight, coordinates, this.HIGHLIGHT_CELL_COLOR);
+  public highlightCell(coordinates: Coordinates, color: string) {
+    this.drawCell(this.layers.highlight, coordinates, color);
   }
 
-  public highlightCells(coords: Coordinates[]) {
-    each(coords, (pair) => { this.highlightCell(pair); });
+  public highlightCells(coordsList: Coordinates[], color: string) {
+    each(coordsList, (pair) => { this.highlightCell(pair, color); });
   }
 
   // *************************
