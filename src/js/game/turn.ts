@@ -1,7 +1,6 @@
 import { Moveable } from '../game';
 import { Coordinates, Move } from '../lib/coordinates';
 
-import { findIndex, isMatch } from 'lodash';
 import { includes } from '../lib/includes';
 
 class Turn {
@@ -48,53 +47,7 @@ class Turn {
   }
 
   public getCellsForShot(): Coordinates[] {
-    if (this.ship.type == "brigantine") {
-      return  [
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x,     y: this.ship.coordinates.y - 1},
-        // this.ship.coordinates is not available
-        {x: this.ship.coordinates.x,     y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 1}
-      ];
-    } else if (this.ship.type == "galleon") {
-      return [
-        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y - 2},
-        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x - 2, y: this.ship.coordinates.y + 2},
-
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 2},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 2},
-
-        {x: this.ship.coordinates.x, y: this.ship.coordinates.y - 2},
-        {x: this.ship.coordinates.x, y: this.ship.coordinates.y - 1},
-        // this.ship.coordinates is not available
-        {x: this.ship.coordinates.x, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x, y: this.ship.coordinates.y + 2},
-
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 2},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 2},
-
-        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y - 2},
-        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y - 1},
-        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y},
-        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y + 1},
-        {x: this.ship.coordinates.x + 2, y: this.ship.coordinates.y + 2}
-      ];
-    } else {
-      throw Error("Unknown ship type " + this.ship.type);
-    }
+    return this.ship.getShootingRange();
   }
 }
 

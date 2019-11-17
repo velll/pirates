@@ -48,6 +48,57 @@ class Ship implements Moveable {
       this.status = ShipStatus.sunk;
     }
   }
+
+  public getShootingRange(): Coordinates[] {
+    if (this.type == ShipType.brigantine) {
+      return  [
+        {x: this.coordinates.x - 1, y: this.coordinates.y - 1},
+        {x: this.coordinates.x - 1, y: this.coordinates.y},
+        {x: this.coordinates.x - 1, y: this.coordinates.y + 1},
+        {x: this.coordinates.x,     y: this.coordinates.y - 1},
+        // this.coordinates is not available
+        {x: this.coordinates.x,     y: this.coordinates.y + 1},
+        {x: this.coordinates.x + 1, y: this.coordinates.y - 1},
+        {x: this.coordinates.x + 1, y: this.coordinates.y},
+        {x: this.coordinates.x + 1, y: this.coordinates.y + 1}
+      ];
+    } else if (this.type == ShipType.galleon) {
+      return [
+        {x: this.coordinates.x - 2, y: this.coordinates.y - 2},
+        {x: this.coordinates.x - 2, y: this.coordinates.y - 1},
+        {x: this.coordinates.x - 2, y: this.coordinates.y},
+        {x: this.coordinates.x - 2, y: this.coordinates.y + 1},
+        {x: this.coordinates.x - 2, y: this.coordinates.y + 2},
+
+        {x: this.coordinates.x - 1, y: this.coordinates.y - 2},
+        {x: this.coordinates.x - 1, y: this.coordinates.y - 1},
+        {x: this.coordinates.x - 1, y: this.coordinates.y},
+        {x: this.coordinates.x - 1, y: this.coordinates.y + 1},
+        {x: this.coordinates.x - 1, y: this.coordinates.y + 2},
+
+        {x: this.coordinates.x, y: this.coordinates.y - 2},
+        {x: this.coordinates.x, y: this.coordinates.y - 1},
+        // this.coordinates is not available
+        {x: this.coordinates.x, y: this.coordinates.y + 1},
+        {x: this.coordinates.x, y: this.coordinates.y + 2},
+
+        {x: this.coordinates.x + 1, y: this.coordinates.y - 2},
+        {x: this.coordinates.x + 1, y: this.coordinates.y - 1},
+        {x: this.coordinates.x + 1, y: this.coordinates.y},
+        {x: this.coordinates.x + 1, y: this.coordinates.y + 1},
+        {x: this.coordinates.x + 1, y: this.coordinates.y + 2},
+
+        {x: this.coordinates.x + 2, y: this.coordinates.y - 2},
+        {x: this.coordinates.x + 2, y: this.coordinates.y - 1},
+        {x: this.coordinates.x + 2, y: this.coordinates.y},
+        {x: this.coordinates.x + 2, y: this.coordinates.y + 1},
+        {x: this.coordinates.x + 2, y: this.coordinates.y + 2}
+      ];
+    } else {
+      throw Error("Unknown ship type " + this.type);
+    }
+
+  }
 }
 
 enum ShipType {

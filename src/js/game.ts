@@ -71,7 +71,8 @@ class Game {
     this.turns[size(this.turns)] = turn;
 
     this.overlay.highlightMoves(turn.getCellsForMove());
-    this.overlay.highlightTargets(this.getHostilesInRange(turn.getCellsForShot()));
+    this.overlay.highlightTargets(
+      this.getHostilesInRange(ship.getShootingRange()));
 
     this.telemetry.report(this.getCurrentTurn());
   }
@@ -193,6 +194,7 @@ interface Moveable {
 
   move(where: Coordinates): void;
   damage(dmg: number): void;
+  getShootingRange(): Coordinates[];
 }
 
 interface Reportable {
