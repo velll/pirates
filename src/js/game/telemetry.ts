@@ -26,6 +26,8 @@ class Telemetry implements Reportable {
     document.getElementById("telemetry-active-fleet").innerText = turn.ship.fleet;
     document.getElementById("telemetry-HP").innerText = turn.ship.HP.toString();
     document.getElementById("telemetry-max-HP").innerText = turn.ship.maxHP.toString();
+    document.getElementById("telemetry-wind").innerText = turn.wind.getName();
+    document.getElementById("telemetry-wind-force").innerText = turn.wind.getForce();
   }
 }
 

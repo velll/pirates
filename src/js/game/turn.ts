@@ -2,16 +2,20 @@ import { Moveable } from '../game';
 import { Coordinates, Move } from '../lib/coordinates';
 
 import { includes } from '../lib/includes';
+import { Wind } from './wind';
 
 class Turn {
   public no: number;
   public ship: Moveable;
+  public wind: Wind;
+
   public move: Move;
   public shot: Move;
 
-  constructor(no: number, ship: Moveable) {
+  constructor(no: number, ship: Moveable, wind: Wind) {
     this.no = no;
     this.ship = ship;
+    this.wind = wind;
     this.move = {from: ship.coordinates, to: {x: -1, y: -1}};
   }
 

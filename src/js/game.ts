@@ -7,6 +7,7 @@ import { Overlay } from './game/overlay';
 import { each, last, size, isEqual, filter, map } from 'lodash';
 import { includes } from './lib/includes';
 import { assert } from './lib/assert';
+import { WindGenerator } from "./game/wind-generator";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -19,6 +20,7 @@ class Game {
 
   private turns: Turn[];
   private overlay: Overlay;
+  private windGen: WindGenerator;
 
   private readonly CADIZ: Coordinates = {x: 5, y: 21};
   private readonly SHOT_DAMAGE = 10;
@@ -32,6 +34,7 @@ class Game {
     this.turns = [];
 
     this.overlay = new Overlay(board);
+    this.windGen = new WindGenerator();
   }
 
   public moveShip(ship: Moveable, to: Coordinates) {
@@ -67,7 +70,7 @@ class Game {
     const turnNo = size(this.turns);
     const ship = this.ships[turnNo % size(this.ships)];
 
-    const turn = new Turn(turnNo, ship);
+    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind());
     this.turns[size(this.turns)] = turn;
 
     this.overlay.highlightMoves(turn.getCellsForMove());
