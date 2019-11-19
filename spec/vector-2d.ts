@@ -1,10 +1,10 @@
 import { Vector2d } from '../src/js/lib/vector-2d';
 
-let verticalVector = new Vector2d(0, 1);
+let verticalVector = new Vector2d({x: 0, y: 1});
 
-let verticalRotatedBy90 = new Vector2d(-1, 0);
-let verticalRotatedBy180 = new Vector2d(0, -1);
-let verticalRotatedBy45 = new Vector2d(-0.707, 0.707);
+let verticalRotatedBy90 = new Vector2d({x: -1, y: 0});
+let verticalRotatedBy180 = new Vector2d({x: 0, y: -1});
+let verticalRotatedBy45 = new Vector2d({x: -1, y: 1});
 
 test('vertical vector can be turned by 90 deg', () => {
   const rotated = verticalVector.rotate(90);
@@ -22,11 +22,11 @@ test('vertical vector can be turned by 45 deg', () => {
   expect(rotated).toEqual(verticalRotatedBy45);
 });
 
-let diagonalVector = new Vector2d(1, 1);
+let diagonalVector = new Vector2d({x: 1, y: 1});
 
-const diagonalRotatedBy90 = new Vector2d(-1, 1);
-const diagonalRotatedBy180 = new Vector2d(-1, -1);
-const diagonalRotatedBy45 = new Vector2d(0, 1.414);
+const diagonalRotatedBy90 = new Vector2d({x: -1, y: 1});
+const diagonalRotatedBy180 = new Vector2d({x: -1, y: -1});
+const diagonalRotatedBy45 = new Vector2d({x: 0, y: 1});
 
 test('diagonal vector can be turned by 90 deg', () => {
   const rotated = diagonalVector.rotate(90);
