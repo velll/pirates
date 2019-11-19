@@ -1,11 +1,14 @@
 import { Features, MapConfig } from '../src/js/board/gamemap';
-import { Cell } from '../src/js/board/cell';
+import { Coordinates } from '../src/js/lib/coordinates';
 
 import { GameMap } from '../src/js/board/gamemap';
 
 const features: Features = {
-  rocks: [ new Cell(1, 1) ],
-  ports: [ new Cell(5, 10), new Cell(20, 15) ]
+  rocks: [ {x: 1, y: 1} ],
+  ports: [ 
+    {x: 5, y: 10,  name: "Plymouth", fleet: "British"},
+    {x: 20, y: 15, name: "New York", fleet: "American"} 
+  ]
 };
 
 const mapConfig: MapConfig = {

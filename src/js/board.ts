@@ -49,6 +49,9 @@ class Board {
   // **************
   // cells and grid
   // **************
+  public isPortOf(cell: Coordinates, fleet: string) {
+    return this.map.isPortOf(cell, fleet);
+  }
 
   public drawCell(layer: Drawable, coordinates: Coordinates, color: string) {
     const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});

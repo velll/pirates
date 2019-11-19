@@ -9,6 +9,7 @@ import { includes } from './lib/includes';
 import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
 import { Wind } from "./game/wind";
+import { GameMap } from "./board/gamemap";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -161,24 +162,20 @@ class Game {
   private isGameOver(): boolean {
     const currentShip = this.getCurrentShip();
 
-    if (!currentShip.carriesGold) {
+    if (!currentShip.carriesGold) { return false; }
+
+    // To win a fleet must bring the gold to their own port
+    if (this.board.isPortOf(currentShip.coordinates, currentShip.fleet)) {
+      // But Spaniards need to bring it to a specific port: Cadiz
+      if (currentShip.fleet == "Spaniards") {
+        return (GameMap.isSameCell(currentShip.coordinates, this.CADIZ));
+      // For the pirates — any port will do
+      } else {
+        return true;
+      }
+    } else {
       return false;
     }
-
-    if (currentShip.fleet == "Spaniards") {
-      if (isEqual(currentShip.coordinates, this.CADIZ)) {
-        return true;
-      }
-    }
-
-    if (currentShip.fleet == "Pirates") {
-      // FIXME: win condition for pirates is different
-      if (isEqual(currentShip.coordinates, this.CADIZ)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   private congratulate(fleet: string) {
