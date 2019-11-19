@@ -28,6 +28,8 @@ const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   config.map,
   config.grid);
 
+board.drawPorts();
+
 const game = new GameBuilder().build(board, ships);
 
 game.telemetry.switchOn();

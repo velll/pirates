@@ -59,6 +59,10 @@ class Board {
     layer.drawSquare(pos, this.grid.cellSize, color);
   }
 
+  public drawPorts(){
+    this.map.getPorts().forEach(port => { this.drawPort(port); })
+  }
+
   public drawGrid() {
     const cellSize = this.grid.cellSize;
     const layer = this.layers.background;
@@ -73,6 +77,10 @@ class Board {
       }
     }
   }
+
+  // **********************
+  // Overlay
+  // **********************
 
   public highlightCell(coordinates: Coordinates, color: string) {
     this.drawCell(this.layers.highlight, coordinates, color);
@@ -110,6 +118,22 @@ class Board {
     const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
 
     this.layers.background.drawText(text, offsettedPosition);
+  }
+
+  public drawPort(coordinates: Coordinates) {
+    const layer = this.layers.background;
+    const color = "rgba(204,204,204, 0.8)"
+    const offset = 0.1;
+    const size = this.grid.cellSize;
+
+    const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
+
+    layer.drawSquare(pos, size, color);
+
+    const offsettedPosition = {left: pos.left + size * offset, top: pos.top + size * offset };
+    const offsettedWidth = this.grid.cellSize * (1 - offset * 2);
+    
+    layer.drawCross(offsettedPosition, offsettedWidth)
   }
 
   // *********************
@@ -154,6 +178,8 @@ interface Drawable {
   drawSquare(pos: Position, width: number, color: string): void;
   drawImage(image: CanvasImageSource, pos: Position, size: number): void;
   drawText(text: string, pos: Position): void;
+  drawLine(start: Position, finish: Position): void;
+  drawCross(pos: Position, width: number): void;
   clear(position: Position, dimensions: Dimensions): void;
   clearAll(): void;
 }

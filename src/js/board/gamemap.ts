@@ -39,6 +39,10 @@ class GameMap {
     return this.getFeature({x: coords.x, y: coords.y});
   }
 
+  public getPorts(): Coordinates[] {
+    return this.features.ports;
+  }
+
   public isPortOf(cell: Coordinates, fleet: string) {
     if (!this.isPort(cell)) { return false; }
 

@@ -9,6 +9,7 @@ class CanvasAdapter implements Drawable {
   private readonly TEXT_FONT: string = "15px Arial";
   private readonly TEXT_STYLE: string = "black";
   private readonly BOX_STROKE_STYLE: string = "grey";
+  private readonly LINE_STROKE_STYLE: string = "rgba(102, 102, 102, 0.8)"
 
   constructor(canvas: HTMLCanvasElement) {
     this.element = canvas;
@@ -18,6 +19,24 @@ class CanvasAdapter implements Drawable {
   public setElementDimensions(dimensions: Dimensions) {
     this.element.width = dimensions.width;
     this.element.height = dimensions.height;
+  }
+
+  public drawLine(start: Position, finish: Position) {
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = this.LINE_STROKE_STYLE;
+
+    this.ctx.moveTo(start.left, start.top);
+    this.ctx.lineTo(finish.left, finish.top);
+    this.ctx.stroke();
+
+    this.ctx.closePath();
+  }
+
+  public drawCross(pos: Position, width: number) {
+    this.drawLine(pos, {left: pos.left + width, top: pos.top + width});
+    this.drawLine(
+      {left: pos.left, top: pos.top + width},
+      {left: pos.left + width, top: pos.top});
   }
 
   public drawBox(pos: Position, dimensions: Dimensions, color: string) {
