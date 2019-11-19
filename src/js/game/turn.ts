@@ -17,17 +17,25 @@ class Turn {
     this.no = no;
     this.ship = ship;
     this.wind = wind;
-    this.move = {from: ship.coordinates, to: {x: -1, y: -1}};
+    
 
     this.cellsForMove = this.getCellsForMove();
   }
 
   public makeMove(to: Coordinates) {
-    this.move.to = to;
+    this.move = {from: this.ship.coordinates, to: to}
   }
 
   public makeShot(at: Coordinates) {
     this.shot = {from: this.ship.coordinates, to: at};
+  }
+
+  public hasMoved(): boolean {
+    return !!this.move
+  }
+
+  public hasShot(): boolean {
+    return !!this.shot
   }
 
   // a move is valid if "to" is in the list of available moves

@@ -40,11 +40,14 @@ class Game {
   }
 
   public moveShip(ship: Moveable, to: Coordinates) {
-    assert(ship == this.getCurrentTurn().ship, "cannot move ships out of turn");
+    const turn = this.getCurrentTurn();
+
+    assert(ship == turn.ship, "cannot move ships out of turn");
 
     const from = ship.coordinates;
     assert(!(from.x == to.x && from.y == to.y), "cannot move ship to the cell it's on");
 
+    turn.makeMove(to);
     ship.move(to);
     this.board.moveShip(ship.type, from, to);
 
@@ -52,21 +55,29 @@ class Game {
       this.congratulate(ship.fleet);
     }
 
-    this.turn();
+    // We made the move. If we also made the shot, then let's go for a next turn
+    if (turn.hasShot() || this.getTargets(ship).length == 0) {
+      this.nextTurn();
+    } else {
+      this.overlay.highlightTargets(this.getTargets(ship));
+    }
   }
 
   public shoot(ship: Moveable, to: Coordinates) {
     const target = this.findShipByCoordinates(to);
     target.damage(this.SHOT_DAMAGE);
 
-    this.telemetry.report(this.getCurrentTurn());
+    // We made the shot. If we also made the move, then let's go for a next turn
+    if (this.getCurrentTurn().hasMoved()) {
+      this.nextTurn();
+    }
   }
 
   public start() {
-    this.turn();
+    this.nextTurn();
   }
 
-  public turn() {
+  public nextTurn() {
     setTimeout(this.drawAllShips.bind(this), 500); // FIXME: with promises
 
     const turnNo = size(this.turns);
@@ -76,8 +87,7 @@ class Game {
     this.turns[size(this.turns)] = turn;
 
     this.overlay.highlightMoves(turn.cellsForMove);
-    this.overlay.highlightTargets(
-      this.getHostilesInRange(ship.getShootingRange()));
+    this.overlay.highlightTargets(this.getTargets(ship));
 
     this.telemetry.report(this.getCurrentTurn());
   }
@@ -130,6 +140,10 @@ class Game {
     return filter(hostilesCoordinates, (coords) => {
       return includes(range, coords);
     });
+  }
+
+  private getTargets(ship: Moveable) {
+    return this.getHostilesInRange(ship.getShootingRange());
   }
 
   private getEnemyFleet(): string {
