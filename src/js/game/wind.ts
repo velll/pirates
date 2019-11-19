@@ -20,7 +20,7 @@ class Wind {
     S:  {name: "S",  x: 0,  y: -1},
     SW: {name: "SW", x: 1,  y: -1},
     W:  {name: "W",  x: 1,  y: 0},
-    NW: {name: "NW", x: 1,  y: 1},
+    NW: {name: "NW", x: 1,  y: 1}
   };
 
   public static readonly BEARINGS = ["N", "NE", "E", "SE", "S", "SW", "W", "NE"];

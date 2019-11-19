@@ -8,6 +8,7 @@ class Turn {
   public no: number;
   public ship: Moveable;
   public wind: Wind;
+  public cellsForMove: Coordinates[];
 
   public move: Move;
   public shot: Move;
@@ -17,6 +18,8 @@ class Turn {
     this.ship = ship;
     this.wind = wind;
     this.move = {from: ship.coordinates, to: {x: -1, y: -1}};
+
+    this.cellsForMove = this.getCellsForMove();
   }
 
   public makeMove(to: Coordinates) {
@@ -29,25 +32,15 @@ class Turn {
 
   // a move is valid if "to" is in the list of available moves
   public isValidMove(to: Coordinates): boolean {
-    return includes(this.getCellsForMove(), to);
+    return includes(this.cellsForMove, to);
   }
+
   public isValidShot(at: Coordinates): boolean {
     return includes(this.getCellsForShot(), at);
   }
 
   public getCellsForMove(): Coordinates[] {
-    // for now just 8 cells around the ship are available
-    return [
-      {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y - 1},
-      {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y},
-      {x: this.ship.coordinates.x - 1, y: this.ship.coordinates.y + 1},
-      {x: this.ship.coordinates.x,     y: this.ship.coordinates.y - 1},
-      // this.ship.coordinates is not available
-      {x: this.ship.coordinates.x,     y: this.ship.coordinates.y + 1},
-      {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y - 1},
-      {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y},
-      {x: this.ship.coordinates.x + 1, y: this.ship.coordinates.y + 1}
-    ];
+    return this.ship.getMovingRange(this.wind);
   }
 
   public getCellsForShot(): Coordinates[] {

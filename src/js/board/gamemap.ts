@@ -5,6 +5,20 @@ import { Coordinates } from '../lib/coordinates';
 // GameMap holds board data — how many cells in a row/column and
 // special features of the cells
 class GameMap {
+
+  public static getCellsAround(coords: Coordinates): Coordinates[] {
+    return [
+      {x: coords.x - 1, y: coords.y - 1},
+      {x: coords.x - 1, y: coords.y},
+      {x: coords.x - 1, y: coords.y + 1},
+      {x: coords.x,     y: coords.y - 1},
+      // not the cell itself
+      {x: coords.x,     y: coords.y + 1},
+      {x: coords.x + 1, y: coords.y - 1},
+      {x: coords.x + 1, y: coords.y},
+      {x: coords.x + 1, y: coords.y + 1}
+    ];
+  }
   public rows: number;
   public columns: number;
 

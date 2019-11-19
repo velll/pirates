@@ -8,6 +8,7 @@ import { each, last, size, isEqual, filter, map } from 'lodash';
 import { includes } from './lib/includes';
 import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
+import { Wind } from "./game/wind";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -73,7 +74,7 @@ class Game {
     const turn = new Turn(turnNo, ship, this.windGen.getRandomWind());
     this.turns[size(this.turns)] = turn;
 
-    this.overlay.highlightMoves(turn.getCellsForMove());
+    this.overlay.highlightMoves(turn.cellsForMove);
     this.overlay.highlightTargets(
       this.getHostilesInRange(ship.getShootingRange()));
 
@@ -198,6 +199,7 @@ interface Moveable {
   move(where: Coordinates): void;
   damage(dmg: number): void;
   getShootingRange(): Coordinates[];
+  getMovingRange(wind: Wind): Coordinates[];
 }
 
 interface Reportable {
