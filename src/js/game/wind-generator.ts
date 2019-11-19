@@ -36,4 +36,4 @@ class WindGenerator {
   }
 }
 
-export { Wind, WindGenerator };
+export { WindGenerator };
