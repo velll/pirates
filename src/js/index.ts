@@ -35,5 +35,5 @@ game.telemetry.switchOn();
 
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 
-game.start();
 (window as any).game = game;
+game.start();
