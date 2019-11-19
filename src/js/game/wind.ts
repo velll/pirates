@@ -13,17 +13,17 @@ enum ForceScale {
 class Wind {
 
   public static readonly DIRECTIONS: Record<string, Direction> = {
-    N:  {name: "N",  x: 0,  y: -1},
-    NE: {name: "NE", x: 1,  y: -1},
-    E:  {name: "E",  x: 1,  y: 0},
-    SE: {name: "SE", x: 1,  y: 1},
-    S:  {name: "S",  x: 0,  y: 1},
-    SW: {name: "SW", x: -1, y: 1},
-    W:  {name: "W",  x: -1, y: 0},
-    WE: {name: "WE", x: -1, y: -1}
+    N:  {name: "N",  x: 0,  y: 1},
+    NE: {name: "NE", x: -1, y: 1},
+    E:  {name: "E",  x: -1, y: 0},
+    SE: {name: "SE", x: -1, y: -1},
+    S:  {name: "S",  x: 0,  y: -1},
+    SW: {name: "SW", x: 1,  y: -1},
+    W:  {name: "W",  x: 1,  y: 0},
+    NW: {name: "NW", x: 1,  y: 1},
   };
 
-  public static readonly BEARINGS = ["N", "NE", "E", "SE", "S", "SW", "W", "WE"];
+  public static readonly BEARINGS = ["N", "NE", "E", "SE", "S", "SW", "W", "NE"];
   public direction: Direction;
   public force: ForceScale;
 
