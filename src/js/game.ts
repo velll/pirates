@@ -55,17 +55,20 @@ class Game {
       this.congratulate(ship.fleet);
     }
 
+    if (!turn.hasShot()) {
+      this.overlay.highlightTargets(this.getTargets(ship));
+    };
+
     // We made the move. If we also made the shot, then let's go for a next turn
     if (turn.hasShot() || this.getTargets(ship).length == 0) {
       this.nextTurn();
-    } else {
-      this.overlay.highlightTargets(this.getTargets(ship));
     }
   }
 
-  public shoot(ship: Moveable, to: Coordinates) {
-    const target = this.findShipByCoordinates(to);
+  public shoot(at: Coordinates) {
+    const target = this.findShipByCoordinates(at);
     target.damage(this.SHOT_DAMAGE);
+    this.getCurrentTurn().makeShot(at);
 
     if (target.isWrecked()) {
       this.board.drawWreck(target.type, target.coordinates);
@@ -87,7 +90,7 @@ class Game {
     const turnNo = size(this.turns);
     const ship = this.ships[turnNo % size(this.ships)];
 
-    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind());
+    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), this.getOccupiedCells());
     this.turns[size(this.turns)] = turn;
 
     if (ship.isReady()) {
@@ -108,6 +111,12 @@ class Game {
     }
   }
 
+  public getOccupiedCells(): Coordinates[] {
+    return this.ships.filter(ship => (!ship.isSunk())).map(
+      ship => (ship.coordinates)
+    )
+  }
+
   public getCurrentTurn() {
     return last(this.turns);
   }
@@ -120,7 +129,7 @@ class Game {
     const coordinates = this.board.locateCell({left: e.offsetX, top: e.offsetY});
 
     if (this.isValidShot(coordinates)) {
-      this.shoot(this.getCurrentShip(), coordinates);
+      this.shoot(coordinates);
     } else if (this.isValidMove(coordinates)) {
       this.moveShip(this.getCurrentShip(), coordinates);
     }
@@ -191,6 +200,10 @@ class Game {
   }
 
   private isValidShot(at: Coordinates): boolean {
+    if (this.getCurrentTurn().hasShot()){
+      return false;
+    }
+
     return this.getCurrentTurn().isValidShot(at) && this.isHostileAtCoordinates(at);
   }
 

@@ -13,12 +13,14 @@ class Turn {
   public move: Move;
   public shot: Move;
 
-  constructor(no: number, ship: Moveable, wind: Wind) {
+  constructor(no: number, ship: Moveable, wind: Wind, occupiedCells: Coordinates[]) {
     this.no = no;
     this.ship = ship;
     this.wind = wind;
 
-    this.cellsForMove = this.getCellsForMove();
+    this.cellsForMove = this.getCellsForMove().filter(cell => (
+      !includes(occupiedCells, cell)
+    ));
   }
 
   public makeMove(to: Coordinates) {
