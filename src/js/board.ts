@@ -24,10 +24,14 @@ class Board {
   private shipModels: ShipModelsDict;
   private wreckModels: ShipModelsDict;
 
-  private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
+  private readonly SHIP_MODEL_TO_CELL_RATIO = 0.8;
+
   private readonly PORT_MODEL_TO_CELL_RATIO = 0.8;
   private readonly PORT_FLAG_TO_CELL_RATIO = 0.5;
   private readonly PORT_FLAG_TO_CELL_OFFSET = 0.25;
+
+  private readonly HP_BAR_WIDTH_TO_CELL_RATIO = 0.05;
+  private readonly SHIP_TO_HP_BAR_OFFSET = 0.05;
 
   constructor(
     layers: Layers,
@@ -98,10 +102,14 @@ class Board {
   // dynamic stuff (ships etc)
   // *************************
 
-  public drawShip(type: string, coordinates: Coordinates, wreck = false) {
+  public drawShip(type: string, coordinates: Coordinates, wreck = false, hitPoints: HitPoints = null) {
     const shipView = this.buildShipView(type, coordinates, wreck);
 
     this.layers.foreground.drawImage(shipView.model, shipView.position, shipView.size);
+
+    if (hitPoints) {
+      this.drawHPBar(shipView.position, shipView.size, hitPoints);
+    }
   }
 
   public drawWreck(type: string, coordinates: Coordinates) {
@@ -116,6 +124,7 @@ class Board {
     const finishShipView = this.buildShipView(type, to);
 
     this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
+    this.removeShip(from);
   }
 
   public removeShip(coordinates: Coordinates) {
@@ -153,6 +162,21 @@ class Board {
   // *********************
   // dynamic stuff (ships)
   // *********************
+
+  private drawHPBar(shipPosition: Position, barWidth: number, HP: HitPoints) {
+    const start = {left: shipPosition.left,
+                   top: shipPosition.top +
+                    this.grid.cellSize * (this.SHIP_MODEL_TO_CELL_RATIO + this.SHIP_TO_HP_BAR_OFFSET)};
+    const green = Math.round(barWidth * HP.current / HP.max);
+
+    const finish = {left: start.left + barWidth, top: start.top};
+    const lineWidth = this.grid.cellSize * this.HP_BAR_WIDTH_TO_CELL_RATIO;
+
+    this.layers.foreground.drawLine(start, {left: start.left + green, top: start.top}, "green", lineWidth);
+    if (HP.current != HP.max) {
+      this.layers.foreground.drawLine({left: start.left + green, top: start.top}, finish, "red", lineWidth);
+    }
+  }
 
   private getShipSize() {
     return this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
@@ -206,7 +230,7 @@ interface Drawable {
   drawSquare(pos: Position, width: number, color: string): void;
   drawImage(image: CanvasImageSource, pos: Position, size: number): void;
   drawText(text: string, pos: Position): void;
-  drawLine(start: Position, finish: Position): void;
+  drawLine(start: Position, finish: Position, color?: string, width?: number): void;
   drawCross(pos: Position, width: number): void;
   clear(position: Position, dimensions: Dimensions): void;
   clearSquare(pos: Position, width: number): void;
@@ -223,6 +247,11 @@ interface ShipView {
   model: CanvasImageSource;
   position: Position;
   size: number;
+}
+
+interface HitPoints {
+  max: number;
+  current: number;
 }
 
 export { Board, Drawable, ShipModelsDict, Layers};

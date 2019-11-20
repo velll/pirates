@@ -60,6 +60,10 @@ class Ship implements Moveable {
   public isFriendlyTo(other: Ship): boolean { return this.fleet == other.fleet; }
   public isHostileTo(other: Ship): boolean { return !this.isFriendlyTo(other); }
 
+  public getHitPoints() {
+    return {current: this.HP, max: this.maxHP};
+  }
+
   // I'm not proud of this
   public getMovingRange(wind: Wind): Coordinates[] {
     const where  = this.coordinates;

@@ -67,9 +67,7 @@ class Game {
     target.damage(this.SHOT_DAMAGE);
     this.getCurrentTurn().makeShot(at);
 
-    if (target.isWrecked()) {
-      this.board.drawWreck(target.type, target.coordinates);
-    }
+    this.board.drawShip(target.type, target.coordinates, target.isWrecked(), target.getHitPoints());
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (this.getCurrentTurn().hasMoved()) { this.nextTurn(); }
@@ -172,7 +170,10 @@ class Game {
 
   private drawAllShips() {
     this.ships.filter(ship => (!ship.isSunk())).forEach(ship => (
-      this.board.drawShip(ship.type, ship.coordinates, ship.isWrecked())
+      this.board.drawShip(ship.type,
+                          ship.coordinates,
+                          ship.isWrecked(),
+                          {current: ship.HP, max: ship.maxHP})
     ));
   }
 
@@ -230,6 +231,7 @@ interface Moveable {
   damage(dmg: number): void;
   getShootingRange(): Coordinates[];
   getMovingRange(wind: Wind): Coordinates[];
+  getHitPoints(): HitPoints;
   sink(): void;
   isReady(): boolean;
   isWrecked(): boolean;
@@ -243,6 +245,11 @@ interface Reportable {
   report(turn: Turn): void;
   switchOn(): void;
   switchOff(): void;
+}
+
+interface HitPoints {
+  current: number;
+  max: number;
 }
 
 export { Game, Moveable, Reportable };

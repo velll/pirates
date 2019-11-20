@@ -21,15 +21,20 @@ class CanvasAdapter implements Drawable {
     this.element.height = dimensions.height;
   }
 
-  public drawLine(start: Position, finish: Position) {
+  public drawLine(start: Position, finish: Position, color = this.LINE_STROKE_STYLE, width = this.ctx.lineWidth) {
     this.ctx.beginPath();
-    this.ctx.strokeStyle = this.LINE_STROKE_STYLE;
+    this.ctx.strokeStyle = color;
+
+    // We're gonna need to leave it as it was before
+    const originalWidth = this.ctx.lineWidth;
+    this.ctx.lineWidth = width;
 
     this.ctx.moveTo(start.left, start.top);
     this.ctx.lineTo(finish.left, finish.top);
     this.ctx.stroke();
-
     this.ctx.closePath();
+
+    this.ctx.lineWidth = originalWidth;
   }
 
   public drawCross(pos: Position, width: number) {
