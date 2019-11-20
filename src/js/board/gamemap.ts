@@ -37,7 +37,7 @@ class GameMap {
     return this.getFeature({x: coords.x, y: coords.y});
   }
 
-  public getPorts(): Coordinates[] {
+  public getPorts(): Port[] {
     return this.features.ports;
   }
 

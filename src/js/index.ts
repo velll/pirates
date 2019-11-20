@@ -24,6 +24,15 @@ const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 const galleonWreck = document.getElementById("galleon-wreck") as CanvasImageSource;
 const sailboatWreck = document.getElementById("sailboat-wreck") as CanvasImageSource;
 
+const flags: Record<string, CanvasImageSource> = {
+  Pirates: document.getElementById("flag-pirates") as CanvasImageSource,
+  Spaniards: document.getElementById("flag-spaniards") as CanvasImageSource,
+  Dutch: document.getElementById("flag-dutch") as CanvasImageSource,
+  Portuguese: document.getElementById("flag-portuguese") as CanvasImageSource,
+  French: document.getElementById("flag-french") as CanvasImageSource,
+  British: document.getElementById("flag-british") as CanvasImageSource
+};
+
 const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   features,
   {width: canvasBG.element.width, height: canvasBG.element.height},
@@ -32,7 +41,7 @@ const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   config.map,
   config.grid);
 
-board.drawPorts();
+board.drawPorts(flags);
 
 const game = new GameBuilder().build(board, ships);
 

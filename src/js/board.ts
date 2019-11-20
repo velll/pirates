@@ -26,6 +26,8 @@ class Board {
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
   private readonly PORT_MODEL_TO_CELL_RATIO = 0.8;
+  private readonly PORT_FLAG_TO_CELL_RATIO = 0.5;
+  private readonly PORT_FLAG_TO_CELL_OFFSET = 0.25;
 
   constructor(
     layers: Layers,
@@ -72,8 +74,10 @@ class Board {
     layer.clearSquare(this.grid.getCellPosition(coordinates), this.grid.cellSize);
   }
 
-  public drawPorts() {
-    this.map.getPorts().forEach(port => { this.drawPort(port); });
+  public drawPorts(flags: Record<string, CanvasImageSource>) {
+    this.map.getPorts().forEach(port => {
+      this.drawPort(port, flags[port.fleet]);
+    });
   }
 
   public drawBoard() { this.drawGrid(); }
@@ -121,8 +125,19 @@ class Board {
   // *******************
   // static map features
   // *******************
+  private drawFlag(coordinates: Coordinates, flag: CanvasImageSource) {
+    const cellPos = this.grid.getCellPosition(coordinates);
+    const flagSize = this.grid.cellSize * this.PORT_FLAG_TO_CELL_RATIO;
 
-  private drawPort(coordinates: Coordinates) {
+    const flagPos = {left: cellPos.left + flagSize,
+                     top: cellPos.top - this.grid.cellSize * this.PORT_FLAG_TO_CELL_OFFSET};
+
+    this.layers.background.drawLine(
+      flagPos, {left: flagPos.left, top: flagPos.top + flagSize});
+    this.layers.background.drawImage(flag, flagPos, flagSize);
+  }
+
+  private drawPort(coordinates: Coordinates, flag: CanvasImageSource) {
     const layer = this.layers.background;
 
     const pos = this.grid.getCellPosition(coordinates);
@@ -132,6 +147,7 @@ class Board {
     const offsettedWidth = this.grid.cellSize * this.PORT_MODEL_TO_CELL_RATIO;
 
     layer.drawCross(offsettedPos, offsettedWidth);
+    this.drawFlag(coordinates, flag);
   }
 
   // *********************
