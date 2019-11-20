@@ -41,6 +41,13 @@ class Board {
     this.wreckModels = wreckModels;
   }
 
+  // window
+
+  public scrollTo(coordinates: Coordinates) {
+    const position = this.grid.getCellPosition(coordinates);
+    window.scrollTo(position.left, position.top);
+  }
+
   // *********************
   // Coordinate conversion
   // *********************

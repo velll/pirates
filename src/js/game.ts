@@ -94,6 +94,9 @@ class Game {
       this.overlay.highlightMoves(turn.cellsForMove);
       this.overlay.highlightTargets(this.getTargets(ship));
 
+      // FIXME: Find some better idea
+      // this.board.scrollTo(ship.coordinates);
+
       this.telemetry.report(this.getCurrentTurn());
     } else {
       if (ship.isWrecked()) {

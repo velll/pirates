@@ -5,6 +5,7 @@
 
 html {
   overflow-x: scroll;
+  scroll-behavior: smooth;
 }
 
 canvas {
