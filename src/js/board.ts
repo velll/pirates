@@ -59,8 +59,8 @@ class Board {
     layer.drawSquare(pos, this.grid.cellSize, color);
   }
 
-  public drawPorts(){
-    this.map.getPorts().forEach(port => { this.drawPort(port); })
+  public drawPorts() {
+    this.map.getPorts().forEach((port) => { this.drawPort(port); });
   }
 
   public drawGrid() {
@@ -120,9 +120,9 @@ class Board {
     this.layers.background.drawText(text, offsettedPosition);
   }
 
-  public drawPort(coordinates: Coordinates) {
+  private drawPort(coordinates: Coordinates) {
     const layer = this.layers.background;
-    const color = "rgba(204,204,204, 0.8)"
+    const color = "rgba(204,204,204, 0.8)";
     const offset = 0.1;
     const size = this.grid.cellSize;
 
@@ -132,8 +132,8 @@ class Board {
 
     const offsettedPosition = {left: pos.left + size * offset, top: pos.top + size * offset };
     const offsettedWidth = this.grid.cellSize * (1 - offset * 2);
-    
-    layer.drawCross(offsettedPosition, offsettedWidth)
+
+    layer.drawCross(offsettedPosition, offsettedWidth);
   }
 
   // *********************

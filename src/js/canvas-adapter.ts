@@ -9,7 +9,7 @@ class CanvasAdapter implements Drawable {
   private readonly TEXT_FONT: string = "15px Arial";
   private readonly TEXT_STYLE: string = "black";
   private readonly BOX_STROKE_STYLE: string = "grey";
-  private readonly LINE_STROKE_STYLE: string = "rgba(102, 102, 102, 0.8)"
+  private readonly LINE_STROKE_STYLE: string = "rgba(102, 102, 102, 0.8)";
 
   constructor(canvas: HTMLCanvasElement) {
     this.element = canvas;
