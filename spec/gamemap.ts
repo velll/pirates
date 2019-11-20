@@ -33,3 +33,36 @@ test('map should know where ports are', () => {
 test('map should not think there are ports when theres none', () => {
   expect(gameMap.getFeatureByCoords({x: 15, y: 25})).not.toEqual('port');
 });
+
+// Statics
+
+test('map should be able to check if the coordinates are the same', () => {
+  expect(GameMap.isSameCell({x: 15, y: 25}, {x:15, y: 25})).toBe(true);
+  expect(GameMap.isSameCell({x: 15, y: 25}, {x:14, y: 26})).toBe(false);
+});
+
+
+test('map should be able to find cells around a given cells', () => {
+  const cell = {x: 10, y: 10}
+  const around = [
+    {x: 9, y: 9},   {x: 10, y: 9},  {x: 11, y: 9},
+    {x: 9, y: 10},     /* no */     {x: 11, y: 10},
+    {x: 9, y: 11},  {x: 10, y: 11}, {x: 11, y: 11}
+  ];
+  
+  expect(GameMap.getCellsAround(cell)).toEqual(around);
+});
+
+test('map should be able to find 2 cells around a given cells', () => {
+  const cell = {x: 5, y: 5}
+  const around = [
+    {x: 3, y: 3}, {x: 4, y: 3}, {x: 5, y: 3}, {x: 6, y: 3}, {x: 7, y: 3},
+    {x: 3, y: 4}, {x: 4, y: 4}, {x: 5, y: 4}, {x: 6, y: 4}, {x: 7, y: 4},
+    {x: 3, y: 5}, {x: 4, y: 5},   /* no */    {x: 6, y: 5}, {x: 7, y: 5},
+    {x: 3, y: 6}, {x: 4, y: 6}, {x: 5, y: 6}, {x: 6, y: 6}, {x: 7, y: 6},
+    {x: 3, y: 7}, {x: 4, y: 7}, {x: 5, y: 7}, {x: 6, y: 7}, {x: 7, y: 7}
+  ];
+
+  expect(GameMap.getCellsAround(cell, 2)).toEqual(around);
+
+})

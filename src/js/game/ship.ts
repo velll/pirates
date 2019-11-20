@@ -21,6 +21,11 @@ class Ship implements Moveable {
     brigantine: 20
   };
 
+  private readonly SHOT_RANGE: Record<ShipType, number> = {
+    galleon: 2,
+    brigantine: 1
+  };
+
   constructor(type: ShipType,
               fleet: string,
               name: string,
@@ -101,43 +106,8 @@ class Ship implements Moveable {
   }
 
   public getShootingRange(): Coordinates[] {
-    if (this.type == ShipType.brigantine) {
-      return  GameMap.getCellsAround(this.coordinates);
-    } else if (this.type == ShipType.galleon) {
-      return [
-        {x: this.coordinates.x - 2, y: this.coordinates.y - 2},
-        {x: this.coordinates.x - 2, y: this.coordinates.y - 1},
-        {x: this.coordinates.x - 2, y: this.coordinates.y},
-        {x: this.coordinates.x - 2, y: this.coordinates.y + 1},
-        {x: this.coordinates.x - 2, y: this.coordinates.y + 2},
-
-        {x: this.coordinates.x - 1, y: this.coordinates.y - 2},
-        {x: this.coordinates.x - 1, y: this.coordinates.y - 1},
-        {x: this.coordinates.x - 1, y: this.coordinates.y},
-        {x: this.coordinates.x - 1, y: this.coordinates.y + 1},
-        {x: this.coordinates.x - 1, y: this.coordinates.y + 2},
-
-        {x: this.coordinates.x, y: this.coordinates.y - 2},
-        {x: this.coordinates.x, y: this.coordinates.y - 1},
-        // this.coordinates is not available
-        {x: this.coordinates.x, y: this.coordinates.y + 1},
-        {x: this.coordinates.x, y: this.coordinates.y + 2},
-
-        {x: this.coordinates.x + 1, y: this.coordinates.y - 2},
-        {x: this.coordinates.x + 1, y: this.coordinates.y - 1},
-        {x: this.coordinates.x + 1, y: this.coordinates.y},
-        {x: this.coordinates.x + 1, y: this.coordinates.y + 1},
-        {x: this.coordinates.x + 1, y: this.coordinates.y + 2},
-
-        {x: this.coordinates.x + 2, y: this.coordinates.y - 2},
-        {x: this.coordinates.x + 2, y: this.coordinates.y - 1},
-        {x: this.coordinates.x + 2, y: this.coordinates.y},
-        {x: this.coordinates.x + 2, y: this.coordinates.y + 1},
-        {x: this.coordinates.x + 2, y: this.coordinates.y + 2}
-      ];
-    } else {
-      throw Error("Unknown ship type " + this.type);
-    }
+    return GameMap.getCellsAround(this.coordinates,
+                                  this.SHOT_RANGE[this.type]);
   }
 }
 

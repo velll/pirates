@@ -1,22 +1,20 @@
-import { filter } from 'lodash';
+import { filter, range, flatten } from 'lodash';
 import { Coordinates } from '../lib/coordinates';
 
 // GameMap holds board data — how many cells in a row/column and
 // special features of the cells
 class GameMap {
 
-  public static getCellsAround(coords: Coordinates): Coordinates[] {
-    return [
-      {x: coords.x - 1, y: coords.y - 1},
-      {x: coords.x - 1, y: coords.y},
-      {x: coords.x - 1, y: coords.y + 1},
-      {x: coords.x,     y: coords.y - 1},
-      // not the cell itself
-      {x: coords.x,     y: coords.y + 1},
-      {x: coords.x + 1, y: coords.y - 1},
-      {x: coords.x + 1, y: coords.y},
-      {x: coords.x + 1, y: coords.y + 1}
-    ];
+  public static getCellsAround(coords: Coordinates, radius = 1): Coordinates[] {
+    const rng: number[] = range(-radius, radius + 1);
+
+    // multiply length by width to get a square of cells
+    const square = flatten(
+                     rng.map((dy) => (
+                       rng.map((dx) => ({x: coords.x + dx, y: coords.y + dy})))));
+
+    // exclude the cell in the center
+    return square.filter((el) => (!GameMap.isSameCell(el, coords)));
   }
 
   public static isSameCell(one: Coordinates, other: Coordinates): boolean {
