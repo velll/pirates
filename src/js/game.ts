@@ -111,7 +111,7 @@ class Game {
   }
 
   private findShipByCoordinates(coordinates: Coordinates): Moveable {
-    return filter(this.ships, (ship) => {
+    return filter(this.ships, ship => {
       return (ship.coordinates.x == coordinates.x && ship.coordinates.y == coordinates.y);
     })[0];
   }
@@ -133,11 +133,11 @@ class Game {
   }
 
   private getHostilesInRange(range: Coordinates[]) {
-    const hostilesCoordinates = map(this.getEnemyShips(), (ship) => {
+    const hostilesCoordinates = map(this.getEnemyShips(), ship => {
       return ship.coordinates;
     });
 
-    return filter(hostilesCoordinates, (coords) => {
+    return filter(hostilesCoordinates, coords => {
       return includes(range, coords);
     });
   }
@@ -157,11 +157,11 @@ class Game {
   }
 
   private getEnemyShips(): Moveable[] {
-    return filter(this.ships, (ship) => ship.fleet == this.getEnemyFleet());
+    return filter(this.ships, ship => ship.fleet == this.getEnemyFleet());
   }
 
   private drawAllShips() {
-    each(this.ships, (ship) => { this.board.drawShip(ship.type, ship.coordinates); });
+    each(this.ships, ship => { this.board.drawShip(ship.type, ship.coordinates); });
   }
 
   private isValidMove(to: Coordinates): boolean {

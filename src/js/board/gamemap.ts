@@ -10,11 +10,11 @@ class GameMap {
 
     // multiply length by width to get a square of cells
     const square = flatten(
-                     rng.map((dy) => (
-                       rng.map((dx) => ({x: coords.x + dx, y: coords.y + dy})))));
+                     rng.map(dy => (
+                       rng.map(dx => ({x: coords.x + dx, y: coords.y + dy})))));
 
     // exclude the cell in the center
-    return square.filter((el) => (!GameMap.isSameCell(el, coords)));
+    return square.filter(el => (!GameMap.isSameCell(el, coords)));
   }
 
   public static isSameCell(one: Coordinates, other: Coordinates): boolean {
@@ -64,14 +64,13 @@ class GameMap {
   }
 
   private getPort(cell: Coordinates): Port {
-    return this.features.ports.filter((portCell) => {
+    return this.features.ports.filter(portCell => {
              return (GameMap.isSameCell(portCell, cell));
            })[0];
   }
 
   private isFeature(cell: Coordinates, featureSet: Coordinates[]) {
-    return filter(featureSet,
-                 (featureCell) => {
+    return filter(featureSet, featureCell => {
                                    return (GameMap.isSameCell(featureCell, cell));
                                   }).length > 0;
   }

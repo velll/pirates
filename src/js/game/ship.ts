@@ -71,7 +71,7 @@ class Ship implements Moveable {
     if (this.type == ShipType.brigantine) {
       closeCells = around;
     } else {
-      closeCells = around.filter((cell) => {
+      closeCells = around.filter(cell => {
         return !(cell.x == aft.x && cell.y == aft.y);
      });
     }

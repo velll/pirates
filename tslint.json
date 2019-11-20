@@ -18,6 +18,7 @@
         "object-literal-shorthand": [true, "never"],
         "semicolon": [true, "always", "ignore-interfaces"],
         "triple-equals": false,
+        "arrow-parens": [true, "ban-single-arg-parens"],
         "trailing-comma": [
             true,
             {

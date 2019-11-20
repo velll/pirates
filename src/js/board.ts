@@ -60,7 +60,7 @@ class Board {
   }
 
   public drawPorts() {
-    this.map.getPorts().forEach((port) => { this.drawPort(port); });
+    this.map.getPorts().forEach(port => { this.drawPort(port); });
   }
 
   public drawGrid() {
@@ -87,7 +87,7 @@ class Board {
   }
 
   public highlightCells(coordsList: Coordinates[], color: string) {
-    each(coordsList, (pair) => { this.highlightCell(pair, color); });
+    each(coordsList, pair => { this.highlightCell(pair, color); });
   }
 
   // *************************
