@@ -24,6 +24,7 @@ class Board {
 
   // Dictionary of images for different ship types
   private shipModels: ShipModelsDict;
+  private wreckModels: ShipModelsDict;
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
 
@@ -31,11 +32,13 @@ class Board {
     layers: Layers,
     map: GameMap,
     grid: Grid,
-    shipModels: ShipModelsDict) {
+    shipModels: ShipModelsDict,
+    wreckModels: ShipModelsDict) {
     this.layers = layers;
     this.map = map;
     this.grid = grid;
     this.shipModels = shipModels;
+    this.wreckModels = wreckModels;
   }
 
   // *********************
@@ -57,6 +60,10 @@ class Board {
     const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
 
     layer.drawSquare(pos, this.grid.cellSize, color);
+  }
+
+  public clearCell(layer: Drawable, coordinates: Coordinates) {
+    layer.clearSquare(this.grid.getCellPosition(coordinates), this.grid.cellSize);
   }
 
   public drawPorts() {
@@ -94,10 +101,15 @@ class Board {
   // dynamic stuff (ships etc)
   // *************************
 
-  public drawShip(type: string, coordinates: Coordinates) {
-    const shipView = this.buildShipView(type, coordinates);
+  public drawShip(type: string, coordinates: Coordinates, wreck = false) {
+    const shipView = this.buildShipView(type, coordinates, wreck);
 
     this.layers.foreground.drawImage(shipView.model, shipView.position, shipView.size);
+  }
+
+  public drawWreck(type: string, coordinates: Coordinates) {
+    this.clearCell(this.layers.foreground, coordinates);
+    this.drawShip(type, coordinates, true);
   }
 
   public moveShip(type: string, from: Coordinates, to: Coordinates) {
@@ -107,6 +119,10 @@ class Board {
     const finishShipView = this.buildShipView(type, to);
 
     this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
+  }
+
+  public removeShip(coordinates: Coordinates) {
+    this.clearCell(this.layers.foreground, coordinates);
   }
 
   // *******************
@@ -144,13 +160,15 @@ class Board {
     return this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
   }
 
-  private buildShipView(type: string, coordinates: Coordinates): ShipView {
+  private buildShipView(type: string, coordinates: Coordinates, wreck = false): ShipView {
     const position = this.grid.getCellPosition(coordinates);
     const offset = this.grid.cellSize * (1 - this.SHIP_MODEL_TO_CELL_RATIO);
     const offsettedPosition = {left: position.left + offset, top: position.top + offset};
 
+    const model = wreck ? this.wreckModels[type] : this.shipModels[type];
+
     return {
-      model: this.shipModels[type],
+      model: model,
       position: offsettedPosition,
       size: this.getShipSize()
     };
@@ -181,6 +199,7 @@ interface Drawable {
   drawLine(start: Position, finish: Position): void;
   drawCross(pos: Position, width: number): void;
   clear(position: Position, dimensions: Dimensions): void;
+  clearSquare(pos: Position, width: number): void;
   clearAll(): void;
 }
 

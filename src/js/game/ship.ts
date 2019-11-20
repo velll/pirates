@@ -52,10 +52,18 @@ class Ship implements Moveable {
   public damage(dmg: number) {
     this.HP -= dmg;
 
-    if (this.HP <= 0) {
-      this.status = ShipStatus.sunk;
+    if (this.status == ShipStatus.ready && this.HP <= 0) {
+      this.status = ShipStatus.sinking;
     }
   }
+
+  public sink() {
+    this.status = ShipStatus.sunk;
+  }
+
+  public isReady(): boolean { return this.status == ShipStatus.ready; }
+  public isWrecked(): boolean { return this.status == ShipStatus.sinking; }
+  public isSunk(): boolean { return this.status == ShipStatus.sunk; }
 
   // I'm not proud of this
   public getMovingRange(wind: Wind): Coordinates[] {
@@ -118,6 +126,7 @@ enum ShipType {
 
 enum ShipStatus {
   ready,
+  sinking,
   sunk
 }
 

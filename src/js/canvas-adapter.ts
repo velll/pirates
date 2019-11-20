@@ -69,6 +69,10 @@ class CanvasAdapter implements Drawable {
     this.ctx.clearRect(position.left, position.top, dimensions.width, dimensions.height);
   }
 
+  public clearSquare(position: Position, width: number) {
+    this.clear(position, {width: width, height: width});
+  }
+
   public clearAll() {
     this.ctx.clearRect(0, 0, this.element.width, this.element.height);
   }

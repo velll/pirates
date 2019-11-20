@@ -67,6 +67,10 @@ class Game {
     const target = this.findShipByCoordinates(to);
     target.damage(this.SHOT_DAMAGE);
 
+    if (target.isWrecked()) {
+      this.board.drawWreck(target.type, target.coordinates);
+    }
+
     // We made the shot. If we also made the move, then let's go for a next turn
     if (this.getCurrentTurn().hasMoved()) {
       this.nextTurn();
@@ -86,10 +90,19 @@ class Game {
     const turn = new Turn(turnNo, ship, this.windGen.getRandomWind());
     this.turns[size(this.turns)] = turn;
 
-    this.overlay.highlightMoves(turn.cellsForMove);
-    this.overlay.highlightTargets(this.getTargets(ship));
+    if (ship.isReady()) {
+      this.overlay.highlightMoves(turn.cellsForMove);
+      this.overlay.highlightTargets(this.getTargets(ship));
 
-    this.telemetry.report(this.getCurrentTurn());
+      this.telemetry.report(this.getCurrentTurn());
+    } else {
+      if (ship.isWrecked()) {
+        ship.sink();
+        this.board.removeShip(ship.coordinates);
+      }
+
+      this.nextTurn();
+    }
   }
 
   public getCurrentTurn() {
@@ -133,7 +146,7 @@ class Game {
   }
 
   private getHostilesInRange(range: Coordinates[]) {
-    const hostilesCoordinates = map(this.getEnemyShips(), ship => {
+    const hostilesCoordinates = map(this.getReadyEnemyShips(), ship => {
       return ship.coordinates;
     });
 
@@ -160,8 +173,14 @@ class Game {
     return filter(this.ships, ship => ship.fleet == this.getEnemyFleet());
   }
 
+  private getReadyEnemyShips(): Moveable[] {
+    return this.getEnemyShips().filter(ship => (ship.isReady()));
+  }
+
   private drawAllShips() {
-    each(this.ships, ship => { this.board.drawShip(ship.type, ship.coordinates); });
+    this.ships.filter(ship => (!ship.isSunk())).forEach(ship => (
+      this.board.drawShip(ship.type, ship.coordinates, ship.isWrecked())
+    ));
   }
 
   private isValidMove(to: Coordinates): boolean {
@@ -211,6 +230,10 @@ interface Moveable {
   damage(dmg: number): void;
   getShootingRange(): Coordinates[];
   getMovingRange(wind: Wind): Coordinates[];
+  sink(): void;
+  isReady(): boolean;
+  isWrecked(): boolean;
+  isSunk(): boolean;
 }
 
 interface Reportable {

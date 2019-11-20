@@ -21,10 +21,14 @@ canvasHL.setElementDimensions(canvasDimensions);
 const galleon = document.getElementById("galleon") as CanvasImageSource;
 const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 
+const galleonWreck = document.getElementById("galleon-wreck") as CanvasImageSource;
+const sailboatWreck = document.getElementById("sailboat-wreck") as CanvasImageSource;
+
 const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   features,
   {width: canvasBG.element.width, height: canvasBG.element.height},
   {galleon: galleon, brigantine: sailboat},
+  {galleon: galleonWreck, brigantine: sailboatWreck},
   config.map,
   config.grid);
 

@@ -17,6 +17,7 @@ class BoardBuilder {
   public build(features: Features,
                initialDimensions: Dimensions,
                shipModels: ShipModelsDict,
+               wreckModels: ShipModelsDict,
                mapConfig: MapConfig,
                gridConfig: GridConfig): Board {
     const layers = {background: this.background, highlight: this.highlight, foreground: this.foreground};
@@ -24,7 +25,7 @@ class BoardBuilder {
     const map = new GameMap(mapConfig, features);
     const grid = new Grid(map, initialDimensions, gridConfig);
 
-    const board = new Board(layers, map, grid, shipModels);
+    const board = new Board(layers, map, grid, shipModels, wreckModels);
 
     return board;
   }
