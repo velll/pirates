@@ -33,3 +33,13 @@ test('grid should be able to find cell position by coordinates', () => {
 test('grid should be able to locate a cell by a point on map', () => {
   expect(grid.locateCell({left: 500, top: 500})).toEqual({x: 5, y: 3});
 });
+
+test('grid should be able to offset positions within a cell', () => {
+  expect(grid.offsetPosition({left: 100, top: 100}, {width: 10, height: 10})).toEqual(
+    {left: 110, top: 110}
+  )
+})
+
+test('grid should be able to offset positions within a cell by ratio', () => {
+  expect(grid.getOffsettedPosition({x: 0, y: 0}, 0.8)).toEqual({left: 108, top: 208})
+})

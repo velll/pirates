@@ -11,12 +11,20 @@ class Overlay {
     this.board = board;
   }
 
+  public highlightCells(cells: Coordinates[], color: string) {
+    cells.forEach(cell => this.board.highlightCell(cell, color));
+  }
+
   public highlightMoves(cells: Coordinates[]) {
-    this.board.highlightCells(cells, this.MOVE_HIGHLIGHT_COLOR);
+    this.highlightCells(cells, this.MOVE_HIGHLIGHT_COLOR);
   }
 
   public highlightTargets(cells: Coordinates[]) {
-    this.board.highlightCells(cells, this.TARGET_HIGHLIGHT_COLOR);
+    this.highlightCells(cells, this.TARGET_HIGHLIGHT_COLOR);
+  }
+
+  public clear() {
+    this.board.clearHighlight();
   }
 }
 

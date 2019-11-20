@@ -25,6 +25,7 @@ class Turn {
 
   public makeMove(to: Coordinates) {
     this.move = {from: this.ship.coordinates, to: to};
+    this.ship.move(to);
   }
 
   public makeShot(at: Coordinates) {

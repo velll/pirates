@@ -8,6 +8,7 @@ class MovingImage {
   private canvas: Drawable;
   private image: CanvasImageSource;
   private imageSize: number;
+
   private start: Position;
   private finish: Position;
 
@@ -19,23 +20,25 @@ class MovingImage {
   constructor(
     canvas: Drawable,
     image: CanvasImageSource,
-    imageSize: number,
-    start: Position,
-    finish: Position) {
-
+    imageSize: number) {
       this.canvas = canvas;
       this.image = image;
       this.imageSize = imageSize;
-      this.start = start;
-      this.finish = finish;
-
-      this.dx = (this.finish.left - this.start.left) / (this.FPS * this.duration);
-      this.dy = (this.finish.top - this.start.top) / (this.FPS * this.duration);
-
-      this.position = start;
   }
 
-  public run() {
+  public run(start: Position, finish: Position) {
+    this.start = start;
+    this.finish = finish;
+
+    this.dx = (this.finish.left - this.start.left) / (this.FPS * this.duration);
+    this.dy = (this.finish.top - this.start.top) / (this.FPS * this.duration);
+
+    this.position = start;
+
+    this.draw();
+  }
+
+  public draw() {
     // We'll flip it once we reach our finish
     let more = true;
 
@@ -54,7 +57,7 @@ class MovingImage {
     this.canvas.drawImage(this.image, this.position, this.imageSize);
 
     if (more) {
-      requestAnimationFrame(this.run.bind(this));
+      requestAnimationFrame(this.draw.bind(this));
     }
   }
 }

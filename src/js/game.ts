@@ -4,7 +4,7 @@ import { Board } from './board';
 import { Turn } from './game/turn';
 import { Overlay } from './game/overlay';
 
-import { each, last, size, isEqual, filter, map } from 'lodash';
+import { each, last, isEqual, filter, map } from 'lodash';
 import { includes } from './lib/includes';
 import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
@@ -41,23 +41,20 @@ class Game {
 
   public moveShip(ship: Moveable, to: Coordinates) {
     const turn = this.getCurrentTurn();
-
     assert(ship == turn.ship, "cannot move ships out of turn");
 
     const from = ship.coordinates;
     assert(!(from.x == to.x && from.y == to.y), "cannot move ship to the cell it's on");
 
     turn.makeMove(to);
-    ship.move(to);
     this.board.moveShip(ship.type, from, to);
 
-    if (this.isGameOver()) {
-      this.congratulate(ship.fleet);
-    }
+    if (this.isGameOver()) { this.congratulate(ship.fleet); }
 
     if (!turn.hasShot()) {
+      this.overlay.clear();
       this.overlay.highlightTargets(this.getTargets(ship));
-    };
+    }
 
     // We made the move. If we also made the shot, then let's go for a next turn
     if (turn.hasShot() || this.getTargets(ship).length == 0) {
@@ -75,25 +72,22 @@ class Game {
     }
 
     // We made the shot. If we also made the move, then let's go for a next turn
-    if (this.getCurrentTurn().hasMoved()) {
-      this.nextTurn();
-    }
+    if (this.getCurrentTurn().hasMoved()) { this.nextTurn(); }
   }
 
-  public start() {
-    this.nextTurn();
-  }
+  public start() { this.nextTurn(); }
 
   public nextTurn() {
     setTimeout(this.drawAllShips.bind(this), 500); // FIXME: with promises
 
-    const turnNo = size(this.turns);
-    const ship = this.ships[turnNo % size(this.ships)];
+    const turnNo = this.turns.length;
+    const ship = this.ships[turnNo % this.ships.length];
 
     const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), this.getOccupiedCells());
-    this.turns[size(this.turns)] = turn;
+    this.turns[this.turns.length] = turn;
 
     if (ship.isReady()) {
+      this.overlay.clear();
       this.overlay.highlightMoves(turn.cellsForMove);
       this.overlay.highlightTargets(this.getTargets(ship));
 
@@ -114,7 +108,7 @@ class Game {
   public getOccupiedCells(): Coordinates[] {
     return this.ships.filter(ship => (!ship.isSunk())).map(
       ship => (ship.coordinates)
-    )
+    );
   }
 
   public getCurrentTurn() {
@@ -141,48 +135,35 @@ class Game {
     })[0];
   }
 
-  private isFriendly(ship: Moveable): boolean {
-    return this.getCurrentShip().fleet == ship.fleet;
-  }
-
-  private isHostile(ship: Moveable): boolean {
-    return !this.isFriendly(ship);
-  }
-
-  private isHostileAtCoordinates(coordinates: Coordinates): boolean {
+  private isHostileAt(coordinates: Coordinates): boolean {
     const ship = this.findShipByCoordinates(coordinates);
 
     if (ship == null) { return false; }
 
-    return this.isHostile(ship);
-  }
-
-  private getHostilesInRange(range: Coordinates[]) {
-    const hostilesCoordinates = map(this.getReadyEnemyShips(), ship => {
-      return ship.coordinates;
-    });
-
-    return filter(hostilesCoordinates, coords => {
-      return includes(range, coords);
-    });
+    return ship.isHostileTo(this.getCurrentShip());
   }
 
   private getTargets(ship: Moveable) {
-    return this.getHostilesInRange(ship.getShootingRange());
+    const range = ship.getShootingRange();
+    const hostiles = this.getReadyEnemyShips().map(el => (el.coordinates));
+
+    return hostiles.filter(coords => (includes(range, coords)));
   }
 
-  private getEnemyFleet(): string {
-    if (this.getCurrentShip().fleet == "Spaniards") {
+  private getEnemyFleet(fleet: string): string {
+    if (fleet == "Spaniards") {
       return "Pirates";
-    } else if (this.getCurrentShip().fleet == "Pirates") {
+    } else if (fleet == "Pirates") {
       return "Spaniards";
     } else {
-      throw Error("Unknown fleet " + this.getCurrentShip().fleet);
+      throw Error("Unknown fleet " + fleet);
     }
   }
 
   private getEnemyShips(): Moveable[] {
-    return filter(this.ships, ship => ship.fleet == this.getEnemyFleet());
+    return this.ships.filter(ship => (
+      ship.fleet == this.getEnemyFleet(this.getCurrentShip().fleet)
+    ));
   }
 
   private getReadyEnemyShips(): Moveable[] {
@@ -200,16 +181,19 @@ class Game {
   }
 
   private isValidShot(at: Coordinates): boolean {
-    if (this.getCurrentTurn().hasShot()){
-      return false;
-    }
-
-    return this.getCurrentTurn().isValidShot(at) && this.isHostileAtCoordinates(at);
+    return !this.getCurrentTurn().hasShot() &&
+            this.getCurrentTurn().isValidShot(at) &&
+            this.isHostileAt(at);
   }
 
   // Win conditions — check it after every move
   private isGameOver(): boolean {
     const currentShip = this.getCurrentShip();
+
+    // Any fleet can win if all enemy ships are down
+    if (this.getReadyEnemyShips().length == 0) {
+      return true;
+    }
 
     if (!currentShip.carriesGold) { return false; }
 
@@ -250,6 +234,8 @@ interface Moveable {
   isReady(): boolean;
   isWrecked(): boolean;
   isSunk(): boolean;
+  isHostileTo(other: Moveable): boolean;
+  isFriendlyTo(other: Moveable): boolean;
 }
 
 interface Reportable {

@@ -13,17 +13,17 @@ interface GridConfig {
 class Grid {
   public cellSize: number;
 
+  public readonly COLOR_CODE: Record<string, string> = {
+    sea:  "rgba(0,102,0,0.1)",
+    rock: "rgba(255,73,73,0.5)",
+    port: "rgba(204,204,204, 0.8)"
+  };
+
   private map: GameMap;
   private config: GridConfig;
 
   private dimensions: Dimensions;
   private startsAt: {x: number, y: number};
-
-  private readonly COLOR_CODE: Record<string, string> = {
-    sea:  "rgba(0,102,0,0.1)",
-    rock: "rgba(255,73,73,0.5)",
-    port: "rgba(1,1,1,0.5)"
-  };
 
   constructor(map: GameMap,
               initialDimensions: Dimensions,
@@ -47,6 +47,16 @@ class Grid {
   public getCellPosition(coords: Coordinates): Position {
     return {left: this.startsAt.x + coords.x * this.cellSize,
             top: this.startsAt.y + coords.y * this.cellSize};
+  }
+
+  public offsetPosition(position: Position, offset: Dimensions): Position {
+    return {left: position.left + offset.width, top: position.top + offset.height};
+  }
+
+  public getOffsettedPosition(coords: Coordinates, ratio: number) {
+    const offset = this.cellSize * (1 - ratio) / 2;
+
+    return this.offsetPosition(this.getCellPosition(coords), {width: offset, height: offset});
   }
 
   public locateCell(position: Position): Coordinates {

@@ -37,7 +37,7 @@ board.drawPorts();
 const game = new GameBuilder().build(board, ships);
 
 game.telemetry.switchOn();
-// if (game.telemetry.working) { board.drawGrid(); }
+// if (game.telemetry.working) { board.drawBoard(); }
 
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 

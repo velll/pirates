@@ -7,8 +7,6 @@ import { Position } from './lib/position';
 
 import { MovingImage } from "./board/moving-image";
 
-import { each } from 'lodash';
-
 class Board {
   // Layers are just canvases
   // map and static features are rendered in Background
@@ -27,6 +25,7 @@ class Board {
   private wreckModels: ShipModelsDict;
 
   private readonly SHIP_MODEL_TO_CELL_RATIO = 0.95;
+  private readonly PORT_MODEL_TO_CELL_RATIO = 0.8;
 
   constructor(
     layers: Layers,
@@ -64,7 +63,7 @@ class Board {
   }
 
   public drawCell(layer: Drawable, coordinates: Coordinates, color: string) {
-    const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
+    const pos = this.grid.getCellPosition(coordinates);
 
     layer.drawSquare(pos, this.grid.cellSize, color);
   }
@@ -77,20 +76,7 @@ class Board {
     this.map.getPorts().forEach(port => { this.drawPort(port); });
   }
 
-  public drawGrid() {
-    const cellSize = this.grid.cellSize;
-    const layer = this.layers.background;
-
-    for (let row: number = 0; row < this.map.rows; row++) {
-      for (let col: number = 0; col < this.map.columns; col++) {
-        const color = this.grid.getColor({x: col, y: row});
-        this.drawCell(layer, {x: col, y: row}, color);
-
-        const pos = this.grid.getCellPosition({x: col, y: row});
-        this.drawCoords(pos, cellSize, {x: col, y: row});
-      }
-    }
-  }
+  public drawBoard() { this.drawGrid(); }
 
   // **********************
   // Overlay
@@ -100,8 +86,8 @@ class Board {
     this.drawCell(this.layers.highlight, coordinates, color);
   }
 
-  public highlightCells(coordsList: Coordinates[], color: string) {
-    each(coordsList, pair => { this.highlightCell(pair, color); });
+  public clearHighlight() {
+    this.layers.highlight.clearAll();
   }
 
   // *************************
@@ -136,27 +122,16 @@ class Board {
   // static map features
   // *******************
 
-  private drawCoords(pos: Position, size: number, coords: Coordinates) {
-    const text = coords.x + "," + coords.y;
-    const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
-
-    this.layers.background.drawText(text, offsettedPosition);
-  }
-
   private drawPort(coordinates: Coordinates) {
     const layer = this.layers.background;
-    const color = "rgba(204,204,204, 0.8)";
-    const offset = 0.1;
-    const size = this.grid.cellSize;
 
-    const pos = this.grid.getCellPosition({x: coordinates.x, y: coordinates.y});
+    const pos = this.grid.getCellPosition(coordinates);
+    layer.drawSquare(pos, this.grid.cellSize, this.grid.COLOR_CODE.port);
 
-    layer.drawSquare(pos, size, color);
+    const offsettedPos = this.grid.getOffsettedPosition(coordinates, this.PORT_MODEL_TO_CELL_RATIO);
+    const offsettedWidth = this.grid.cellSize * this.PORT_MODEL_TO_CELL_RATIO;
 
-    const offsettedPosition = {left: pos.left + size * offset, top: pos.top + size * offset };
-    const offsettedWidth = this.grid.cellSize * (1 - offset * 2);
-
-    layer.drawCross(offsettedPosition, offsettedWidth);
+    layer.drawCross(offsettedPos, offsettedWidth);
   }
 
   // *********************
@@ -168,27 +143,39 @@ class Board {
   }
 
   private buildShipView(type: string, coordinates: Coordinates, wreck = false): ShipView {
-    const position = this.grid.getCellPosition(coordinates);
-    const offset = this.grid.cellSize * (1 - this.SHIP_MODEL_TO_CELL_RATIO);
-    const offsettedPosition = {left: position.left + offset, top: position.top + offset};
-
+    const position = this.grid.getOffsettedPosition(coordinates, this.SHIP_MODEL_TO_CELL_RATIO);
     const model = wreck ? this.wreckModels[type] : this.shipModels[type];
 
-    return {
-      model: model,
-      position: offsettedPosition,
-      size: this.getShipSize()
-    };
+    return { model: model, position: position, size: this.getShipSize() };
   }
 
   private dragImage(image: CanvasImageSource, size: number, start: Position, finish: Position) {
-    const animation = new MovingImage(this.layers.foreground,
-                                      image,
-                                      size,
-                                      start,
-                                      finish);
+    const animation = new MovingImage(this.layers.foreground, image, size);
+    animation.run(start, finish);
+  }
 
-    animation.run();
+  // debugging shoved at the tail end of the class
+
+  private drawGrid() {
+    const cellSize = this.grid.cellSize;
+    const layer = this.layers.background;
+
+    for (let row: number = 0; row < this.map.rows; row++) {
+      for (let col: number = 0; col < this.map.columns; col++) {
+        const color = this.grid.getColor({x: col, y: row});
+        this.drawCell(layer, {x: col, y: row}, color);
+
+        const pos = this.grid.getCellPosition({x: col, y: row});
+        this.drawCoords(pos, cellSize, {x: col, y: row});
+      }
+    }
+  }
+
+  private drawCoords(pos: Position, size: number, coords: Coordinates) {
+    const text = coords.x + "," + coords.y;
+    const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
+
+    this.layers.background.drawText(text, offsettedPosition);
   }
 }
 

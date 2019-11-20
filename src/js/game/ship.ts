@@ -17,13 +17,11 @@ class Ship implements Moveable {
   public maxHP: number;
 
   private readonly HP_VALUES: Record<ShipType, number> = {
-    galleon: 30,
-    brigantine: 20
+    galleon: 30, brigantine: 20
   };
 
   private readonly SHOT_RANGE: Record<ShipType, number> = {
-    galleon: 2,
-    brigantine: 1
+    galleon: 2, brigantine: 1
   };
 
   constructor(type: ShipType,
@@ -44,26 +42,23 @@ class Ship implements Moveable {
   }
 
   public move(coordinates: Coordinates) {
-    // FIXME: check if able to move
-
     this.coordinates = coordinates;
   }
 
   public damage(dmg: number) {
     this.HP -= dmg;
-
-    if (this.status == ShipStatus.ready && this.HP <= 0) {
-      this.status = ShipStatus.sinking;
-    }
+    if (this.status == ShipStatus.ready && this.HP <= 0) { this.wreck(); }
   }
 
-  public sink() {
-    this.status = ShipStatus.sunk;
-  }
+  public wreck() { this.status = ShipStatus.sinking; }
+  public sink() { this.status = ShipStatus.sunk; }
 
   public isReady(): boolean { return this.status == ShipStatus.ready; }
   public isWrecked(): boolean { return this.status == ShipStatus.sinking; }
   public isSunk(): boolean { return this.status == ShipStatus.sunk; }
+
+  public isFriendlyTo(other: Ship): boolean { return this.fleet == other.fleet; }
+  public isHostileTo(other: Ship): boolean { return !this.isFriendlyTo(other); }
 
   // I'm not proud of this
   public getMovingRange(wind: Wind): Coordinates[] {
@@ -114,8 +109,7 @@ class Ship implements Moveable {
   }
 
   public getShootingRange(): Coordinates[] {
-    return GameMap.getCellsAround(this.coordinates,
-                                  this.SHOT_RANGE[this.type]);
+    return GameMap.getCellsAround(this.coordinates, this.SHOT_RANGE[this.type]);
   }
 }
 
