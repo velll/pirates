@@ -6,10 +6,12 @@ class CanvasAdapter implements Drawable {
   public element: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 
-  private readonly TEXT_FONT: string = "15px Arial";
-  private readonly TEXT_STYLE: string = "black";
-  private readonly BOX_STROKE_STYLE: string = "grey";
-  private readonly LINE_STROKE_STYLE: string = "rgba(102, 102, 102, 0.8)";
+  private readonly TEXT_FONT = "15px Arial";
+  private readonly TEXT_STYLE = "black";
+  private readonly BOX_STROKE_STYLE = "grey";
+  private readonly LINE_STROKE_STYLE = "rgba(102, 102, 102, 0.8)";
+  private readonly IMAGE_SHADOW_OFFSET = {x: 1, y: 1};
+  private readonly SHADOW_COLOR = "grey";
 
   constructor(canvas: HTMLCanvasElement) {
     this.element = canvas;
@@ -22,19 +24,16 @@ class CanvasAdapter implements Drawable {
   }
 
   public drawLine(start: Position, finish: Position, color = this.LINE_STROKE_STYLE, width = this.ctx.lineWidth) {
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = color;
+    this.withTmpContext(() => {
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = color;
+      this.ctx.lineWidth = width;
 
-    // We're gonna need to leave it as it was before
-    const originalWidth = this.ctx.lineWidth;
-    this.ctx.lineWidth = width;
-
-    this.ctx.moveTo(start.left, start.top);
-    this.ctx.lineTo(finish.left, finish.top);
-    this.ctx.stroke();
-    this.ctx.closePath();
-
-    this.ctx.lineWidth = originalWidth;
+      this.ctx.moveTo(start.left, start.top);
+      this.ctx.lineTo(finish.left, finish.top);
+      this.ctx.stroke();
+      this.ctx.closePath();
+    });
   }
 
   public drawCross(pos: Position, width: number) {
@@ -45,14 +44,16 @@ class CanvasAdapter implements Drawable {
   }
 
   public drawBox(pos: Position, dimensions: Dimensions, color: string) {
-    this.ctx.beginPath();
-    this.ctx.rect(pos.left, pos.top, dimensions.width, dimensions.height);
-    this.ctx.strokeStyle = this.BOX_STROKE_STYLE;
-    this.ctx.stroke();
-    this.ctx.closePath();
+    this.withTmpContext(() => {
+      this.ctx.beginPath();
+      this.ctx.rect(pos.left, pos.top, dimensions.width, dimensions.height);
+      this.ctx.strokeStyle = this.BOX_STROKE_STYLE;
+      this.ctx.stroke();
+      this.ctx.closePath();
 
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(pos.left, pos.top, dimensions.width, dimensions.height);
+      this.ctx.fillStyle = color;
+      this.ctx.fillRect(pos.left, pos.top, dimensions.width, dimensions.height);
+    });
   }
 
   public drawSquare(pos: Position, width: number, color: string) {
@@ -61,13 +62,21 @@ class CanvasAdapter implements Drawable {
 
   // assumes the Image is square, so only has one size
   public drawImage(image: CanvasImageSource, position: Position, size: number) {
-    this.ctx.drawImage(image, position.left, position.top, size, size);
+    this.withTmpContext(() => {
+      this.ctx.shadowColor = this.SHADOW_COLOR;
+      this.ctx.shadowOffsetX = this.IMAGE_SHADOW_OFFSET.x;
+      this.ctx.shadowOffsetY = this.IMAGE_SHADOW_OFFSET.y;
+
+      this.ctx.drawImage(image, position.left, position.top, size, size);
+    });
   }
 
   public drawText(text: string, pos: Position) {
-    this.ctx.font = this.TEXT_FONT;
-    this.ctx.fillStyle = this.TEXT_STYLE;
-    this.ctx.fillText(text, pos.left, pos.top);
+    this.withTmpContext(() => {
+      this.ctx.font = this.TEXT_FONT;
+      this.ctx.fillStyle = this.TEXT_STYLE;
+      this.ctx.fillText(text, pos.left, pos.top);
+    });
   }
 
   public clear(position: Position, dimensions: Dimensions) {
@@ -80,6 +89,12 @@ class CanvasAdapter implements Drawable {
 
   public clearAll() {
     this.ctx.clearRect(0, 0, this.element.width, this.element.height);
+  }
+
+  private withTmpContext(callback: () => void) {
+    this.ctx.save();
+    callback();
+    this.ctx.restore();
   }
 }
 
