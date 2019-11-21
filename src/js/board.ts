@@ -6,6 +6,7 @@ import { Dimensions } from "./lib/dimensions";
 import { Position } from './lib/position';
 
 import { MovingImage } from "./board/moving-image";
+import { Shipyard } from "./shipyard";
 
 class Board {
   // Layers are just canvases
@@ -19,6 +20,9 @@ class Board {
 
   // grid knows where to draw them
   private grid: Grid;
+
+  // shipyard knows about different ship designs
+  private shipyard: Shipyard;
 
   // Dictionary of images for different ship types
   private shipModels: ShipModelsDict;
@@ -37,13 +41,11 @@ class Board {
     layers: Layers,
     map: GameMap,
     grid: Grid,
-    shipModels: ShipModelsDict,
-    wreckModels: ShipModelsDict) {
+    shipyard: Shipyard) {
     this.layers = layers;
     this.map = map;
     this.grid = grid;
-    this.shipModels = shipModels;
-    this.wreckModels = wreckModels;
+    this.shipyard = shipyard;
   }
 
   // window
@@ -102,8 +104,10 @@ class Board {
   // dynamic stuff (ships etc)
   // *************************
 
-  public drawShip(type: string, coordinates: Coordinates, wreck = false, hitPoints: HitPoints = null) {
-    const shipView = this.buildShipView(type, coordinates, wreck);
+  public drawShip(type: string, fleet: string, coordinates: Coordinates, wreck = false, hitPoints: HitPoints = null) {
+    this.clearCell(this.layers.foreground, coordinates);
+
+    const shipView = this.buildShipView(type, fleet, coordinates, wreck);
 
     this.layers.foreground.drawImage(shipView.model, shipView.position, shipView.size);
 
@@ -112,16 +116,11 @@ class Board {
     }
   }
 
-  public drawWreck(type: string, coordinates: Coordinates) {
-    this.clearCell(this.layers.foreground, coordinates);
-    this.drawShip(type, coordinates, true);
-  }
-
-  public moveShip(type: string, from: Coordinates, to: Coordinates) {
+  public moveShip(type: string, fleet: string, from: Coordinates, to: Coordinates) {
     this.layers.highlight.clearAll();
 
-    const startShipView = this.buildShipView(type, from);
-    const finishShipView = this.buildShipView(type, to);
+    const startShipView = this.buildShipView(type, fleet, from);
+    const finishShipView = this.buildShipView(type, fleet, to);
 
     this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
     this.removeShip(from);
@@ -182,9 +181,9 @@ class Board {
     return this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
   }
 
-  private buildShipView(type: string, coordinates: Coordinates, wreck = false): ShipView {
+  private buildShipView(type: string, fleet: string, coordinates: Coordinates, wreck = false): ShipView {
     const position = this.grid.getOffsettedPosition(coordinates, this.SHIP_MODEL_TO_CELL_RATIO);
-    const model = wreck ? this.wreckModels[type] : this.shipModels[type];
+    const model = this.shipyard.findModel(fleet, type, false, wreck);
 
     return { model: model, position: position, size: this.getShipSize() };
   }

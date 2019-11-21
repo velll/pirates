@@ -7,6 +7,7 @@ import { CanvasAdapter } from './canvas-adapter';
 import { features } from "./data/map-features";
 import { ships } from "./data/ships";
 import { config } from './data/config';
+import { Shipyard } from "./shipyard";
 
 const canvasDimensions = {width: 2000, height: 1384};
 
@@ -24,6 +25,23 @@ const sailboat = document.getElementById("sailboat") as CanvasImageSource;
 const galleonWreck = document.getElementById("galleon-wreck") as CanvasImageSource;
 const sailboatWreck = document.getElementById("sailboat-wreck") as CanvasImageSource;
 
+const goldSpanishGalleon = document.getElementById("gold-galleon-spaniards") as CanvasImageSource;
+const goldPirateGalleon = document.getElementById("gold-galleon-pirates") as CanvasImageSource;
+const goldSpanishGalleonWrecked = document.getElementById("gold-ship-wreck-spaniards") as CanvasImageSource;
+const goldPirateGalleonWrecked = document.getElementById("gold-ship-wreck-pirates") as CanvasImageSource;
+
+const shipyard = new Shipyard([
+  {model: galleon, type: "galleon", fleet: "Spaniards", wreck: false, golden: false},
+  {model: sailboat, type: "brigantine", fleet: "Pirates", wreck: false, golden: false},
+  {model: galleonWreck, type: "galleon", fleet: "Spaniards", wreck: true, golden: false},
+  {model: sailboatWreck, type: "brigantine", fleet: "Pirates", wreck: true, golden: false},
+
+  {model: goldSpanishGalleon, type: "galleon", fleet: "Spaniards", wreck: false, golden: true},
+  {model: goldPirateGalleon, type: "galleon", fleet: "Pirates", wreck: false, golden: true},
+  {model: goldSpanishGalleonWrecked, type: "galleon", fleet: "Spaniards", wreck: true, golden: true},
+  {model: goldPirateGalleonWrecked, type: "galleon", fleet: "Pirates", wreck: true, golden: true}
+]);
+
 const flags: Record<string, CanvasImageSource> = {
   Pirates: document.getElementById("flag-pirates") as CanvasImageSource,
   Spaniards: document.getElementById("flag-spaniards") as CanvasImageSource,
@@ -36,8 +54,7 @@ const flags: Record<string, CanvasImageSource> = {
 const board = new BoardBuilder(canvasBG, canvasHL, canvasFG).build(
   features,
   {width: canvasBG.element.width, height: canvasBG.element.height},
-  {galleon: galleon, brigantine: sailboat},
-  {galleon: galleonWreck, brigantine: sailboatWreck},
+  shipyard,
   config.map,
   config.grid);
 
@@ -51,4 +68,5 @@ game.telemetry.switchOn();
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 
 (window as any).game = game;
+(window as any).shipyard = shipyard;
 game.start();

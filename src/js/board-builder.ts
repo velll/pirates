@@ -1,7 +1,8 @@
-import { Board, Drawable, ShipModelsDict } from "./board";
+import { Board, Drawable } from "./board";
 import { Dimensions } from "./lib/dimensions";
 import { GameMap, Features, MapConfig } from "./board/gamemap";
 import { Grid, GridConfig } from "./board/grid";
+import { Shipyard } from "./shipyard";
 
 class BoardBuilder {
   private background: Drawable;
@@ -16,8 +17,7 @@ class BoardBuilder {
 
   public build(features: Features,
                initialDimensions: Dimensions,
-               shipModels: ShipModelsDict,
-               wreckModels: ShipModelsDict,
+               shipyard: Shipyard,
                mapConfig: MapConfig,
                gridConfig: GridConfig): Board {
     const layers = {background: this.background, highlight: this.highlight, foreground: this.foreground};
@@ -25,7 +25,7 @@ class BoardBuilder {
     const map = new GameMap(mapConfig, features);
     const grid = new Grid(map, initialDimensions, gridConfig);
 
-    const board = new Board(layers, map, grid, shipModels, wreckModels);
+    const board = new Board(layers, map, grid, shipyard);
 
     return board;
   }
