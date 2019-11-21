@@ -24,7 +24,7 @@ class Game {
   private overlay: Overlay;
   private windGen: WindGenerator;
 
-  private readonly CADIZ: Coordinates = {x: 5, y: 21};
+  private readonly CADIZ: Coordinates = {x: 37, y: 9};
   private readonly SHOT_DAMAGE = 10;
 
   constructor(board: Board, ships: Moveable[], telemetry: Reportable) {

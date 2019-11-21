@@ -24,6 +24,7 @@ const ports: Port[] = map([
  [37, 1,  "Lands End",          "Pirates"],
  [36, 5,  "Bay of Biscay",      "Spaniards"],
  [35, 8,  "Lisbon",             "Portuguese"],
+ [37, 9,  "Cadiz",              "Spaniards"],
  [28, 8,  "Azores",             "Portuguese"],
  [32, 11, "Madeira",            "Portuguese"],
  [31, 13, "Canary island",      "Spaniards"],
