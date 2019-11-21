@@ -27,7 +27,7 @@ class ShipView implements Drawable {
     layer.clearSquare(position, cellSize);
     layer.drawImage(this.getIcon(), iconPosition, this.getIconSize(cellSize));
 
-    this.drawHPBar(layer, position, iconSize, cellSize);
+    this.drawHPBar(layer, iconPosition, iconSize, cellSize);
   }
 
   public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void {

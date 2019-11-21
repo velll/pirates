@@ -26,7 +26,7 @@ class CanvasAdapter implements Kanvas {
   private readonly TEXT_STYLE = "black";
   private readonly BOX_STROKE_STYLE = "grey";
   private readonly LINE_STROKE_STYLE = "rgba(102, 102, 102, 0.8)";
-  private readonly IMAGE_SHADOW_OFFSET = {x: 1, y: 1};
+  private readonly IMAGE_SHADOW_OFFSET = {x: 3, y: 3};
   private readonly SHADOW_COLOR = "grey";
 
   constructor(canvas: HTMLCanvasElement) {
