@@ -8,11 +8,7 @@ class Shipyard {
   public findModel(fleet: string, type: string, golden = false, wreck = false) {
     const order = {fleet: fleet, type: type, golden: golden};
 
-    if (wreck) {
-      return this.getDesigns(true).filter(el => this.isMatch(el, order))[0].model;
-    } else {
-      return this.getDesigns().filter(el => this.isMatch(el, order))[0].model;
-    }
+    return this.getDesigns(wreck).filter(el => this.isMatch(el, order))[0].model;
   }
 
   public findLiveModel(fleet: string, type: string, golden = false) {
