@@ -25,6 +25,8 @@ class Game {
   private overlay: Overlay;
   private windGen: WindGenerator;
 
+  private goldenShip: Moveable;
+
   private readonly CADIZ: Coordinates = {x: 37, y: 9};
   private readonly SHOT_DAMAGE = 10;
 
@@ -38,6 +40,7 @@ class Game {
 
     this.overlay = new Overlay(board);
     this.windGen = new WindGenerator();
+    this.goldenShip = ships.filter(ship => (ship.carriesGold))[0];
   }
 
   public moveShip(ship: Moveable, to: Coordinates) {
@@ -49,6 +52,10 @@ class Game {
 
     turn.makeMove(to);
     this.board.moveShip(ship.view, from, to);
+
+    if (this.canCaptureGold()) {
+      this.captureGold();
+    }
 
     if (this.isGameOver()) { this.congratulate(ship.fleet); }
 
@@ -69,6 +76,10 @@ class Game {
     this.getCurrentTurn().makeShot(at);
 
     this.board.drawShip(target.view, target.coordinates);
+
+    if (this.canCaptureGold()) {
+      this.captureGold();
+    }
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (this.getCurrentTurn().hasMoved()) { this.nextTurn(); }
@@ -129,15 +140,15 @@ class Game {
   }
 
   private findShipByCoordinates(coordinates: Coordinates): Moveable {
-    return filter(this.ships, ship => {
-      return (ship.coordinates.x == coordinates.x && ship.coordinates.y == coordinates.y);
-    })[0];
+    return this.ships.filter(ship => (
+      (ship.coordinates.x == coordinates.x && ship.coordinates.y == coordinates.y)
+    ))[0];
   }
 
   private isHostileAt(coordinates: Coordinates): boolean {
     const ship = this.findShipByCoordinates(coordinates);
 
-    if (ship == null) { return false; }
+    if (ship == null || !ship.isReady()) { return false; }
 
     return ship.isHostileTo(this.getCurrentShip());
   }
@@ -185,22 +196,30 @@ class Game {
             this.isHostileAt(at);
   }
 
+  private canCaptureGold(): boolean {
+    return this.goldenShip.isWrecked() &&
+           includes(GameMap.getCellsAround(this.getCurrentShip().coordinates),
+                   this.goldenShip.coordinates);
+  }
+
+  private captureGold() {
+    this.goldenShip.fleet = this.getCurrentShip().fleet;
+    this.goldenShip.repair();
+    this.board.drawShip(this.goldenShip.view, this.goldenShip.coordinates);
+  }
+
   // Win conditions — check it after every move
   private isGameOver(): boolean {
-    const currentShip = this.getCurrentShip();
-
     // Any fleet can win if all enemy ships are down
     if (this.getReadyEnemyShips().length == 0) {
       return true;
     }
 
-    if (!currentShip.carriesGold) { return false; }
-
     // To win a fleet must bring the gold to their own port
-    if (this.board.isPortOf(currentShip.coordinates, currentShip.fleet)) {
+    if (this.board.isPortOf(this.goldenShip.coordinates, this.goldenShip.fleet)) {
       // But Spaniards need to bring it to a specific port: Cadiz
-      if (currentShip.fleet == "Spaniards") {
-        return (GameMap.isSameCell(currentShip.coordinates, this.CADIZ));
+      if (this.goldenShip.fleet == "Spaniards") {
+        return (GameMap.isSameCell(this.goldenShip.coordinates, this.CADIZ));
       // For the pirates — any port will do
       } else {
         return true;
@@ -232,9 +251,11 @@ interface Moveable {
   getMovingRange(wind: Wind): Coordinates[];
   getHitPoints(): HitPoints;
   sink(): void;
+  repair(): void;
   isReady(): boolean;
   isWrecked(): boolean;
   isSunk(): boolean;
+  isGolden(): boolean;
   isHostileTo(other: Moveable): boolean;
   isFriendlyTo(other: Moveable): boolean;
 }

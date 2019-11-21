@@ -65,7 +65,7 @@ class ShipView implements Drawable {
   private getIcon(): CanvasImageSource {
     return this.icons.filter(icon => (
       icon.fleet == this.model.fleet &&
-      icon.golden == this.model.carriesGold &&
+      icon.golden == this.model.isGolden() &&
       icon.wreck == this.model.isWrecked()
     ))[0].icon;
   }

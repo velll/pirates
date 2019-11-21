@@ -11,14 +11,17 @@ class Ship implements Moveable {
   public fleet: string;
   public name: string;
 
-  public coordinates: Coordinates;
-  public status: ShipStatus;
   public carriesGold: boolean;
+
+  public coordinates: Coordinates;
 
   public HP: number;
   public maxHP: number;
 
   public view: ShipView;
+
+  private status: ShipStatus;
+  private goldDiscovered: boolean = false;
 
   private readonly HP_VALUES: Record<ShipType, number> = {
     galleon: 30, brigantine: 20
@@ -27,6 +30,8 @@ class Ship implements Moveable {
   private readonly SHOT_RANGE: Record<ShipType, number> = {
     galleon: 2, brigantine: 1
   };
+
+  private readonly REPAIR_BY = 10;
 
   constructor(type: ShipType, fleet: string, name: string,
               initialCoordinates: Coordinates, icons: Design[],
@@ -54,12 +59,33 @@ class Ship implements Moveable {
     if (this.status == ShipStatus.ready && this.HP <= 0) { this.wreck(); }
   }
 
-  public wreck() { this.status = ShipStatus.sinking; }
-  public sink() { this.status = ShipStatus.sunk; }
+  public wreck() {
+    this.status = ShipStatus.sinking;
+
+    if (this.carriesGold) {
+      this.goldDiscovered = true;
+    }
+  }
+
+  public sink() {
+    if (!this.carriesGold) {  // Cannot sink if carries gold
+      this.status = ShipStatus.sunk;
+    }
+  }
+
+  public repair() {
+    this.HP = Math.min(this.HP + this.REPAIR_BY, this.maxHP);
+
+    if (this.isWrecked()) {
+      this.status = ShipStatus.ready;
+    }
+  }
 
   public isReady(): boolean { return this.status == ShipStatus.ready; }
   public isWrecked(): boolean { return this.status == ShipStatus.sinking; }
   public isSunk(): boolean { return this.status == ShipStatus.sunk; }
+
+  public isGolden(): boolean { return this.carriesGold && this.goldDiscovered; }
 
   public isFriendlyTo(other: Ship): boolean { return this.fleet == other.fleet; }
   public isHostileTo(other: Ship): boolean { return !this.isFriendlyTo(other); }
