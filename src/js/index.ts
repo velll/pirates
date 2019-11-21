@@ -4,9 +4,11 @@ import { GameBuilder } from "./game-builder";
 import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 
 // data and configuration
-import { features } from "./data/map-features";
-import { orders as shipOrders } from "./data/ships";
+import { spaniards, pirates } from './game/fleet'
+import { rocks } from "./data/rocks";
+import { ports } from "./data/ports";
 import { config } from './data/config';
+import { orders as shipOrders } from "./data/ships";
 import { Shipyard } from "./shipyard";
 
 const canvasDimensions = {width: 2000, height: 1384};
@@ -33,31 +35,29 @@ const goldSpanishGalleonWrecked = document.getElementById("gold-ship-wreck-spani
 const goldPirateGalleonWrecked = document.getElementById("gold-ship-wreck-pirates") as CanvasImageSource;
 
 const shipyard = new Shipyard([
-  {icon: galleon, type: "galleon", fleet: "Spaniards", wreck: false, golden: false},
-  {icon: sailboat, type: "brigantine", fleet: "Pirates", wreck: false, golden: false},
-  {icon: galleonWreck, type: "galleon", fleet: "Spaniards", wreck: true, golden: false},
-  {icon: sailboatWreck, type: "brigantine", fleet: "Pirates", wreck: true, golden: false},
-  {icon: goldSpanishGalleon, type: "galleon", fleet: "Spaniards", wreck: false, golden: true},
-  {icon: goldPirateGalleon, type: "galleon", fleet: "Pirates", wreck: false, golden: true},
-  {icon: goldSpanishGalleonWrecked, type: "galleon", fleet: "Spaniards", wreck: true, golden: true},
-  {icon: goldPirateGalleonWrecked, type: "galleon", fleet: "Pirates", wreck: true, golden: true}
+  {icon: galleon, type: "galleon", fleet: spaniards, wreck: false, golden: false},
+  {icon: sailboat, type: "brigantine", fleet: pirates, wreck: false, golden: false},
+  {icon: galleonWreck, type: "galleon", fleet: spaniards, wreck: true, golden: false},
+  {icon: sailboatWreck, type: "brigantine", fleet: pirates, wreck: true, golden: false},
+  {icon: goldSpanishGalleon, type: "galleon", fleet: spaniards, wreck: false, golden: true},
+  {icon: goldPirateGalleon, type: "galleon", fleet: pirates, wreck: false, golden: true},
+  {icon: goldSpanishGalleonWrecked, type: "galleon", fleet: spaniards, wreck: true, golden: true},
+  {icon: goldPirateGalleonWrecked, type: "galleon", fleet: pirates, wreck: true, golden: true}
 ]);
 
 const flags: Record<string, CanvasImageSource> = {
-  Pirates: document.getElementById("flag-pirates") as CanvasImageSource,
-  Spaniards: document.getElementById("flag-spaniards") as CanvasImageSource,
-  Dutch: document.getElementById("flag-dutch") as CanvasImageSource,
-  Portuguese: document.getElementById("flag-portuguese") as CanvasImageSource,
-  French: document.getElementById("flag-french") as CanvasImageSource,
-  British: document.getElementById("flag-british") as CanvasImageSource
+  pirates: document.getElementById("flag-pirates") as CanvasImageSource,
+  spaniards: document.getElementById("flag-spaniards") as CanvasImageSource,
+  dutch: document.getElementById("flag-dutch") as CanvasImageSource,
+  portuguese: document.getElementById("flag-portuguese") as CanvasImageSource,
+  french: document.getElementById("flag-french") as CanvasImageSource,
+  british: document.getElementById("flag-british") as CanvasImageSource
 };
 
-const board = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG).build(
-  features,
-  {width: canvasBG.element.width, height: canvasBG.element.height},
-  shipyard,
-  config.map,
-  config.grid);
+const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG)
+const map = builder.buildMap(config.map, rocks, ports);
+const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height})
+const board = builder.build(map, grid)
 
 board.drawPorts(flags);
 

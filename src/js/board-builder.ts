@@ -1,9 +1,10 @@
 import { Board } from "./board";
 import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 import { Dimensions } from "./lib/dimensions";
-import { GameMap, Features, MapConfig } from "./board/gamemap";
+import { GameMap, Features, MapConfig, Port } from "./board/gamemap";
 import { Grid, GridConfig } from "./board/grid";
 import { Shipyard } from "./shipyard";
+import { Coordinates } from "./lib/coordinates";
 
 class BoardBuilder {
   private background: CanvasAdapter;
@@ -18,20 +19,21 @@ class BoardBuilder {
     this.foreground = foreground;
   }
 
-  public build(features: Features,
-               initialDimensions: Dimensions,
-               shipyard: Shipyard,
-               mapConfig: MapConfig,
-               gridConfig: GridConfig): Board {
+  public buildMap(mapConfig: MapConfig, rocks: Coordinates[], ports: Port[]){
+    return new GameMap(mapConfig, rocks, ports);
+  }
+
+  public buildGrid(map: GameMap, gridConfig: GridConfig, initialDimensions: Dimensions) {
+    return new Grid(map, initialDimensions, gridConfig);
+  }
+
+  public build(map: GameMap, grid: Grid): Board {
     const layers = {background: this.background,
                     highlight: this.highlight,
                     ships: this.ships,
                     foreground: this.foreground};
 
-    const map = new GameMap(mapConfig, features);
-    const grid = new Grid(map, initialDimensions, gridConfig);
-
-    const board = new Board(layers, map, grid, shipyard);
+    const board = new Board(layers, map, grid);
 
     return board;
   }

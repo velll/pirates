@@ -1,7 +1,10 @@
 import { Ship, ShipType } from '../src/js/game/ship';
 import { Coordinates } from '../src/js/lib/coordinates';
+import { pirates } from '../src/js/game/fleet';
+import { Design } from '../src/js/shipyard';
 
-const ship = new Ship(ShipType.brigantine, "pirates", "Tester's rage", {x: 10, y: 10});
+let icons: Design[];
+const ship = new Ship(ShipType.brigantine, pirates, "Tester's rage", {x: 10, y: 10}, icons);
 const newCoordinates: Coordinates = {x: 8, y: 8};
 
 test('ship should be able to move', () => {

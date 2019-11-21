@@ -5,10 +5,11 @@ import { Wind } from "./wind";
 import { ShipView } from "../views/ship";
 import { getRange } from "./rules/moving";
 import { Design } from "../shipyard";
+import { Fleet } from "./fleet";
 
 class Ship implements Moveable {
   public type: ShipType;
-  public fleet: string;
+  public fleet: Fleet;
   public name: string;
 
   public carriesGold: boolean;
@@ -33,7 +34,7 @@ class Ship implements Moveable {
 
   private readonly REPAIR_BY = 10;
 
-  constructor(type: ShipType, fleet: string, name: string,
+  constructor(type: ShipType, fleet: Fleet, name: string,
               initialCoordinates: Coordinates, icons: Design[],
               carriesGold: boolean = false) {
     this.type = type;
@@ -87,12 +88,8 @@ class Ship implements Moveable {
 
   public isGolden(): boolean { return this.carriesGold && this.goldDiscovered; }
 
-  public isFriendlyTo(other: Ship): boolean { return this.fleet == other.fleet; }
+  public isFriendlyTo(other: Ship): boolean { return this.fleet.isFriendlyTo(other.fleet); }
   public isHostileTo(other: Ship): boolean { return !this.isFriendlyTo(other); }
-
-  public getHitPoints() {
-    return {current: this.HP, max: this.maxHP};
-  }
 
   // I'm not proud of this
   public getMovingRange(wind: Wind): Coordinates[] {

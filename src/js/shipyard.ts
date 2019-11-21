@@ -1,5 +1,6 @@
 import { Ship, ShipType } from "./game/ship";
 import { Coordinates } from "./lib/coordinates";
+import { Fleet } from "./game/fleet";
 
 class Shipyard {
   private designs: Design[];
@@ -24,14 +25,14 @@ class Shipyard {
 interface Design {
   icon: CanvasImageSource;
   type: string;
-  fleet: string;
+  fleet: Fleet;
   wreck: boolean;
   golden: boolean;
 }
 
 interface Order {
   type: ShipType;
-  fleet: string;
+  fleet: Fleet;
   name: string;
   coords: Coordinates,
   gold?: boolean;

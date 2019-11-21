@@ -11,6 +11,7 @@ import { WindGenerator } from "./game/wind-generator";
 import { Wind } from "./game/wind";
 import { GameMap } from "./board/gamemap";
 import { ShipView } from "./views/ship";
+import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -57,7 +58,7 @@ class Game {
       this.captureGold();
     }
 
-    if (this.isGameOver()) { this.congratulate(ship.fleet); }
+    if (this.isGameOver()) { this.congratulate(ship.fleet.name); }
 
     if (!turn.hasShot()) {
       this.overlay.clear();
@@ -160,19 +161,9 @@ class Game {
     return hostiles.filter(coords => (includes(range, coords)));
   }
 
-  private getEnemyFleet(fleet: string): string {
-    if (fleet == "Spaniards") {
-      return "Pirates";
-    } else if (fleet == "Pirates") {
-      return "Spaniards";
-    } else {
-      throw Error("Unknown fleet " + fleet);
-    }
-  }
-
   private getEnemyShips(): Moveable[] {
     return this.ships.filter(ship => (
-      ship.fleet == this.getEnemyFleet(this.getCurrentShip().fleet)
+      ship.fleet.is(Fleet.getEnemyFleet(this.getCurrentShip().fleet))
     ));
   }
 
@@ -218,7 +209,7 @@ class Game {
     // To win a fleet must bring the gold to their own port
     if (this.board.isPortOf(this.goldenShip.coordinates, this.goldenShip.fleet)) {
       // But Spaniards need to bring it to a specific port: Cadiz
-      if (this.goldenShip.fleet == "Spaniards") {
+      if (this.goldenShip.fleet.is(spaniards)) {
         return (GameMap.isSameCell(this.goldenShip.coordinates, this.CADIZ));
       // For the pirates — any port will do
       } else {
@@ -238,7 +229,7 @@ interface Moveable {
   coordinates: Coordinates;
   type: string;
   name: string;
-  fleet: string;
+  fleet: Fleet;
   carriesGold: boolean;
   view: ShipView;
 
@@ -249,7 +240,6 @@ interface Moveable {
   damage(dmg: number): void;
   getShootingRange(): Coordinates[];
   getMovingRange(wind: Wind): Coordinates[];
-  getHitPoints(): HitPoints;
   sink(): void;
   repair(): void;
   isReady(): boolean;

@@ -6,8 +6,8 @@ import { Dimensions } from "./lib/dimensions";
 import { Position } from './lib/position';
 
 import { MovingImage } from "./lib/canvas/moving-image";
-import { Shipyard } from "./shipyard";
 import { CanvasAdapter } from "./lib/canvas/canvas-adapter";
+import { Fleet } from "./game/fleet";
 
 class Board {
   // Layers are just canvases
@@ -22,9 +22,6 @@ class Board {
   // grid knows where to draw them
   private grid: Grid;
 
-  // shipyard knows about different ship designs
-  private shipyard: Shipyard;
-
   // Dictionary of images for different ship types
   private shipModels: ShipModelsDict;
   private wreckModels: ShipModelsDict;
@@ -36,12 +33,10 @@ class Board {
   constructor(
     layers: Layers,
     map: GameMap,
-    grid: Grid,
-    shipyard: Shipyard) {
+    grid: Grid) {
     this.layers = layers;
     this.map = map;
     this.grid = grid;
-    this.shipyard = shipyard;
   }
 
   // window
@@ -62,7 +57,7 @@ class Board {
   // **************
   // cells and grid
   // **************
-  public isPortOf(cell: Coordinates, fleet: string) {
+  public isPortOf(cell: Coordinates, fleet: Fleet) {
     return this.map.isPortOf(cell, fleet);
   }
 
@@ -78,7 +73,7 @@ class Board {
 
   public drawPorts(flags: Record<string, CanvasImageSource>) {
     this.map.getPorts().forEach(port => {
-      this.drawPort(port, flags[port.fleet]);
+      this.drawPort(port, flags[port.fleet.name]);
     });
   }
 
@@ -146,7 +141,7 @@ class Board {
     const offsettedWidth = this.grid.cellSize * this.PORT_MODEL_TO_CELL_RATIO;
 
     layer.drawCross(offsettedPos, offsettedWidth);
-    this.drawFlag(coordinates, flag);
+    //this.drawFlag(coordinates, flag);
   }
 
   // *********************

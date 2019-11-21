@@ -1,22 +1,23 @@
-import { Features, MapConfig } from '../src/js/board/gamemap';
+import { MapConfig, Port } from '../src/js/board/gamemap';
 import { Coordinates } from '../src/js/lib/coordinates';
 
 import { GameMap } from '../src/js/board/gamemap';
+import { neutrals } from '../src/js/game/fleet';
 
-const features: Features = {
-  rocks: [ {x: 1, y: 1} ],
-  ports: [ 
-    {x: 5, y: 10,  name: "Plymouth", fleet: "British"},
-    {x: 20, y: 15, name: "New York", fleet: "American"} 
-  ]
-};
+
+const rocks: Coordinates[] = [ {x: 1, y: 1} ]
+
+const ports: Port[] = [ 
+    {x: 5, y: 10,  name: "Plymouth", fleet: neutrals},
+    {x: 20, y: 15, name: "New York", fleet: neutrals} 
+]
 
 const mapConfig: MapConfig = {
   rows: 10,
   columns: 10
 };
 
-const gameMap = new GameMap(mapConfig, features);
+const gameMap = new GameMap(mapConfig, rocks, ports);
 
 test('map should know where rocks are', () => {
   expect(gameMap.getFeatureByCoords({x: 1, y: 1})).toEqual('rock');
