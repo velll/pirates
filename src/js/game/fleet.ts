@@ -1,11 +1,4 @@
 class Fleet {
-  public name: string;
-  public playable: boolean;
-
-  constructor(name: string, playable: boolean) {
-     this.name = name;
-     this.playable = playable;
-  }
 
   public static getEnemyFleet(fleet: Fleet) {
     if (fleet.is(spaniards)) {
@@ -16,9 +9,16 @@ class Fleet {
       throw Error("Unknown fleet " + fleet);
     }
   }
+  public name: string;
+  public playable: boolean;
+
+  constructor(name: string, playable: boolean) {
+     this.name = name;
+     this.playable = playable;
+  }
 
   public is(fleet: Fleet) {
-    return this.name == fleet.name
+    return this.name == fleet.name;
   }
 
   public isHostileTo(fleet: Fleet) {
@@ -30,8 +30,8 @@ class Fleet {
   }
 }
 
-const spaniards = new Fleet("spaniards", true)
-const pirates = new Fleet("pirates", true)
-const neutrals = new Fleet("neutrals", false)
+const spaniards = new Fleet("spaniards", true);
+const pirates = new Fleet("pirates", true);
+const neutrals = new Fleet("neutrals", false);
 
-export { Fleet, spaniards, pirates, neutrals }
+export { Fleet, spaniards, pirates, neutrals };

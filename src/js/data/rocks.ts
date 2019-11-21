@@ -1,4 +1,4 @@
-import { Coordinates } from "../lib/coordinates"
+import { Coordinates } from "../lib/coordinates";
 
 const rocks: Coordinates[] = [
   [7, 0], [8, 0], [9, 0], [10, 0], [11, 0],
@@ -10,4 +10,4 @@ const rocks: Coordinates[] = [
   {x: point[0], y: point[1] }
 ));
 
-export { rocks }
+export { rocks };

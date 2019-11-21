@@ -4,12 +4,13 @@ import { GameBuilder } from "./game-builder";
 import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 
 // data and configuration
-import { spaniards, pirates } from './game/fleet'
+import { spaniards, pirates } from './game/fleet';
 import { rocks } from "./data/rocks";
-import { ports } from "./data/ports";
+import { portsData } from "./data/ports";
 import { config } from './data/config';
 import { orders as shipOrders } from "./data/ships";
 import { Shipyard } from "./shipyard";
+import { Port } from "./board/port";
 
 const canvasDimensions = {width: 2000, height: 1384};
 
@@ -47,17 +48,19 @@ const shipyard = new Shipyard([
 
 const flags: Record<string, CanvasImageSource> = {
   pirates: document.getElementById("flag-pirates") as CanvasImageSource,
-  spaniards: document.getElementById("flag-spaniards") as CanvasImageSource,
-  dutch: document.getElementById("flag-dutch") as CanvasImageSource,
-  portuguese: document.getElementById("flag-portuguese") as CanvasImageSource,
-  french: document.getElementById("flag-french") as CanvasImageSource,
-  british: document.getElementById("flag-british") as CanvasImageSource
+  spain: document.getElementById("flag-spaniards") as CanvasImageSource,
+  netherlands: document.getElementById("flag-dutch") as CanvasImageSource,
+  portugal: document.getElementById("flag-portuguese") as CanvasImageSource,
+  france: document.getElementById("flag-french") as CanvasImageSource,
+  britain: document.getElementById("flag-british") as CanvasImageSource
 };
 
-const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG)
+const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet, flags[row.nation]));
+
+const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
 const map = builder.buildMap(config.map, rocks, ports);
-const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height})
-const board = builder.build(map, grid)
+const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
+const board = builder.build(map, grid);
 
 board.drawPorts(flags);
 

@@ -19,7 +19,7 @@ class BoardBuilder {
     this.foreground = foreground;
   }
 
-  public buildMap(mapConfig: MapConfig, rocks: Coordinates[], ports: Port[]){
+  public buildMap(mapConfig: MapConfig, rocks: Coordinates[], ports: Port[]) {
     return new GameMap(mapConfig, rocks, ports);
   }
 

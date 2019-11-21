@@ -1,6 +1,7 @@
 import { filter, range, flatten, isEqual } from 'lodash';
 import { Coordinates } from '../lib/coordinates';
-import { Fleet } from '../game/fleet'
+import { Fleet } from '../game/fleet';
+import { Port } from './port';
 
 // GameMap holds board data — how many cells in a row/column and
 // special features of the cells
@@ -31,7 +32,7 @@ class GameMap {
     this.rows = config.rows;
     this.columns = config.columns;
 
-    this.features = {ports: ports, rocks: rocks}
+    this.features = {ports: ports, rocks: rocks};
   }
 
   public getFeatureByCoords(coords: Coordinates): string {
@@ -49,7 +50,7 @@ class GameMap {
   }
 
   private isPort(cell: Coordinates): boolean {
-    return this.isFeature(cell, this.features.ports);
+    return this.isFeature(cell, this.features.ports.map(port => port.coordinates));
   }
 
   private isRock(cell: Coordinates): boolean {
@@ -64,9 +65,9 @@ class GameMap {
     return FeatureTypes.sea;
   }
 
-  private getPort(cell: Coordinates): Port {
-    return this.features.ports.filter(portCell => {
-             return (GameMap.isSameCell(portCell, cell));
+  private getPort(coordinates: Coordinates): Port {
+    return this.features.ports.filter(port => {
+             return (GameMap.isSameCell(port.coordinates, coordinates));
            })[0];
   }
 
@@ -80,11 +81,6 @@ class GameMap {
 interface MapConfig {
   rows: number;
   columns: number;
-}
-
-interface Port extends Coordinates {
-  name: string;
-  fleet: Fleet;
 }
 
 interface Features {

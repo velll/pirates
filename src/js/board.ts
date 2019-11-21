@@ -73,7 +73,7 @@ class Board {
 
   public drawPorts(flags: Record<string, CanvasImageSource>) {
     this.map.getPorts().forEach(port => {
-      this.drawPort(port, flags[port.fleet.name]);
+      this.drawPort(port.view, port.coordinates);
     });
   }
 
@@ -101,7 +101,7 @@ class Board {
                   this.grid.cellSize);
   }
 
-  public moveShip(shipView: Drawable, from: Coordinates, to: Coordinates) {
+  public moveShip(shipView: Moveable, from: Coordinates, to: Coordinates) {
     this.layers.foreground.clearAll();
 
     shipView.drawMove(this.layers.foreground,
@@ -119,29 +119,10 @@ class Board {
   // *******************
   // static map features
   // *******************
-  private drawFlag(coordinates: Coordinates, flag: CanvasImageSource) {
-    const cellPos = this.grid.getCellPosition(coordinates);
-    const flagSize = this.grid.cellSize * this.PORT_FLAG_TO_CELL_RATIO;
-
-    const flagPos = {left: cellPos.left + flagSize,
-                     top: cellPos.top - this.grid.cellSize * this.PORT_FLAG_TO_CELL_OFFSET};
-
-    this.layers.background.drawLine(
-      flagPos, {left: flagPos.left, top: flagPos.top + flagSize});
-    this.layers.background.drawImage(flag, flagPos, flagSize);
-  }
-
-  private drawPort(coordinates: Coordinates, flag: CanvasImageSource) {
-    const layer = this.layers.background;
-
-    const pos = this.grid.getCellPosition(coordinates);
-    layer.drawSquare(pos, this.grid.cellSize, this.grid.COLOR_CODE.port);
-
-    const offsettedPos = this.grid.getOffsettedPosition(coordinates, this.PORT_MODEL_TO_CELL_RATIO);
-    const offsettedWidth = this.grid.cellSize * this.PORT_MODEL_TO_CELL_RATIO;
-
-    layer.drawCross(offsettedPos, offsettedWidth);
-    //this.drawFlag(coordinates, flag);
+  private drawPort(portView: Drawable, coordinates: Coordinates) {
+    portView.draw(this.layers.background,
+                  this.grid.getCellPosition(coordinates),
+                  this.grid.cellSize);
   }
 
   // *********************
@@ -190,8 +171,11 @@ interface Layers {
 
 interface Drawable {
   draw(layer: CanvasAdapter, position: Position, cellSize: number): void;
-  drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void;
   getImage?(): CanvasImageSource;
 }
 
-export { Board, ShipModelsDict, Layers, Drawable};
+interface Moveable {
+  drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void;
+}
+
+export { Board, ShipModelsDict, Layers, Drawable, Moveable};
