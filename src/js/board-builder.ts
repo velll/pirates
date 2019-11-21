@@ -8,11 +8,13 @@ import { Shipyard } from "./shipyard";
 class BoardBuilder {
   private background: CanvasAdapter;
   private highlight: CanvasAdapter;
+  private ships: CanvasAdapter;
   private foreground: CanvasAdapter;
 
-  constructor(background: CanvasAdapter, highlight: CanvasAdapter, foreground: CanvasAdapter) {
+  constructor(background: CanvasAdapter, highlight: CanvasAdapter, ships: CanvasAdapter, foreground: CanvasAdapter) {
     this.background = background;
     this.highlight = highlight;
+    this.ships = ships;
     this.foreground = foreground;
   }
 
@@ -21,7 +23,10 @@ class BoardBuilder {
                shipyard: Shipyard,
                mapConfig: MapConfig,
                gridConfig: GridConfig): Board {
-    const layers = {background: this.background, highlight: this.highlight, foreground: this.foreground};
+    const layers = {background: this.background,
+                    highlight: this.highlight,
+                    ships: this.ships,
+                    foreground: this.foreground};
 
     const map = new GameMap(mapConfig, features);
     const grid = new Grid(map, initialDimensions, gridConfig);

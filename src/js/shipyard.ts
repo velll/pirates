@@ -1,3 +1,6 @@
+import { Ship, ShipType } from "./game/ship";
+import { Coordinates } from "./lib/coordinates";
+
 class Shipyard {
   private designs: Design[];
 
@@ -5,33 +8,21 @@ class Shipyard {
     this.designs = designs;
   }
 
-  public findModel(fleet: string, type: string, golden = false, wreck = false) {
-    const order = {fleet: fleet, type: type, golden: golden};
-
-    return this.getDesigns(wreck).filter(el => this.isMatch(el, order))[0].model;
+  public buildAll(orders: Order[]) {
+    return orders.map(order => (this.build(order)));
+  }
+  public build(order: Order) {
+    return new Ship(order.type, order.fleet, order.name,
+      order.coords, this.getIconsFor(order.type), order.gold);
   }
 
-  public findLiveModel(fleet: string, type: string, golden = false) {
-    return this.findModel(fleet, type, golden, false);
-  }
-
-  public findWreckModel(fleet: string, type: string, golden = false) {
-    return this.findModel(fleet, type, golden, false);
-  }
-
-  private getDesigns(wreck = false) {
-    return this.designs.filter(el => (el.wreck == wreck));
-  }
-
-  private isMatch(design: Design, order: Order) {
-    return design.type == order.type &&
-           design.fleet == order.fleet &&
-           design.golden == order.golden;
+  public getIconsFor(type: ShipType): Design[] {
+    return this.designs.filter(design => (design.type == type));
   }
 }
 
 interface Design {
-  model: CanvasImageSource;
+  icon: CanvasImageSource;
   type: string;
   fleet: string;
   wreck: boolean;
@@ -39,14 +30,11 @@ interface Design {
 }
 
 interface Order {
-  fleet: string,
-  type: string,
-  golden: boolean
+  type: ShipType;
+  fleet: string;
+  name: string;
+  coords: Coordinates,
+  gold?: boolean;
 }
 
-enum ShipType {
-  brigantine = "brigantine",
-  galleon = "galleon"
-}
-
-export { Shipyard, Design, ShipType};
+export { Shipyard, Design, Order};

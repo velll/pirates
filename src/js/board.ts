@@ -29,14 +29,9 @@ class Board {
   private shipModels: ShipModelsDict;
   private wreckModels: ShipModelsDict;
 
-  private readonly SHIP_MODEL_TO_CELL_RATIO = 0.8;
-
   private readonly PORT_MODEL_TO_CELL_RATIO = 0.8;
   private readonly PORT_FLAG_TO_CELL_RATIO = 0.5;
   private readonly PORT_FLAG_TO_CELL_OFFSET = 0.25;
-
-  private readonly HP_BAR_WIDTH_TO_CELL_RATIO = 0.05;
-  private readonly SHIP_TO_HP_BAR_OFFSET = 0.05;
 
   constructor(
     layers: Layers,
@@ -105,30 +100,25 @@ class Board {
   // dynamic stuff (ships etc)
   // *************************
 
-  public drawShip(type: string, fleet: string, coordinates: Coordinates, wreck = false, hitPoints: HitPoints = null) {
-    this.clearCell(this.layers.foreground, coordinates);
-
-    const shipView = this.buildShipView(type, fleet, coordinates, wreck);
-
-    this.layers.foreground.drawImage(shipView.model, shipView.position, shipView.size);
-
-    if (hitPoints) {
-      this.drawHPBar(shipView.position, shipView.size, hitPoints);
-    }
+  public drawShip(shipView: Drawable, coordinates: Coordinates) {
+    shipView.draw(this.layers.ships,
+                  this.grid.getCellPosition(coordinates),
+                  this.grid.cellSize);
   }
 
-  public moveShip(type: string, fleet: string, from: Coordinates, to: Coordinates) {
-    this.layers.highlight.clearAll();
+  public moveShip(shipView: Drawable, from: Coordinates, to: Coordinates) {
+    this.layers.foreground.clearAll();
 
-    const startShipView = this.buildShipView(type, fleet, from);
-    const finishShipView = this.buildShipView(type, fleet, to);
+    shipView.drawMove(this.layers.foreground,
+                      this.grid.getCellPosition(from),
+                      this.grid.getCellPosition(to),
+                      this.grid.cellSize);
 
-    this.dragImage(startShipView.model, startShipView.size, startShipView.position, finishShipView.position);
-    this.removeShip(from);
+    this.clearCell(this.layers.ships, from);
   }
 
   public removeShip(coordinates: Coordinates) {
-    this.clearCell(this.layers.foreground, coordinates);
+    this.clearCell(this.layers.ships, coordinates);
   }
 
   // *******************
@@ -162,32 +152,6 @@ class Board {
   // *********************
   // dynamic stuff (ships)
   // *********************
-
-  private drawHPBar(shipPosition: Position, barWidth: number, HP: HitPoints) {
-    const start = {left: shipPosition.left,
-                   top: shipPosition.top +
-                    this.grid.cellSize * (this.SHIP_MODEL_TO_CELL_RATIO + this.SHIP_TO_HP_BAR_OFFSET)};
-    const green = Math.round(barWidth * HP.current / HP.max);
-
-    const finish = {left: start.left + barWidth, top: start.top};
-    const lineWidth = this.grid.cellSize * this.HP_BAR_WIDTH_TO_CELL_RATIO;
-
-    this.layers.foreground.drawLine(start, {left: start.left + green, top: start.top}, "green", lineWidth);
-    if (HP.current != HP.max) {
-      this.layers.foreground.drawLine({left: start.left + green, top: start.top}, finish, "red", lineWidth);
-    }
-  }
-
-  private getShipSize() {
-    return this.grid.cellSize * this.SHIP_MODEL_TO_CELL_RATIO;
-  }
-
-  private buildShipView(type: string, fleet: string, coordinates: Coordinates, wreck = false): ShipView {
-    const position = this.grid.getOffsettedPosition(coordinates, this.SHIP_MODEL_TO_CELL_RATIO);
-    const model = this.shipyard.findModel(fleet, type, false, wreck);
-
-    return { model: model, position: position, size: this.getShipSize() };
-  }
 
   private dragImage(image: CanvasImageSource, size: number, start: Position, finish: Position) {
     const animation = new MovingImage(this.layers.foreground, image, size);
@@ -224,19 +188,15 @@ type ShipModelsDict = Record<string, CanvasImageSource>;
 // What we expect from our canvas adapter
 interface Layers {
   background: CanvasAdapter;
+  ships: CanvasAdapter;
   highlight: CanvasAdapter;
   foreground: CanvasAdapter;
 }
 
-interface ShipView {
-  model: CanvasImageSource;
-  position: Position;
-  size: number;
+interface Drawable {
+  draw(layer: CanvasAdapter, position: Position, cellSize: number): void;
+  drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void;
+  getImage?(): CanvasImageSource;
 }
 
-interface HitPoints {
-  max: number;
-  current: number;
-}
-
-export { Board, ShipModelsDict, Layers};
+export { Board, ShipModelsDict, Layers, Drawable};

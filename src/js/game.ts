@@ -10,6 +10,7 @@ import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
 import { Wind } from "./game/wind";
 import { GameMap } from "./board/gamemap";
+import { ShipView } from "./views/ship";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -47,7 +48,7 @@ class Game {
     assert(!(from.x == to.x && from.y == to.y), "cannot move ship to the cell it's on");
 
     turn.makeMove(to);
-    this.board.moveShip(ship.type, ship.fleet, from, to);
+    this.board.moveShip(ship.view, from, to);
 
     if (this.isGameOver()) { this.congratulate(ship.fleet); }
 
@@ -67,7 +68,7 @@ class Game {
     target.damage(this.SHOT_DAMAGE);
     this.getCurrentTurn().makeShot(at);
 
-    this.board.drawShip(target.type, target.fleet, target.coordinates, target.isWrecked(), target.getHitPoints());
+    this.board.drawShip(target.view, target.coordinates);
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (this.getCurrentTurn().hasMoved()) { this.nextTurn(); }
@@ -170,11 +171,7 @@ class Game {
 
   private drawAllShips() {
     this.ships.filter(ship => (!ship.isSunk())).forEach(ship => (
-      this.board.drawShip(ship.type,
-                          ship.fleet,
-                          ship.coordinates,
-                          ship.isWrecked(),
-                          {current: ship.HP, max: ship.maxHP})
+      this.board.drawShip(ship.view, ship.coordinates)
     ));
   }
 
@@ -224,6 +221,7 @@ interface Moveable {
   name: string;
   fleet: string;
   carriesGold: boolean;
+  view: ShipView;
 
   HP: number;
   maxHP: number;
