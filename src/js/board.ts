@@ -5,8 +5,9 @@ import { Coordinates } from './lib/coordinates';
 import { Dimensions } from "./lib/dimensions";
 import { Position } from './lib/position';
 
-import { MovingImage } from "./board/moving-image";
+import { MovingImage } from "./lib/canvas/moving-image";
 import { Shipyard } from "./shipyard";
+import { CanvasAdapter } from "./lib/canvas/canvas-adapter";
 
 class Board {
   // Layers are just canvases
@@ -70,13 +71,13 @@ class Board {
     return this.map.isPortOf(cell, fleet);
   }
 
-  public drawCell(layer: Drawable, coordinates: Coordinates, color: string) {
+  public drawCell(layer: CanvasAdapter, coordinates: Coordinates, color: string) {
     const pos = this.grid.getCellPosition(coordinates);
 
     layer.drawSquare(pos, this.grid.cellSize, color);
   }
 
-  public clearCell(layer: Drawable, coordinates: Coordinates) {
+  public clearCell(layer: CanvasAdapter, coordinates: Coordinates) {
     layer.clearSquare(this.grid.getCellPosition(coordinates), this.grid.cellSize);
   }
 
@@ -221,25 +222,10 @@ class Board {
 type ShipModelsDict = Record<string, CanvasImageSource>;
 
 // What we expect from our canvas adapter
-interface Drawable {
-  element: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-
-  drawBox(pos: Position, dimesions: Dimensions, color: string): void;
-  drawSquare(pos: Position, width: number, color: string): void;
-  drawImage(image: CanvasImageSource, pos: Position, size: number): void;
-  drawText(text: string, pos: Position): void;
-  drawLine(start: Position, finish: Position, color?: string, width?: number): void;
-  drawCross(pos: Position, width: number): void;
-  clear(position: Position, dimensions: Dimensions): void;
-  clearSquare(pos: Position, width: number): void;
-  clearAll(): void;
-}
-
 interface Layers {
-  background: Drawable;
-  highlight: Drawable;
-  foreground: Drawable;
+  background: CanvasAdapter;
+  highlight: CanvasAdapter;
+  foreground: CanvasAdapter;
 }
 
 interface ShipView {
@@ -253,4 +239,4 @@ interface HitPoints {
   current: number;
 }
 
-export { Board, Drawable, ShipModelsDict, Layers};
+export { Board, ShipModelsDict, Layers};

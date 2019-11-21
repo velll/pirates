@@ -1,11 +1,11 @@
-import { Drawable } from '../board';
-import { Position } from '../lib/position';
+import { CanvasAdapter } from './canvas-adapter';
+import { Position } from '../position';
 
 class MovingImage {
   private readonly FPS = 60;
   private readonly duration = 0.5; // seconds
 
-  private canvas: Drawable;
+  private canvas: CanvasAdapter;
   private image: CanvasImageSource;
   private imageSize: number;
 
@@ -18,7 +18,7 @@ class MovingImage {
   private position: Position;
 
   constructor(
-    canvas: Drawable,
+    canvas: CanvasAdapter,
     image: CanvasImageSource,
     imageSize: number) {
       this.canvas = canvas;

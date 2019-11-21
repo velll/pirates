@@ -1,15 +1,16 @@
-import { Board, Drawable } from "./board";
+import { Board } from "./board";
+import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 import { Dimensions } from "./lib/dimensions";
 import { GameMap, Features, MapConfig } from "./board/gamemap";
 import { Grid, GridConfig } from "./board/grid";
 import { Shipyard } from "./shipyard";
 
 class BoardBuilder {
-  private background: Drawable;
-  private highlight: Drawable;
-  private foreground: Drawable;
+  private background: CanvasAdapter;
+  private highlight: CanvasAdapter;
+  private foreground: CanvasAdapter;
 
-  constructor(background: Drawable, highlight: Drawable, foreground: Drawable) {
+  constructor(background: CanvasAdapter, highlight: CanvasAdapter, foreground: CanvasAdapter) {
     this.background = background;
     this.highlight = highlight;
     this.foreground = foreground;

@@ -1,8 +1,24 @@
-import { Position } from './lib/position';
-import { Dimensions } from './lib/dimensions';
-import { Drawable } from './board';
+import { Position } from '../position';
+import { Dimensions } from '../dimensions';
 
-class CanvasAdapter implements Drawable {
+// Just so that it's all in one place
+interface Kanvas {
+  element: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  drawBox(pos: Position, dimesions: Dimensions, color: string): void;
+  drawSquare(pos: Position, width: number, color: string): void;
+  drawImage(image: CanvasImageSource, pos: Position, size: number): void;
+  drawText(text: string, pos: Position): void;
+  drawLine(start: Position, finish: Position, color?: string, width?: number): void;
+  drawCross(pos: Position, width: number): void;
+
+  clear(position: Position, dimensions: Dimensions): void;
+  clearSquare(pos: Position, width: number): void;
+  clearAll(): void;
+}
+
+class CanvasAdapter implements Kanvas {
   public element: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 

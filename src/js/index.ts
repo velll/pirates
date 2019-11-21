@@ -1,7 +1,7 @@
 import { BoardBuilder } from "./board-builder";
 import { GameBuilder } from "./game-builder";
 
-import { CanvasAdapter } from './canvas-adapter';
+import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 
 // data and configuration
 import { features } from "./data/map-features";
