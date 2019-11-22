@@ -11,6 +11,7 @@ import { config } from './data/config';
 import { orders as shipOrders } from "./data/ships";
 import { Shipyard } from "./shipyard";
 import { Port } from "./board/port";
+import { collectResources } from './resources';
 
 const canvasDimensions = {width: 2000, height: 1384};
 
@@ -24,41 +25,22 @@ canvasFG.setElementDimensions(canvasDimensions);
 canvasHL.setElementDimensions(canvasDimensions);
 canvasSH.setElementDimensions(canvasDimensions);
 
-const galleon = document.getElementById("galleon") as CanvasImageSource;
-const sailboat = document.getElementById("sailboat") as CanvasImageSource;
-
-const galleonWreck = document.getElementById("galleon-wreck") as CanvasImageSource;
-const sailboatWreck = document.getElementById("sailboat-wreck") as CanvasImageSource;
-
-const goldSpanishGalleon = document.getElementById("gold-galleon-spaniards") as CanvasImageSource;
-const goldPirateGalleon = document.getElementById("gold-galleon-pirates") as CanvasImageSource;
-const goldSpanishGalleonWrecked = document.getElementById("gold-ship-wreck-spaniards") as CanvasImageSource;
-const goldPirateGalleonWrecked = document.getElementById("gold-ship-wreck-pirates") as CanvasImageSource;
+const resources = collectResources();
 
 const shipyard = new Shipyard([
-  {icon: galleon, type: "galleon", fleet: spaniards, wreck: false, golden: false},
-  {icon: sailboat, type: "brigantine", fleet: pirates, wreck: false, golden: false},
-  {icon: galleonWreck, type: "galleon", fleet: spaniards, wreck: true, golden: false},
-  {icon: sailboatWreck, type: "brigantine", fleet: pirates, wreck: true, golden: false},
-  {icon: goldSpanishGalleon, type: "galleon", fleet: spaniards, wreck: false, golden: true},
-  {icon: goldPirateGalleon, type: "galleon", fleet: pirates, wreck: false, golden: true},
-  {icon: goldSpanishGalleonWrecked, type: "galleon", fleet: spaniards, wreck: true, golden: true},
-  {icon: goldPirateGalleonWrecked, type: "galleon", fleet: pirates, wreck: true, golden: true}
+  {icon: resources.ships.galleon, type: "galleon", fleet: spaniards, wreck: false, golden: false},
+  {icon: resources.ships.sailboat, type: "brigantine", fleet: pirates, wreck: false, golden: false},
+  {icon: resources.ships.galleonWreck, type: "galleon", fleet: spaniards, wreck: true, golden: false},
+  {icon: resources.ships.sailboatWreck, type: "brigantine", fleet: pirates, wreck: true, golden: false},
+  {icon: resources.ships.goldSpanishGalleon, type: "galleon", fleet: spaniards, wreck: false, golden: true},
+  {icon: resources.ships.goldPirateGalleon, type: "galleon", fleet: pirates, wreck: false, golden: true},
+  {icon: resources.ships.goldSpanishGalleonWrecked, type: "galleon", fleet: spaniards, wreck: true, golden: true},
+  {icon: resources.ships.goldPirateGalleonWrecked, type: "galleon", fleet: pirates, wreck: true, golden: true}
 ]);
 
-const flags: Record<string, CanvasImageSource> = {
-  pirates: document.getElementById("flag-pirates") as CanvasImageSource,
-  spain: document.getElementById("flag-spaniards") as CanvasImageSource,
-  netherlands: document.getElementById("flag-dutch") as CanvasImageSource,
-  portugal: document.getElementById("flag-portuguese") as CanvasImageSource,
-  france: document.getElementById("flag-french") as CanvasImageSource,
-  britain: document.getElementById("flag-british") as CanvasImageSource
-};
-
-const anchor = document.getElementById("anchor") as CanvasImageSource;
-
 const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet,
-                                            {anchor: anchor, flag: flags[row.nation]}));
+                                            {anchor: resources.anchor, flag: resources.flags[row.nation]}));
+
 (window as any).ports = ports;
 
 const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
@@ -66,7 +48,7 @@ const map = builder.buildMap(config.map, rocks, ports);
 const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
 const board = builder.build(map, grid);
 
-board.drawPorts(flags);
+board.drawPorts(resources.flags);
 
 const ships = shipyard.buildAll(shipOrders);
 const game = new GameBuilder().build(board, ships);
