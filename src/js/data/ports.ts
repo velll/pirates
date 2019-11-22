@@ -1,26 +1,27 @@
 import { spaniards, pirates, neutrals, Fleet } from '../game/fleet';
 
 const portsData = [
- [13, 1,  "Newfoundland",       neutrals,  "france"],
- [6, 7,   "Maryland peninsula", pirates,   "pirates"],
- [10, 12, "Bermudas",           spaniards, "spain"],
- [2, 16,  "Havana",             spaniards, "spain"],
- [4, 22,  "Porto Bello",        spaniards, "spain"],
- [5, 18,  "Santiago",           spaniards, "spain"],
- [6, 17,  "Tortuga",            pirates,   "pirates"],
- [8, 18,  "Santo Domingo",      spaniards, "spain"],
- [12, 19, "Guadalupe",          neutrals,  "france"],
- [12, 22, "Trinidad",           pirates,   "pirates"],
- [13, 23, "Guyana",             neutrals,  "netherlands"],
- [37, 1,  "Lands End",          neutrals,  "france"],
- [36, 5,  "Bay of Biscay",      spaniards, "spain"],
- [35, 8,  "Lisbon",             neutrals,  "portugal"],
- [37, 9,  "Cadiz",              spaniards, "spain"],
- [28, 8,  "Azores",             neutrals,  "portugal"],
- [32, 11, "Madeira",            neutrals,  "portugal"],
- [31, 13, "Canary island",      spaniards, "spain"],
- [28, 19, "Cabo Verde island",  neutrals,  "portugal"],
- [31, 20, "Cabo Verde",         neutrals,  "portugal"]
+ [16, 1,  "Newfoundland",       neutrals,  "france"],
+ [8, 7,   "Maryland peninsula", pirates,   "pirates"],
+ [13, 9, "Bermudas",            spaniards, "spain"],
+ [5, 14,  "Havana",             spaniards, "spain"],
+ [1, 16,  "Campeche",           spaniards, "spain"],
+ [7, 20,  "Porto Bello",        spaniards, "spain"],
+ [8, 15,  "Santiago",           spaniards, "spain"],
+ [10, 15,  "Tortuga",            pirates,   "pirates"],
+ [11, 17,  "Santo Domingo",     spaniards, "spain"],
+ [14, 17, "Guadalupe",          neutrals,  "france"],
+ [15, 20, "Trinidad",           pirates,   "pirates"],
+ [16, 21, "Guyana",             neutrals,  "netherlands"],
+ [40, 0,  "Lands End",          neutrals,  "britain"],
+ [39, 3,  "Bay of Biscay",      spaniards, "spain"],
+ [37, 7,  "Lisbon",             neutrals,  "portugal"],
+ [38, 8,  "Cadiz",              spaniards, "spain"],
+ [30, 7,  "Azores",             neutrals,  "portugal"],
+ [34, 9, "Madeira",            neutrals,  "portugal"],
+ [34, 12, "Canary island",      spaniards, "spain"],
+ [30, 17, "Cabo Verde island",  neutrals,  "portugal"],
+ [33, 18, "Cabo Verde",         neutrals,  "portugal"]
 
 ].map((cell: [number, number, string, Fleet, string]) => (
   {coordinates: {x: cell[0], y: cell[1]}, name: cell[2], fleet: cell[3], nation: cell[4]}

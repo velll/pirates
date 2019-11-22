@@ -13,7 +13,7 @@ import { Shipyard } from "./shipyard";
 import { Port } from "./board/port";
 import { collectResources } from './resources';
 
-const canvasDimensions = {width: 2000, height: 1384};
+const canvasDimensions = {width: 2000, height: 1221};
 
 const canvasBG = new CanvasAdapter(document.getElementById("background") as HTMLCanvasElement);
 const canvasHL = new CanvasAdapter(document.getElementById("highlight") as HTMLCanvasElement);

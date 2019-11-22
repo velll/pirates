@@ -9,12 +9,12 @@ interface Config {
 const config: Config = {
   map: {
     rows: 25,
-    columns: 39
+    columns: 41
   },
   grid: {
-    X_OFFSET: 0.0065, // padding from left
-    Y_OFFSET: 0.043, // padding from top
-    X_WIDTH: 0.9 // width of active portion of the map
+    X_OFFSET:  0.019 , // padding from left
+    Y_OFFSET: 0.034, // padding from top
+    X_WIDTH: 0.95 // width of active portion of the map
   }
 };
 
