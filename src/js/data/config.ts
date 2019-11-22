@@ -8,7 +8,7 @@ interface Config {
 
 const config: Config = {
   map: {
-    rows: 25,
+    rows: 23,
     columns: 41
   },
   grid: {
