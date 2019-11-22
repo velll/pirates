@@ -82,7 +82,9 @@ class Board {
     this.map.getPorts().forEach(port => this.drawPort(port.view, port.coordinates));
   }
 
-  public drawBoard() { this.drawGrid(); }
+  public drawBoard(transparent = true, coordinates = false) {
+     this.drawGrid(transparent, coordinates);
+  }
 
   // **********************
   // Overlay
@@ -141,17 +143,22 @@ class Board {
 
   // debugging shoved at the tail end of the class
 
-  private drawGrid() {
+  private drawGrid(transparent = true, coordinates = false) {
     const cellSize = this.grid.cellSize;
     const layer = this.layers.background;
 
     for (let row: number = 0; row < this.map.rows; row++) {
       for (let col: number = 0; col < this.map.columns; col++) {
-        const color = this.grid.getColor({x: col, y: row});
-        this.drawCell(layer, {x: col, y: row}, color);
+        const color = transparent ? "transparent" : this.grid.getColor({x: col, y: row});
 
-        const pos = this.grid.getCellPosition({x: col, y: row});
-        this.drawCoords(pos, cellSize, {x: col, y: row});
+        if (!this.map.isRock({x: col, y: row})) {
+          this.drawCell(layer, {x: col, y: row}, color);
+        }
+
+        if (coordinates) {
+          const pos = this.grid.getCellPosition({x: col, y: row});
+          this.drawCoords(pos, cellSize, {x: col, y: row});
+        }
       }
     }
   }

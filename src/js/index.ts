@@ -54,7 +54,8 @@ const ships = shipyard.buildAll(shipOrders);
 const game = new GameBuilder().build(board, ships);
 
 game.telemetry.switchOn();
-// if (game.telemetry.working) { board.drawBoard(); }
+// board.drawBoard();
+// if (game.telemetry.working) { board.drawBoard(false, true); }
 
 canvasFG.element.addEventListener('click', game.clickHandler.bind(game));
 

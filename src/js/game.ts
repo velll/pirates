@@ -28,7 +28,7 @@ class Game {
   private windGen: WindGenerator;
 
   private goldenShip: Moveable;
-  
+
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly SHOT_DAMAGE = 10;
 
