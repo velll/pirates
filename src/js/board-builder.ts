@@ -1,9 +1,8 @@
 import { Board } from "./board";
 import { CanvasAdapter } from './lib/canvas/canvas-adapter';
 import { Dimensions } from "./lib/dimensions";
-import { GameMap, Features, MapConfig, Port } from "./board/gamemap";
+import { GameMap, MapConfig, Port } from "./board/gamemap";
 import { Grid, GridConfig } from "./board/grid";
-import { Shipyard } from "./shipyard";
 import { Coordinates } from "./lib/coordinates";
 
 class BoardBuilder {

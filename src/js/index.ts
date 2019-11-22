@@ -48,7 +48,7 @@ const map = builder.buildMap(config.map, rocks, ports);
 const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
 const board = builder.build(map, grid);
 
-board.drawPorts(resources.flags);
+board.drawPorts();
 
 const ships = shipyard.buildAll(shipOrders);
 const game = new GameBuilder().build(board, ships);

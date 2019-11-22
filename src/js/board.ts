@@ -2,7 +2,6 @@ import { GameMap } from "./board/gamemap";
 import { Grid } from "./board/grid";
 
 import { Coordinates } from './lib/coordinates';
-import { Dimensions } from "./lib/dimensions";
 import { Position } from './lib/position';
 
 import { MovingImage } from "./lib/canvas/moving-image";
@@ -61,6 +60,10 @@ class Board {
     return this.map.getPorts();
   }
 
+  // ***********************
+  // drawing cells and ports
+  // ***********************
+
   public drawCell(layer: CanvasAdapter, coordinates: Coordinates, color: string) {
     const pos = this.grid.getCellPosition(coordinates);
 
@@ -71,10 +74,8 @@ class Board {
     layer.clearSquare(this.grid.getCellPosition(coordinates), this.grid.cellSize);
   }
 
-  public drawPorts(flags: Record<string, CanvasImageSource>) {
-    this.map.getPorts().forEach(port => {
-      this.drawPort(port.view, port.coordinates);
-    });
+  public drawPorts() {
+    this.map.getPorts().forEach(port => this.drawPort(port.view, port.coordinates));
   }
 
   public drawBoard() { this.drawGrid(); }

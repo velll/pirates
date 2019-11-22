@@ -4,7 +4,7 @@ import { Board } from './board';
 import { Turn } from './game/turn';
 import { Overlay } from './game/overlay';
 
-import { each, last, isEqual, filter, map } from 'lodash';
+import { last } from 'lodash';
 import { includes } from './lib/includes';
 import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
