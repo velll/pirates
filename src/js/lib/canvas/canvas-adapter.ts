@@ -77,11 +77,13 @@ class CanvasAdapter implements Kanvas {
   }
 
   // assumes the Image is square, so only has one size
-  public drawImage(image: CanvasImageSource, position: Position, size: number) {
+  public drawImage(image: CanvasImageSource, position: Position, size: number, shadow = true) {
     this.withTmpContext(() => {
-      this.ctx.shadowColor = this.SHADOW_COLOR;
-      this.ctx.shadowOffsetX = this.IMAGE_SHADOW_OFFSET.x;
-      this.ctx.shadowOffsetY = this.IMAGE_SHADOW_OFFSET.y;
+      if (shadow) {
+        this.ctx.shadowColor = this.SHADOW_COLOR;
+        this.ctx.shadowOffsetX = this.IMAGE_SHADOW_OFFSET.x;
+        this.ctx.shadowOffsetY = this.IMAGE_SHADOW_OFFSET.y;
+      }
 
       this.ctx.drawImage(image, position.left, position.top, size, size);
     });

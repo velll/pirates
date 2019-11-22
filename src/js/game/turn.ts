@@ -3,6 +3,7 @@ import { Coordinates, Move } from '../lib/coordinates';
 
 import { includes } from '../lib/includes';
 import { Wind } from './wind';
+import { filterOut } from '../lib/filter-out';
 
 class Turn {
   public no: number;
@@ -13,14 +14,17 @@ class Turn {
   public move: Move;
   public shot: Move;
 
-  constructor(no: number, ship: Moveable, wind: Wind, occupiedCells: Coordinates[]) {
+  private offLimitCells: OffLimits;
+
+  constructor(no: number, ship: Moveable, wind: Wind, offLimitCells: OffLimits) {
     this.no = no;
     this.ship = ship;
     this.wind = wind;
+    this.offLimitCells = offLimitCells;
 
-    this.cellsForMove = this.getCellsForMove().filter(cell => (
-      !includes(occupiedCells, cell)
-    ));
+    this.cellsForMove = filterOut(
+                          this.ship.getMovingRange(this.wind),
+                          offLimitCells.move);
   }
 
   public makeMove(to: Coordinates) {
@@ -46,16 +50,17 @@ class Turn {
   }
 
   public isValidShot(at: Coordinates): boolean {
-    return includes(this.getCellsForShot(), at);
-  }
-
-  public getCellsForMove(): Coordinates[] {
-    return this.ship.getMovingRange(this.wind);
+    return !this.hasShot() && includes(this.getCellsForShot(), at);
   }
 
   public getCellsForShot(): Coordinates[] {
-    return this.ship.getShootingRange();
+    return filterOut(this.ship.getShootingRange(), this.offLimitCells.shot);
   }
+}
+
+interface OffLimits {
+  move: Coordinates[],
+  shot: Coordinates[]
 }
 
 export { Turn };

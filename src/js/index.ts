@@ -55,7 +55,11 @@ const flags: Record<string, CanvasImageSource> = {
   britain: document.getElementById("flag-british") as CanvasImageSource
 };
 
-const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet, flags[row.nation]));
+const anchor = document.getElementById("anchor") as CanvasImageSource;
+
+const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet,
+                                            {anchor: anchor, flag: flags[row.nation]}));
+(window as any).ports = ports;
 
 const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
 const map = builder.buildMap(config.map, rocks, ports);

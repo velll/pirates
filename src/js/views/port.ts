@@ -5,6 +5,7 @@ import { Port } from "../board/port";
 
 class PortView implements Drawable {
   private model: Port;
+  private icon: CanvasImageSource;
   private flag: CanvasImageSource;
 
   private readonly PORT_CROSS_TO_CELL_RATIO = 0.8;
@@ -12,18 +13,19 @@ class PortView implements Drawable {
   private readonly PORT_FLAG_TO_CELL_OFFSET = 0.25;
   private readonly PORT_COLOR = "rgba(204,204,204, 0.8)";
 
-  constructor(model: Port, flag: CanvasImageSource) {
+  constructor(model: Port, icon: CanvasImageSource, flag: CanvasImageSource) {
     this.model = model;
+    this.icon = icon;
     this.flag = flag;
   }
 
   public draw(layer: CanvasAdapter, position: Position, cellSize: number) {
     layer.drawSquare(position, cellSize, this.PORT_COLOR);
 
-    const offsettedPos = this.getCrossPosition(position, cellSize);
-    const offsettedWidth = this.getCrossSize(cellSize);
+    const offsettedPos = this.getIconPosition(position, cellSize);
+    const offsettedWidth = this.getIconSize(cellSize);
 
-    layer.drawCross(offsettedPos, offsettedWidth);
+    layer.drawImage(this.icon, offsettedPos, offsettedWidth, false);
 
     this.drawFlag(layer, position, cellSize);
   }
@@ -38,12 +40,12 @@ class PortView implements Drawable {
     layer.drawImage(this.flag, flagPos, flagSize);
   }
 
-  private getCrossPosition(position: Position, cellSize: number): Position {
-    const offset = (cellSize - this.getCrossSize(cellSize)) / 2;
+  private getIconPosition(position: Position, cellSize: number): Position {
+    const offset = (cellSize - this.getIconSize(cellSize)) / 2;
     return {left: position.left + offset, top: position.top + offset};
   }
 
-  private getCrossSize(cellSize: number): number {
+  private getIconSize(cellSize: number): number {
     return cellSize * this.PORT_CROSS_TO_CELL_RATIO;
   }
 }

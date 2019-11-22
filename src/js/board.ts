@@ -22,14 +22,6 @@ class Board {
   // grid knows where to draw them
   private grid: Grid;
 
-  // Dictionary of images for different ship types
-  private shipModels: ShipModelsDict;
-  private wreckModels: ShipModelsDict;
-
-  private readonly PORT_MODEL_TO_CELL_RATIO = 0.8;
-  private readonly PORT_FLAG_TO_CELL_RATIO = 0.5;
-  private readonly PORT_FLAG_TO_CELL_OFFSET = 0.25;
-
   constructor(
     layers: Layers,
     map: GameMap,
@@ -59,6 +51,14 @@ class Board {
   // **************
   public isPortOf(cell: Coordinates, fleet: Fleet) {
     return this.map.isPortOf(cell, fleet);
+  }
+
+  public getPortsOf(fleet: Fleet) {
+    return this.getPorts().filter(port => port.fleet.is(fleet));
+  }
+
+  public getPorts() {
+    return this.map.getPorts();
   }
 
   public drawCell(layer: CanvasAdapter, coordinates: Coordinates, color: string) {

@@ -9,9 +9,10 @@ import { includes } from './lib/includes';
 import { assert } from './lib/assert';
 import { WindGenerator } from "./game/wind-generator";
 import { Wind } from "./game/wind";
-import { GameMap } from "./board/gamemap";
+import { GameMap, Port } from "./board/gamemap";
 import { ShipView } from "./views/ship";
 import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
+import { filterOut } from "./lib/filter-out";
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -94,7 +95,14 @@ class Game {
     const turnNo = this.turns.length;
     const ship = this.ships[turnNo % this.ships.length];
 
-    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), this.getOccupiedCells());
+    // cannot move to already occupied cells
+    // cannot shoot into ports
+    const offLimitCells = {move: this.getOccupiedCells().concat(
+                                   this.board.getPortsOf(
+                                     Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates)),
+                           shot: this.board.getPorts().map(port => port.coordinates)};
+
+    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), offLimitCells);
     this.turns[this.turns.length] = turn;
 
     if (ship.isReady()) {
@@ -155,16 +163,21 @@ class Game {
   }
 
   private getTargets(ship: Moveable) {
-    const range = ship.getShootingRange();
+    const range = filterOut(ship.getShootingRange(), this.board.getPorts().map(port => port.coordinates));
     const hostiles = this.getReadyEnemyShips().map(el => (el.coordinates));
 
-    return hostiles.filter(coords => (includes(range, coords)));
+    return hostiles.filter(coords => includes(range, coords));
   }
 
   private getEnemyShips(): Moveable[] {
     return this.ships.filter(ship => (
       ship.fleet.is(Fleet.getEnemyFleet(this.getCurrentShip().fleet))
     ));
+  }
+
+  private getEnemyPorts(fleet: Fleet): Port[] {
+    return this.board.getPortsOf(Fleet.getEnemyFleet(fleet));
+
   }
 
   private getReadyEnemyShips(): Moveable[] {
@@ -182,9 +195,8 @@ class Game {
   }
 
   private isValidShot(at: Coordinates): boolean {
-    return !this.getCurrentTurn().hasShot() &&
-            this.getCurrentTurn().isValidShot(at) &&
-            this.isHostileAt(at);
+    return this.getCurrentTurn().isValidShot(at) &&
+           this.isHostileAt(at);
   }
 
   private canCaptureGold(): boolean {
