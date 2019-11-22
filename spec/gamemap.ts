@@ -7,11 +7,11 @@ import { neutrals } from '../src/js/game/fleet';
 
 const rocks: Coordinates[] = [ {x: 1, y: 1} ]
 
-let flag: CanvasImageSource;
+let img: CanvasImageSource;
 
 const ports: Port[] = [ 
-    new Port({x: 5, y: 10}, "Plymouth", neutrals, flag),
-    new Port({x: 20, y: 15}, "New York", neutrals, flag) 
+    new Port({x: 5, y: 10}, "Plymouth", neutrals, {anchor: img, flag: img}),
+    new Port({x: 20, y: 15}, "New York", neutrals, {anchor: img, flag: img}) 
 ]
 
 const mapConfig: MapConfig = {

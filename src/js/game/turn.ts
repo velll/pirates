@@ -63,4 +63,4 @@ interface OffLimits {
   shot: Coordinates[]
 }
 
-export { Turn };
+export { Turn, OffLimits };
