@@ -48,6 +48,10 @@ class Board {
   // **************
   // cells and grid
   // **************
+  public isPort(cell: Coordinates) {
+    return this.map.isPort(cell);
+  }
+
   public isPortOf(cell: Coordinates, fleet: Fleet) {
     return this.map.isPortOf(cell, fleet);
   }

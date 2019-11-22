@@ -49,11 +49,11 @@ class GameMap {
     return isEqual(this.getPort(cell).fleet, fleet);
   }
 
-  private isPort(cell: Coordinates): boolean {
+  public isPort(cell: Coordinates): boolean {
     return this.isFeature(cell, this.features.ports.map(port => port.coordinates));
   }
 
-  private isRock(cell: Coordinates): boolean {
+  public isRock(cell: Coordinates): boolean {
     return this.isFeature(cell, this.features.rocks);
   }
 

@@ -28,8 +28,8 @@ class Game {
   private windGen: WindGenerator;
 
   private goldenShip: Moveable;
-
-  private readonly CADIZ: Coordinates = {x: 37, y: 9};
+  
+  private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly SHOT_DAMAGE = 10;
 
   constructor(board: Board, ships: Moveable[], telemetry: Reportable) {
@@ -163,6 +163,8 @@ class Game {
   }
 
   private getTargets(ship: Moveable) {
+    if (this.isInPort(ship)) { return []; }
+
     const range = filterOut(ship.getShootingRange(), this.board.getPorts().map(port => port.coordinates));
     const hostiles = this.getReadyEnemyShips().map(el => (el.coordinates));
 
@@ -177,7 +179,6 @@ class Game {
 
   private getEnemyPorts(fleet: Fleet): Port[] {
     return this.board.getPortsOf(Fleet.getEnemyFleet(fleet));
-
   }
 
   private getReadyEnemyShips(): Moveable[] {
@@ -196,7 +197,12 @@ class Game {
 
   private isValidShot(at: Coordinates): boolean {
     return this.getCurrentTurn().isValidShot(at) &&
-           this.isHostileAt(at);
+           this.isHostileAt(at) &&
+          !this.isInPort(this.getCurrentShip());
+  }
+
+  private isInPort(ship: Moveable) {
+    return this.board.isPort(ship.coordinates);
   }
 
   private canCaptureGold(): boolean {
