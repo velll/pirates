@@ -1,12 +1,11 @@
 import { Turn } from './turn';
 import { Reportable } from '../game';
-import { DOM } from '../lib/dom/dom'
-import { AsyncRenderer, State } from '../lib/dom/async-renderer'
+import { DOM } from '../lib/dom/dom';
+import { AsyncRenderer, State } from '../lib/dom/async-renderer';
 
 class Telemetry implements Reportable {
   public working: boolean;
-  public ready: Promise<boolean>;
-  
+
   private renderer: AsyncRenderer;
 
   private readonly TELEMETRY_DISPLAY = "block";
@@ -16,7 +15,7 @@ class Telemetry implements Reportable {
     this.working = false;
     this.renderer = new AsyncRenderer("templates/telemetry.html",
                                       DOM.$("telemetry"),
-                                      this.update)
+                                      this.update);
   }
 
   public switchOn() {
@@ -30,7 +29,7 @@ class Telemetry implements Reportable {
   }
 
   public report(turn: Turn) {
-    if (!this.working) { return }
+    if (!this.working) { return; }
 
     const state: State = {
       turnNo: turn.no.toString(),
@@ -40,7 +39,7 @@ class Telemetry implements Reportable {
       shipMaxHP: turn.ship.maxHP.toString(),
       windName: turn.wind.getName(),
       windForce: turn.wind.getForce()
-    }
+    };
 
     this.renderer.update(state);
   }
@@ -50,7 +49,7 @@ class Telemetry implements Reportable {
     DOM.$("telemetry-active-ship").innerText = state.shipName;
     DOM.$("telemetry-active-fleet").innerText = state.shipFleetName;
     DOM.$("telemetry-HP").innerText = state.shipHP;
-    DOM.$("telemetry-max-HP").innerText = state.shipMaxHP
+    DOM.$("telemetry-max-HP").innerText = state.shipMaxHP;
     DOM.$("telemetry-wind").innerText = state.windName;
     DOM.$("telemetry-wind-force").innerText = state.windForce;
   }

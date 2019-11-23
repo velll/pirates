@@ -25,6 +25,8 @@ canvasFG.setElementDimensions(canvasDimensions);
 canvasHL.setElementDimensions(canvasDimensions);
 canvasSH.setElementDimensions(canvasDimensions);
 
+document.body.style.width = canvasDimensions.width.toString() + "px";
+
 const resources = collectResources();
 
 const shipyard = new Shipyard([
@@ -53,7 +55,7 @@ board.drawPorts();
 const ships = shipyard.buildAll(shipOrders);
 const game = new GameBuilder().build(board, ships);
 
-game.telemetry.switchOn();
+// game.telemetry.switchOn();
 // board.drawBoard();
 // if (game.telemetry.working) { board.drawBoard(false, true); }
 
