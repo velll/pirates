@@ -1,4 +1,4 @@
-/* 
+/*
 A very basic mechanism for asynchronously rendering an html remplate.
 To render an object provide:
   - a URL to a template (html)
@@ -28,14 +28,12 @@ class AsyncRenderer {
   }
 
   public async update(state: State) {
-    if (await this.ready) { this.updater(state) }
+    if (await this.ready) { this.updater(state); }
   }
 }
 
-type State = Record<string, any>
+type State = Record<string, any>;
 
-interface Updater {
-  (state: State): void
-}
+type Updater = (state: State) => void;
 
-export { AsyncRenderer, State }
+export { AsyncRenderer, State };
