@@ -13,6 +13,7 @@ import { GameMap, Port } from "./board/gamemap";
 import { ShipView } from "./views/ship";
 import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 import { filterOut } from "./lib/filter-out";
+import { GameStatus } from './game/status';
 
 // Game starts with .start()
 // Every turn starts with .turn()
@@ -21,7 +22,7 @@ class Game {
 
   private board: Board;
   private ships: Moveable[];
-  private status: string;
+  private status: GameStatus;
 
   private turns: Turn[];
   private overlay: Overlay;
@@ -37,7 +38,7 @@ class Game {
     this.ships = ships;
     this.telemetry = telemetry;
 
-    this.status = "created";
+    this.status = new GameStatus(this);
     this.turns = [];
 
     this.overlay = new Overlay(board);
@@ -114,6 +115,7 @@ class Game {
       // this.board.scrollTo(ship.coordinates);
 
       this.telemetry.report(this.getCurrentTurn());
+      this.status.report();
     } else {
       if (ship.isWrecked()) {
         ship.sink();
