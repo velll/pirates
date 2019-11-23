@@ -21,7 +21,8 @@ canvas#background{
 }
 
 canvas#highlight { z-index: 10; }
-canvas#foreground{ z-index: 20; }
+canvas#ships { z-index: 20; }
+canvas#foreground{ z-index: 30; }
 
 resources {
   display: none;
@@ -37,4 +38,8 @@ div#telemetry {
   font-size: 2em;
 
   display: none;
+}
+
+* {
+  box-sizing: border-box;
 }
