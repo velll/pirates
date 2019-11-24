@@ -63,8 +63,7 @@ class Game {
     if (this.isGameOver()) { this.congratulate(ship.fleet.name); }
 
     if (!turn.hasShot()) {
-      this.overlay.clear();
-      this.overlay.highlightTargets(this.getTargets(ship));
+      this.redrawOverlay();
     }
 
     // We made the move. If we also made the shot, then let's go for a next turn
@@ -83,6 +82,8 @@ class Game {
     if (this.canCaptureGold()) {
       this.captureGold();
     }
+
+    this.redrawOverlay();
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (this.getCurrentTurn().hasMoved()) { this.nextTurn(); }
@@ -107,9 +108,7 @@ class Game {
     this.turns[this.turns.length] = turn;
 
     if (ship.isReady()) {
-      this.overlay.clear();
-      this.overlay.highlightMoves(turn.cellsForMove);
-      this.overlay.highlightTargets(this.getTargets(ship));
+      this.redrawOverlay();
 
       // FIXME: Find some better idea
       // this.board.scrollTo(ship.coordinates);
@@ -150,6 +149,14 @@ class Game {
     }
   }
 
+  private redrawOverlay() {
+    const turn = this.getCurrentTurn();
+
+    this.overlay.clear();
+    this.overlay.highlightMoves(turn.cellsForMove);
+    this.overlay.highlightTargets(this.getTargets(turn.ship));
+  }
+
   private findShipByCoordinates(coordinates: Coordinates): Moveable {
     return this.ships.filter(ship => (
       (ship.coordinates.x == coordinates.x && ship.coordinates.y == coordinates.y)
@@ -166,6 +173,7 @@ class Game {
 
   private getTargets(ship: Moveable) {
     if (this.isInPort(ship)) { return []; }
+    if (this.getCurrentTurn().hasShot()) { return []; }
 
     const range = filterOut(ship.getShootingRange(), this.board.getPorts().map(port => port.coordinates));
     const hostiles = this.getReadyEnemyShips().map(el => (el.coordinates));
@@ -198,9 +206,8 @@ class Game {
   }
 
   private isValidShot(at: Coordinates): boolean {
-    return this.getCurrentTurn().isValidShot(at) &&
-           this.isHostileAt(at) &&
-          !this.isInPort(this.getCurrentShip());
+    const ship = this.getCurrentShip();
+    return includes(this.getTargets(ship), at)
   }
 
   private isInPort(ship: Moveable) {
