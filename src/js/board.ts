@@ -64,6 +64,10 @@ class Board {
     return this.map.getPorts();
   }
 
+  public getRocks() {
+    return this.map.getRocks();
+  }
+
   // ***********************
   // drawing cells and ports
   // ***********************

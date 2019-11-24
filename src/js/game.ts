@@ -99,9 +99,10 @@ class Game {
 
     // cannot move to already occupied cells
     // cannot shoot into ports
-    const offLimitCells = {move: this.getOccupiedCells().concat(
-                                   this.board.getPortsOf(
-                                     Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates)),
+    const offLimitCells = {move: this.board.getRocks().concat(
+                                   this.getOccupiedCells().concat(
+                                    this.board.getPortsOf(
+                                      Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates))),
                            shot: this.board.getPorts().map(port => port.coordinates)};
 
     const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), offLimitCells);
@@ -207,7 +208,7 @@ class Game {
 
   private isValidShot(at: Coordinates): boolean {
     const ship = this.getCurrentShip();
-    return includes(this.getTargets(ship), at)
+    return includes(this.getTargets(ship), at);
   }
 
   private isInPort(ship: Moveable) {

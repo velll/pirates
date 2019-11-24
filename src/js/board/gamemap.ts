@@ -43,6 +43,10 @@ class GameMap {
     return this.features.ports;
   }
 
+  public getRocks(): Coordinates[] {
+    return this.features.rocks;
+  }
+
   public isPortOf(cell: Coordinates, fleet: Fleet) {
     if (!this.isPort(cell)) { return false; }
 
