@@ -15,15 +15,18 @@ class GameStatus {
   }
 
   public report() {
+    const turn = this.model.getCurrentTurn();
+    const ship = turn.ship;
+
     const state: State = {
-      turnNo: this.model.getCurrentTurn().no.toString(),
-      shipName: this.model.getCurrentShip().name,
-      shipHP: this.model.getCurrentShip().HP.toString(),
-      shipMaxHP: this.model.getCurrentShip().maxHP.toString(),
-      shipHPPercentage: Math.round(this.model.getCurrentShip().HP * 100 / this.model.getCurrentShip().maxHP).toString(),
-      windName: this.model.getCurrentTurn().wind.getName(),
-      windForce: this.model.getCurrentTurn().wind.getForce(),
-      roseImg: `img/wind-rose-${this.model.getCurrentShip().fleet.name}.png`
+      turnNo: turn.no.toString(),
+      shipName: ship.name,
+      shipHP: ship.HP.toString(),
+      shipMaxHP: ship.maxHP.toString(),
+      shipHPPercentage: Math.round(ship.HP * 100 / ship.maxHP).toString(),
+      windName: turn.wind.getName(),
+      windForce: turn.wind.getForce(),
+      roseImg: `img/wind-rose-${ship.fleet.name}.png`
     };
 
     this.renderer.update(state);
