@@ -21,14 +21,14 @@ class AsyncRenderer {
     this.ready = this.initializeElement();
   }
 
-  public async initializeElement() {
+  public async update(state: State) {
+    if (await this.ready) { this.updater(state); }
+  }
+
+  private async initializeElement() {
     const response = await fetch(this.templateURL);
     this.root.innerHTML = await response.text();
     return true;
-  }
-
-  public async update(state: State) {
-    if (await this.ready) { this.updater(state); }
   }
 }
 
