@@ -1,9 +1,8 @@
 import { Grid, GridConfig } from "../src/js/board/grid";
-import { Features, MapConfig, GameMap } from "../src/js/board/gamemap";
+import { MapConfig, GameMap } from "../src/js/board/gamemap";
 
 const mapConfig: MapConfig = { rows: 10, columns: 10 };
-const features: Features = {ports: [], rocks: []};
-const map = new GameMap(mapConfig, features);
+const map = new GameMap(mapConfig, [], []);
 
 const gridDimensions = { width: 1000, height: 1000 };
 
