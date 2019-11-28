@@ -10,13 +10,15 @@ class AsyncRenderer {
   private templateURL: string;
   private root: HTMLElement;
   private updater: Updater;
+  private afterInit: Procedure;
 
   private ready: Promise<boolean>;
 
-  constructor(templateURL: string, root: HTMLElement, updater: Updater) {
+  constructor(templateURL: string, root: HTMLElement, updater: Updater, afterInit: Procedure = null) {
     this.templateURL = templateURL;
     this.root = root;
     this.updater = updater;
+    this.afterInit = afterInit;
 
     this.ready = this.initializeElement();
   }
@@ -28,6 +30,9 @@ class AsyncRenderer {
   private async initializeElement() {
     const response = await fetch(this.templateURL);
     this.root.innerHTML = await response.text();
+
+    if (this.afterInit) { this.afterInit(); }
+
     return true;
   }
 }
@@ -35,5 +40,6 @@ class AsyncRenderer {
 type State = Record<string, any>;
 
 type Updater = (state: State) => void;
+type Procedure = () => void;
 
 export { AsyncRenderer, State };
