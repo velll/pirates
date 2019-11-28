@@ -49,6 +49,13 @@ class Grid {
             top: this.startsAt.y + coords.y * this.cellSize};
   }
 
+  public getCellCenter(coords: Coordinates): Position {
+    const position = this.getCellPosition(coords);
+
+    return {left: position.left + this.cellSize / 2,
+            top: position.top + this.cellSize / 2};
+  }
+
   public offsetPosition(position: Position, offset: Dimensions): Position {
     return {left: position.left + offset.width, top: position.top + offset.height};
   }

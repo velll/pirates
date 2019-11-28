@@ -98,6 +98,11 @@ class Board {
     this.drawCell(this.layers.highlight, coordinates, color);
   }
 
+  public highlightShip(coordinates: Coordinates, color: string) {
+    const position = this.grid.getCellCenter(coordinates);
+    this.layers.highlight.drawBlurryCircle(position, this.grid.cellSize, color);
+  }
+
   public clearHighlight() {
     this.layers.highlight.clearAll();
   }

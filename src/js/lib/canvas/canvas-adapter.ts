@@ -19,6 +19,11 @@ interface Kanvas {
 }
 
 class CanvasAdapter implements Kanvas {
+
+  public static getCanvas(id: string): CanvasAdapter {
+    return new CanvasAdapter(document.getElementById(id) as HTMLCanvasElement);
+  }
+
   public element: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 
@@ -32,10 +37,6 @@ class CanvasAdapter implements Kanvas {
   constructor(canvas: HTMLCanvasElement) {
     this.element = canvas;
     this.ctx = canvas.getContext("2d");
-  }
-
-  public static getCanvas(id: string): CanvasAdapter{
-    return new CanvasAdapter(document.getElementById(id) as HTMLCanvasElement);
   }
 
   public setElementDimensions(dimensions: Dimensions) {
@@ -90,6 +91,26 @@ class CanvasAdapter implements Kanvas {
       }
 
       this.ctx.drawImage(image, position.left, position.top, size, size);
+    });
+  }
+
+  public drawBlurryCircle(pos: Position, rad: number, color: string) {
+    const inner = rad * 0.25;
+    const outer = rad * 0.75;
+    const offset = outer * 1.5;
+
+    const gradient = this.ctx.createRadialGradient(pos.left, pos.top, inner,
+                                                   pos.left, pos.top, outer);
+
+    // Make a donut
+    gradient.addColorStop(0, "transparent");
+    gradient.addColorStop(0.4, color);
+    gradient.addColorStop(0.6, color);
+    gradient.addColorStop(1, "transparent");
+
+    this.withTmpContext(() => {
+      this.ctx.fillStyle = gradient;
+      this.ctx.fillRect(pos.left - offset, pos.top - offset, offset * 2, offset * 2);
     });
   }
 

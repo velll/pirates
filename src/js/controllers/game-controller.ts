@@ -136,6 +136,7 @@ class GameController {
     this.overlay.clear();
     this.overlay.highlightMoves(turn.cellsForMove);
     this.overlay.highlightTargets(this.game.getTargets(turn.ship));
+    this.overlay.highlightShip(turn.ship.coordinates);
   }
 
   private drawShips(ships: Ship[]) {
