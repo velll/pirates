@@ -6,7 +6,7 @@ function collectResources(): Resources {
       galleonWreck: document.getElementById("galleon-wreck") as CanvasImageSource,
       sailboatWreck: document.getElementById("sailboat-wreck") as CanvasImageSource,
 
-      goldSpanishGalleo: document.getElementById("gold-galleon-spaniards") as CanvasImageSource,
+      goldSpanishGalleon: document.getElementById("gold-galleon-spaniards") as CanvasImageSource,
       goldPirateGalleon: document.getElementById("gold-galleon-pirates") as CanvasImageSource,
       goldSpanishGalleonWrecked: document.getElementById("gold-ship-wreck-spaniards") as CanvasImageSource,
       goldPirateGalleonWrecked: document.getElementById("gold-ship-wreck-pirates") as CanvasImageSource
