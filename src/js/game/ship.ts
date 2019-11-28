@@ -1,13 +1,13 @@
 import { Coordinates } from "../lib/coordinates";
-import { Moveable } from "../game";
 import { GameMap } from "../board/gamemap";
 import { Wind } from "./wind";
 import { ShipView } from "../views/ship";
 import { getRange } from "./rules/moving";
 import { Design } from "../shipyard";
 import { Fleet } from "./fleet";
+import { assert } from "../lib/assert";
 
-class Ship implements Moveable {
+class Ship {
   public type: ShipType;
   public fleet: Fleet;
   public name: string;
@@ -32,6 +32,7 @@ class Ship implements Moveable {
     galleon: 2, brigantine: 1
   };
 
+  private readonly DAMAGE_BY = 10;
   private readonly REPAIR_BY = 10;
 
   constructor(type: ShipType, fleet: Fleet, name: string,
@@ -55,13 +56,13 @@ class Ship implements Moveable {
     this.coordinates = coordinates;
   }
 
-  public damage(dmg: number) {
-    this.HP -= dmg;
+  public damage() {
+    this.HP -= this.DAMAGE_BY;
     if (this.status == ShipStatus.ready && this.HP <= 0) { this.wreck(); }
   }
 
   public wreck() {
-    this.status = ShipStatus.sinking;
+    this.status = ShipStatus.wrecked;
 
     if (this.carriesGold) {
       this.goldDiscovered = true;
@@ -82,8 +83,15 @@ class Ship implements Moveable {
     }
   }
 
+  public surrender(fleet: Fleet) {
+    assert(this.carriesGold, "only ships carrying gold can surrender");
+
+    this.fleet = fleet;
+    this.repair();
+  }
+
   public isReady(): boolean { return this.status == ShipStatus.ready; }
-  public isWrecked(): boolean { return this.status == ShipStatus.sinking; }
+  public isWrecked(): boolean { return this.status == ShipStatus.wrecked; }
   public isSunk(): boolean { return this.status == ShipStatus.sunk; }
 
   public isGolden(): boolean { return this.carriesGold && this.goldDiscovered; }
@@ -108,7 +116,7 @@ enum ShipType {
 
 enum ShipStatus {
   ready,
-  sinking,
+  wrecked,
   sunk
 }
 

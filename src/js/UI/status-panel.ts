@@ -1,21 +1,25 @@
 import { Game } from '../game';
 import { DOM } from '../lib/dom/dom';
 import { AsyncRenderer, State } from '../lib/dom/async-renderer';
+import { each } from 'lodash';
 
-class GameStatus {
+class StatusPanel {
   private model: Game;
   private renderer: AsyncRenderer;
 
-  constructor(model: Game) {
+  private buttonHandlers: Record<string, () => void>;
+
+  constructor(model: Game, buttonHandlers: Record<string, () => void>) {
     this.model = model;
+    this.buttonHandlers = buttonHandlers;
 
     this.renderer = new AsyncRenderer("templates/status.html",
                                       DOM.$("status"),
-                                      this.update);
+                                      this.update,
+                                      this.bindEvents.bind(this));
   }
 
-  public report() {
-    const turn = this.model.getCurrentTurn();
+  public report(turn: Reportable) {
     const ship = turn.ship;
 
     const state: State = {
@@ -44,6 +48,29 @@ class GameStatus {
     const HPBarStyle = `linear-gradient(to top, rgba(51, 153, 0, 0.8) ${state.shipHPPercentage}%, red ${state.shipHPPercentage}%)`;
     DOM.$("status-hp-bar") .style.background = HPBarStyle;
   }
+
+  private bindEvents() {
+    each(this.buttonHandlers, (f, elementId) => (
+      DOM.$(elementId).addEventListener("click", f)
+    ));
+  }
 }
 
-export { GameStatus };
+interface Reportable {
+  no: number;
+
+  wind: {
+    getName(): string;
+    getForce(): string;
+  };
+  ship: {
+    name: string;
+    fleet: {
+      name: string;
+    };
+    HP: number;
+    maxHP: number;
+  }
+}
+
+export { StatusPanel };

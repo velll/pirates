@@ -1,13 +1,13 @@
-import { Moveable } from '../game';
 import { Coordinates, Move } from '../lib/coordinates';
 
 import { includes } from '../lib/includes';
 import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
+import { Ship } from './ship';
 
 class Turn {
   public no: number;
-  public ship: Moveable;
+  public ship: Ship;
   public wind: Wind;
   public cellsForMove: Coordinates[];
 
@@ -16,7 +16,7 @@ class Turn {
 
   private offLimitCells: OffLimits;
 
-  constructor(no: number, ship: Moveable, wind: Wind, offLimitCells: OffLimits) {
+  constructor(no: number, ship: Ship, wind: Wind, offLimitCells: OffLimits) {
     this.no = no;
     this.ship = ship;
     this.wind = wind;
