@@ -18,10 +18,10 @@ import { GameController } from "./controllers/game-controller";
 
 const canvasDimensions = {width: 2000, height: 1221};
 
-const canvasBG = new CanvasAdapter(document.getElementById("background") as HTMLCanvasElement);
-const canvasHL = new CanvasAdapter(document.getElementById("highlight") as HTMLCanvasElement);
-const canvasSH = new CanvasAdapter(document.getElementById("ships") as HTMLCanvasElement);
-const canvasFG = new CanvasAdapter(document.getElementById("foreground") as HTMLCanvasElement);
+const canvasBG = CanvasAdapter.getCanvas("background");
+const canvasHL = CanvasAdapter.getCanvas("highlight");
+const canvasSH = CanvasAdapter.getCanvas("ships");
+const canvasFG = CanvasAdapter.getCanvas("foreground");
 
 [canvasBG, canvasHL, canvasSH, canvasFG].forEach(canvas => canvas.setElementDimensions(canvasDimensions));
 

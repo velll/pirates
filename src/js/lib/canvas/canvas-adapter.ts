@@ -34,6 +34,10 @@ class CanvasAdapter implements Kanvas {
     this.ctx = canvas.getContext("2d");
   }
 
+  public static getCanvas(id: string): CanvasAdapter{
+    return new CanvasAdapter(document.getElementById(id) as HTMLCanvasElement);
+  }
+
   public setElementDimensions(dimensions: Dimensions) {
     this.element.width = dimensions.width;
     this.element.height = dimensions.height;
