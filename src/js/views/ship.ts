@@ -30,12 +30,13 @@ class ShipView implements Drawable, Moveable {
     this.drawHPBar(layer, iconPosition, iconSize, cellSize);
   }
 
-  public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void {
+  public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number) {
     const start = this.getIconPosition(from, cellSize);
     const finish = this.getIconPosition(to, cellSize);
 
     const animation = new MovingImage(layer, this.getIcon(), this.getIconSize(cellSize));
-    animation.run(start, finish);
+
+    return animation.run(start, finish);
   }
 
   private drawHPBar(layer: CanvasAdapter, position: Position, size: number, cellSize: number) {

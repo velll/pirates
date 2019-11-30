@@ -12,13 +12,13 @@ class CannonballView implements Moveable {
     this.img = DOM.$('cannonball') as CanvasImageSource;
   }
 
-  public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void {
+  public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number) {
     const start = this.getIconPosition(from, cellSize);
     const finish = this.getIconPosition(to, cellSize);
 
     const animation = new MovingImage(layer, this.img, this.getIconSize(cellSize));
 
-    animation.run(start, finish);
+    return animation.run(start, finish);
   }
 
   private getIconPosition(position: Position, cellSize: number): Position {

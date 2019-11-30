@@ -37,11 +37,8 @@ class GameController {
     if (this.game.isValidShot(coordinates)) {
       this.shoot(coordinates);
     } else if (this.game.isValidMove(coordinates)) {
-      this.move(turn.ship, coordinates);
+      this.move(coordinates);
     }
-
-    // this.drawOverlay(turn);
-    // this.panel.report(turn);
 
     if (this.game.isOver()) { this.congratulate(turn.ship.fleet); }
   }
@@ -72,8 +69,7 @@ class GameController {
 
     if (!turn.ship.isReady()) { this.game.nextTurn(); }
 
-    // FIXME: with promises
-    setTimeout(() => (this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())))), 500);
+    this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())))
 
     // FIXME: Find some better idea
     // this.board.scrollTo(turn.ship.coordinates);
@@ -89,17 +85,15 @@ class GameController {
 
   // game actions
 
-  private move(ship: Ship, to: Coordinates) {
+  private async move(to: Coordinates) {
     const turn = this.game.getCurrentTurn();
-    assert(ship == turn.ship, "cannot move ships out of turn");
-
+    const ship = turn.ship;
     const from = ship.coordinates;
-    assert(!(from.x == to.x && from.y == to.y), "cannot move ship to the cell it's on");
 
     turn.makeMove(to);
-    this.board.moveShip(ship.view, from, to);
 
-    setTimeout(() => (() => (this.board.drawShip(ship.view, to))), 1000);
+    await this.board.moveShip(ship.view, from, to);
+    this.board.drawShip(ship.view, to);
 
     if (this.game.canCaptureGold()) { this.captureGold(); }
 
@@ -111,7 +105,7 @@ class GameController {
     }
   }
 
-  private shoot(at: Coordinates) {
+  private async shoot(at: Coordinates) {
     const turn = this.game.getCurrentTurn();
 
     const target = this.game.findShipByCoordinates(at);
@@ -120,8 +114,9 @@ class GameController {
 
     const cannonball = new CannonballView();
 
-    this.board.shoot(cannonball, turn.ship.coordinates, at);
-    setTimeout(() => (this.board.drawShip(target.view, target.coordinates), 500));
+    await this.board.shoot(cannonball, turn.ship.coordinates, at);
+
+    this.board.drawShip(target.view, target.coordinates);
 
     if (this.game.canCaptureGold()) { this.captureGold(); }
 

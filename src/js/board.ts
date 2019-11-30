@@ -124,21 +124,21 @@ class Board {
   public moveShip(shipView: Moveable, from: Coordinates, to: Coordinates) {
     this.layers.foreground.clearAll();
 
-    shipView.drawMove(this.layers.foreground,
-                      this.grid.getCellPosition(from),
-                      this.grid.getCellPosition(to),
-                      this.grid.cellSize);
-
     this.clearCell(this.layers.ships, from);
+
+    return shipView.drawMove(this.layers.foreground,
+                             this.grid.getCellPosition(from),
+                             this.grid.getCellPosition(to),
+                             this.grid.cellSize);
   }
 
   public shoot(cannonballView: Moveable, from: Coordinates, to: Coordinates) {
     this.layers.foreground.clearAll();
 
-    cannonballView.drawMove(this.layers.foreground,
-                            this.grid.getCellPosition(from),
-                            this.grid.getCellPosition(to),
-                            this.grid.cellSize);
+    return cannonballView.drawMove(this.layers.foreground,
+                                   this.grid.getCellPosition(from),
+                                   this.grid.getCellPosition(to),
+                                   this.grid.cellSize);
   }
 
   public removeShip(coordinates: Coordinates) {
@@ -209,7 +209,7 @@ interface Drawable {
 }
 
 interface Moveable {
-  drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): void;
+  drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): Promise<boolean>;
 }
 
 export { Board, ShipModelsDict, Layers, Drawable, Moveable};
