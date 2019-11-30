@@ -17,6 +17,6 @@ test('ship starts with full HP', () => {
 });
 
 test('ship can be damaged', () => {
-  ship.damage(5);
-  expect(ship.HP).toEqual(15);
+  ship.damage();
+  expect(ship.HP).toEqual(10);
 });
