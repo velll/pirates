@@ -1,5 +1,6 @@
 import { Position } from '../position';
 import { Dimensions } from '../dimensions';
+import { TemporaryContext } from './temporary-context';
 
 // Just so that it's all in one place
 interface Kanvas {
@@ -46,10 +47,10 @@ class CanvasAdapter implements Kanvas {
 
   public drawLine(start: Position, finish: Position, color = this.LINE_STROKE_STYLE, width = this.ctx.lineWidth) {
     this.withTmpContext(() => {
-      this.ctx.beginPath();
       this.ctx.strokeStyle = color;
       this.ctx.lineWidth = width;
-
+    }).do(() => {
+      this.ctx.beginPath();
       this.ctx.moveTo(start.left, start.top);
       this.ctx.lineTo(finish.left, finish.top);
       this.ctx.stroke();
@@ -66,13 +67,14 @@ class CanvasAdapter implements Kanvas {
 
   public drawBox(pos: Position, dimensions: Dimensions, color: string) {
     this.withTmpContext(() => {
+      this.ctx.strokeStyle = this.BOX_STROKE_STYLE;
+      this.ctx.fillStyle = color;
+    }).do(() => {
       this.ctx.beginPath();
       this.ctx.rect(pos.left, pos.top, dimensions.width, dimensions.height);
-      this.ctx.strokeStyle = this.BOX_STROKE_STYLE;
       this.ctx.stroke();
       this.ctx.closePath();
 
-      this.ctx.fillStyle = color;
       this.ctx.fillRect(pos.left, pos.top, dimensions.width, dimensions.height);
     });
   }
@@ -89,9 +91,7 @@ class CanvasAdapter implements Kanvas {
         this.ctx.shadowOffsetX = this.IMAGE_SHADOW_OFFSET.x;
         this.ctx.shadowOffsetY = this.IMAGE_SHADOW_OFFSET.y;
       }
-
-      this.ctx.drawImage(image, position.left, position.top, size, size);
-    });
+    }).do(() => this.ctx.drawImage(image, position.left, position.top, size, size));
   }
 
   public drawBlurryCircle(pos: Position, rad: number, color: string) {
@@ -108,18 +108,18 @@ class CanvasAdapter implements Kanvas {
     gradient.addColorStop(0.6, color);
     gradient.addColorStop(1, "transparent");
 
-    this.withTmpContext(() => {
-      this.ctx.fillStyle = gradient;
-      this.ctx.fillRect(pos.left - offset, pos.top - offset, offset * 2, offset * 2);
-    });
+    this.withTmpContext(() =>
+      this.ctx.fillStyle = gradient
+    ).do(() =>
+      this.ctx.fillRect(pos.left - offset, pos.top - offset, offset * 2, offset * 2)
+    );
   }
 
   public drawText(text: string, pos: Position) {
     this.withTmpContext(() => {
       this.ctx.font = this.TEXT_FONT;
       this.ctx.fillStyle = this.TEXT_STYLE;
-      this.ctx.fillText(text, pos.left, pos.top);
-    });
+    }).do(() => this.ctx.fillText(text, pos.left, pos.top));
   }
 
   public clear(position: Position, dimensions: Dimensions) {
@@ -134,10 +134,8 @@ class CanvasAdapter implements Kanvas {
     this.ctx.clearRect(0, 0, this.element.width, this.element.height);
   }
 
-  private withTmpContext(callback: () => void) {
-    this.ctx.save();
-    callback();
-    this.ctx.restore();
+  private withTmpContext(initializer: () => void) {
+    return new TemporaryContext(this.ctx, initializer);
   }
 }
 
