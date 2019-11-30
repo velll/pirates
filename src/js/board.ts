@@ -132,6 +132,15 @@ class Board {
     this.clearCell(this.layers.ships, from);
   }
 
+  public shoot(cannonballView: Moveable, from: Coordinates, to: Coordinates) {
+    this.layers.foreground.clearAll();
+
+    cannonballView.drawMove(this.layers.foreground,
+                            this.grid.getCellPosition(from),
+                            this.grid.getCellPosition(to),
+                            this.grid.cellSize);
+  }
+
   public removeShip(coordinates: Coordinates) {
     this.clearCell(this.layers.ships, coordinates);
   }

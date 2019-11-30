@@ -52,9 +52,9 @@ class MovingImage {
        (Math.sqrt(this.dx ** 2 + this.dy ** 2))) {
           this.position = this.finish;
           more = false;
+    } else {
+      this.canvas.drawImage(this.image, this.position, this.imageSize);
     }
-
-    this.canvas.drawImage(this.image, this.position, this.imageSize);
 
     if (more) {
       requestAnimationFrame(this.draw.bind(this));

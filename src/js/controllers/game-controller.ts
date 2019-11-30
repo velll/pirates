@@ -7,6 +7,7 @@ import { Coordinates } from "../board/gamemap";
 import { Ship } from "../game/ship";
 import { assert } from "../lib/assert";
 import { Turn } from "../game/turn";
+import { CannonballView } from "../views/cannonball";
 
 class GameController {
   private game: Game;
@@ -96,6 +97,8 @@ class GameController {
     turn.makeMove(to);
     this.board.moveShip(ship.view, from, to);
 
+    setTimeout(() => (() => (this.board.drawShip(ship.view, to))), 1000);
+
     if (this.game.canCaptureGold()) { this.captureGold(); }
 
     // We made the move. If we also made the shot, then let's go for a next turn
@@ -113,7 +116,10 @@ class GameController {
     target.damage();
     turn.makeShot(at);
 
-    this.board.drawShip(target.view, target.coordinates);
+    const cannonball = new CannonballView();
+
+    this.board.shoot(cannonball, turn.ship.coordinates, at);
+    setTimeout(() => (this.board.drawShip(target.view, target.coordinates), 500));
 
     if (this.game.canCaptureGold()) { this.captureGold(); }
 
