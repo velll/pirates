@@ -27,40 +27,44 @@ const canvasFG = CanvasAdapter.getCanvas("foreground");
 
 document.body.style.width = canvasDimensions.width.toString() + "px";
 
-const resources = collectResources();
+window.onload = () => {
+  const resources = collectResources();
 
-const shipyard = new Shipyard([
-  {icon: resources.ships.galleon,                   type: "galleon",    fleet: spaniards, wreck: false, golden: false},
-  {icon: resources.ships.sailboat,                  type: "brigantine", fleet: pirates,   wreck: false, golden: false},
-  {icon: resources.ships.galleonWreck,              type: "galleon",    fleet: spaniards, wreck: true,  golden: false},
-  {icon: resources.ships.sailboatWreck,             type: "brigantine", fleet: pirates,   wreck: true,  golden: false},
-  {icon: resources.ships.goldSpanishGalleon,        type: "galleon",    fleet: spaniards, wreck: false, golden: true},
-  {icon: resources.ships.goldPirateGalleon,         type: "galleon",    fleet: pirates,   wreck: false, golden: true},
-  {icon: resources.ships.goldSpanishGalleonWrecked, type: "galleon",    fleet: spaniards, wreck: true,  golden: true},
-  {icon: resources.ships.goldPirateGalleonWrecked,  type: "galleon",    fleet: pirates,   wreck: true,  golden: true}
-]);
+  const shipyard = new Shipyard([
+    {icon: resources.ships.galleon,            type: "galleon",    fleet: spaniards, wreck: false, golden: false},
+    {icon: resources.ships.sailboat,           type: "brigantine", fleet: pirates,   wreck: false, golden: false},
+    {icon: resources.ships.galleonWreck,       type: "galleon",    fleet: spaniards, wreck: true,  golden: false},
+    {icon: resources.ships.sailboatWreck,      type: "brigantine", fleet: pirates,   wreck: true,  golden: false},
+    {icon: resources.ships.goldSpanishGalleon, type: "galleon",    fleet: spaniards, wreck: false, golden: true},
+    {icon: resources.ships.goldPirateGalleon,  type: "galleon",    fleet: pirates,   wreck: false, golden: true},
+    {icon: resources.ships.goldSpanishGalleonWrecked,
+                                               type: "galleon",    fleet: spaniards, wreck: true,  golden: true},
+    {icon: resources.ships.goldPirateGalleonWrecked,
+                                               type: "galleon",    fleet: pirates,   wreck: true,  golden: true}
+  ]);
 
-const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet,
-                                            {anchor: resources.anchor, flag: resources.flags[row.nation]}));
+  const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet,
+                                              {anchor: resources.anchor, flag: resources.flags[row.nation]}));
 
-const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
-const map = builder.buildMap(config.map, rocks, ports);
-const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
-const board = builder.build(map, grid);
+  const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
+  const map = builder.buildMap(config.map, rocks, ports);
+  const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
+  const board = builder.build(map, grid);
 
-board.drawPorts();
+  board.drawPorts();
 
-const ships = shipyard.buildAll(shipOrders);
-const game = new GameBuilder().build(board, ships);
+  const ships = shipyard.buildAll(shipOrders);
+  const game = new GameBuilder().build(board, ships);
 
-// game.telemetry.switchOn();
-// board.drawBoard();
-// if (game.telemetry.working) { board.drawBoard(false, true); }
+  // game.telemetry.switchOn();
+  // board.drawBoard();
+  // if (game.telemetry.working) { board.drawBoard(false, true); }
 
-const gameController = new GameController(game, board);
+  const gameController = new GameController(game, board);
 
-canvasFG.element.addEventListener('click', gameController.click.bind(gameController));
+  canvasFG.element.addEventListener('click', gameController.click.bind(gameController));
 
-(window as any).game = game;
-(window as any).shipyard = shipyard;
-gameController.start();
+  (window as any).game = game;
+  (window as any).shipyard = shipyard;
+  gameController.start();
+};
