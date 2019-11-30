@@ -52,9 +52,11 @@ class GameController {
 
   public repair() {
     const turn = this.game.getCurrentTurn();
+
     if (this.game.canRepair()) {
       turn.ship.repair();
       this.panel.report(turn);
+      this.nextTurn();
     }
   }
 
