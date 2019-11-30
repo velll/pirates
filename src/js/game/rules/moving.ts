@@ -51,8 +51,14 @@ function getCellsBetween(first: Coordinates, second: Coordinates): Coordinates[]
   }
 }
 
+function getCalmRange(shipType: ShipType, where: Coordinates) {
+  return shipType == ShipType.brigantine ? GameMap.getCellsAround(where) : [];
+}
+
 // I'm not proud of this
 function getRange(wind: Wind, shipType: ShipType, where: Coordinates): Coordinates[] {
+  if (wind.isCalm()) { return getCalmRange(shipType, where); }
+
   const windVector = new Vector2d(wind.direction);
   const aft = windVector.apply(where, -1);
 

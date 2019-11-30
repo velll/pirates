@@ -8,6 +8,7 @@ import { Ship } from "../game/ship";
 import { assert } from "../lib/assert";
 import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
+import { ForceScale } from "../game/wind";
 
 class GameController {
   private game: Game;
@@ -69,7 +70,7 @@ class GameController {
 
     if (!turn.ship.isReady()) { this.game.nextTurn(); }
 
-    this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())))
+    this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 
     // FIXME: Find some better idea
     // this.board.scrollTo(turn.ship.coordinates);
@@ -135,11 +136,19 @@ class GameController {
 
   // UI
 
+  private highlightWind(turn: Turn) {
+    if (turn.wind.isCalm()) {
+      this.overlay.highlightShip(turn.ship.coordinates);
+    } else {
+      this.overlay.highlightWind(turn.ship.coordinates, turn.wind.view);
+    }
+  }
+
   private drawOverlay(turn: Turn) {
     this.overlay.clear();
     if (!turn.hasMoved()) {
       this.overlay.highlightMoves(turn.cellsForMove);
-      this.overlay.highlightWind(turn.ship.coordinates, turn.wind.view);
+      this.highlightWind(turn);
     } else {
       this.overlay.highlightShip(turn.ship.coordinates);
     }

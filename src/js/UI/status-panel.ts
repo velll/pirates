@@ -28,8 +28,7 @@ class StatusPanel {
       shipHP: ship.HP.toString(),
       shipMaxHP: ship.maxHP.toString(),
       shipHPPercentage: Math.round(ship.HP * 100 / ship.maxHP).toString(),
-      windName: turn.wind.getName(),
-      windForce: turn.wind.getForce(),
+      wind: turn.wind.description(),
       roseImg: `img/wind-rose-${ship.fleet.name}.png`
     };
 
@@ -39,8 +38,7 @@ class StatusPanel {
   private update(state: State) {
     DOM.$("status-turn-no").innerText = state.turnNo;
     DOM.$("status-active-ship").innerText = state.shipName;
-    DOM.$("status-wind").innerText = state.windName;
-    DOM.$("status-wind-force").innerText = state.windForce;
+    DOM.$("status-wind").innerText = state.wind;
     DOM.$("status-HP").innerText = state.shipHP;
 
     (DOM.$("status-rose-img") as HTMLImageElement).src = state.roseImg;
@@ -56,13 +54,14 @@ class StatusPanel {
   }
 }
 
+interface Describable {
+  description(): string;
+}
+
 interface Reportable {
   no: number;
+  wind: Describable;
 
-  wind: {
-    getName(): string;
-    getForce(): string;
-  };
   ship: {
     name: string;
     fleet: {

@@ -46,6 +46,14 @@ class Wind {
     return ForceScale[this.force]; // Using reverse mapping of the enums here
   }
 
+  public description() {
+    return this.force == ForceScale.calm ? this.getForce() : `${this.direction.name} (${this.getForce()})`;
+  }
+
+  public isCalm() {
+    return this.force == ForceScale.calm;
+  }
+
 }
 
 export { Wind, ForceScale };
