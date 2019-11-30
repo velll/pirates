@@ -2,7 +2,7 @@ import { Moveable } from '../board';
 import { CanvasAdapter } from '../lib/canvas/canvas-adapter';
 import { MovingImage } from '../lib/canvas/moving-image';
 import { Position } from '../lib/position';
-import { DOM } from '../lib/DOM/dom';
+import { DOM } from '../lib/dom/dom';
 
 class CannonballView implements Moveable {
   private readonly ICON_TO_CELL_RATIO = 0.5;
