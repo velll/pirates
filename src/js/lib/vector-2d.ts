@@ -37,6 +37,11 @@ class Vector2d {
     return Math.sign(rounded);
   }
 
+  // apply the vector to a set of coordinates
+  public apply(point: {x: number, y: number}, times = 1) {
+    return {x: point.x + times * this.x, y: point.y + times * this.y};
+  }
+
   private sin(angle: number): number {
     return Math.sin((Math.PI / 180) * angle);
   }
