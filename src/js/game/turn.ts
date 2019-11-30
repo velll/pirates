@@ -1,5 +1,4 @@
 import { Coordinates, Move } from '../lib/coordinates';
-
 import { includes } from '../lib/includes';
 import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
@@ -16,15 +15,13 @@ class Turn {
 
   private offLimitCells: OffLimits;
 
-  constructor(no: number, ship: Ship, wind: Wind, offLimitCells: OffLimits) {
+  constructor(no: number, ship: Ship, wind: Wind, movement: Coordinates[], offLimitCells: OffLimits) {
     this.no = no;
     this.ship = ship;
     this.wind = wind;
     this.offLimitCells = offLimitCells;
 
-    this.cellsForMove = filterOut(
-                          this.ship.getMovingRange(this.wind),
-                          offLimitCells.move);
+    this.cellsForMove = filterOut(movement, offLimitCells.move);
   }
 
   public makeMove(to: Coordinates) {

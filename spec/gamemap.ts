@@ -34,7 +34,14 @@ test('map should know where ports are', () => {
 });
 
 test('map should not think there are ports when theres none', () => {
-  expect(gameMap.getFeatureByCoords({x: 15, y: 25})).not.toEqual('port');
+  expect(gameMap.getFeatureByCoords({x: 8, y: 9})).not.toEqual('port');
+});
+
+test('map should be able to filter out invalid cells', () => {
+  expect(gameMap.isOnMap({x: 5, y: 8})).toBe(true);
+  expect(gameMap.isOnMap({x: 7, y: 3})).toBe(true);
+  expect(gameMap.isOnMap({x: -1, y: 5})).toBe(false);
+  expect(gameMap.isOnMap({x: 2, y: 27})).toBe(false);
 });
 
 // Statics

@@ -61,6 +61,11 @@ class GameMap {
     return this.isFeature(cell, this.features.rocks);
   }
 
+  public isOnMap(cell: Coordinates): boolean {
+    return cell.x >= 0 && cell.x < this.columns &&
+           cell.y >= 0 && cell.y < this.rows;
+  }
+
   private getFeature(cell: Coordinates): string {
     // console.log("trying for a feature at" + cell.x + "," + cell.y);
 

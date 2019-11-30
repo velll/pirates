@@ -39,6 +39,9 @@ class Game {
     const turnNo = this.turns.length;
     const ship = this.ships[turnNo % this.ships.length];
 
+    const wind = this.windGen.getRandomWind();
+    const mvmt = ship.getMovingRange(wind).filter(cell => this.board.isOnMap(cell));
+
     // cannot move to already occupied cells
     // cannot shoot into ports
     const offLimitCells = {move: this.board.getRocks().concat(
@@ -47,7 +50,7 @@ class Game {
                                       Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates))),
                            shot: this.board.getPorts().map(port => port.coordinates)};
 
-    const turn = new Turn(turnNo, ship, this.windGen.getRandomWind(), offLimitCells);
+    const turn = new Turn(turnNo, ship, wind, mvmt, offLimitCells);
     this.turns[this.turns.length] = turn;
 
     if (ship.isSunk()) {
