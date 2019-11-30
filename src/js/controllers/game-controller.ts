@@ -134,9 +134,14 @@ class GameController {
 
   private drawOverlay(turn: Turn) {
     this.overlay.clear();
-    this.overlay.highlightMoves(turn.cellsForMove);
+    if (!turn.hasMoved()) {
+      this.overlay.highlightMoves(turn.cellsForMove);
+      this.overlay.highlightWind(turn.ship.coordinates, turn.wind.view);
+    } else {
+      this.overlay.highlightShip(turn.ship.coordinates);
+    }
+
     this.overlay.highlightTargets(this.game.getTargets(turn.ship));
-    this.overlay.highlightShip(turn.ship.coordinates);
   }
 
   private drawShips(ships: Ship[]) {

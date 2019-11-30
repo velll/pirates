@@ -1,3 +1,5 @@
+import { WindView } from "../views/wind";
+
 interface Direction {
   name: string;
   x: number;
@@ -27,9 +29,13 @@ class Wind {
   public direction: Direction;
   public force: ForceScale;
 
+  public view: WindView;
+
   constructor(direction: Direction, force: ForceScale) {
     this.direction = direction;
     this.force = force;
+
+    this.view = new WindView(this);
   }
 
   public getName() {

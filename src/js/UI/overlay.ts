@@ -1,5 +1,5 @@
 import { Coordinates } from "../lib/coordinates";
-import { Board } from "../board";
+import { Board, Drawable } from "../board";
 
 class Overlay {
   private board: Board;
@@ -26,6 +26,10 @@ class Overlay {
 
   public highlightShip(at: Coordinates) {
     this.board.highlightShip(at, this.SHIP_HIGHLIGHT_COLOR);
+  }
+
+  public highlightWind(at: Coordinates, wind: Drawable) {
+    this.board.highlightWind(at, wind);
   }
 
   public clear() {

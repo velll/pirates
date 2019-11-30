@@ -103,6 +103,10 @@ class Board {
     this.layers.highlight.drawBlurryCircle(position, this.grid.cellSize, color);
   }
 
+  public highlightWind(at: Coordinates, wind: Drawable) {
+    wind.draw(this.layers.highlight, this.grid.getCellPosition(at), this.grid.cellSize);
+  }
+
   public clearHighlight() {
     this.layers.highlight.clearAll();
   }
