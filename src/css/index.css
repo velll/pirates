@@ -23,6 +23,7 @@ canvas#background{
 canvas#highlight { z-index: 10; }
 canvas#ships { z-index: 20; }
 canvas#foreground{ z-index: 30; }
+.message { z-index: 100 }
 
 resources {
   display: none;

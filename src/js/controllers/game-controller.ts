@@ -5,10 +5,9 @@ import { Board } from "../board";
 import { Overlay } from "../UI/overlay";
 import { Coordinates } from "../board/gamemap";
 import { Ship } from "../game/ship";
-import { assert } from "../lib/assert";
 import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
-import { ForceScale } from "../game/wind";
+import { Messenger } from "../UI/messenger";
 
 class GameController {
   private game: Game;
@@ -16,6 +15,7 @@ class GameController {
 
   private panel: StatusPanel;
   private overlay: Overlay;
+  private messenger: Messenger;
 
   constructor(game: Game, board: Board) {
     this.game = game;
@@ -27,6 +27,8 @@ class GameController {
                         "button-surrender": this.surrender.bind(this)});
 
     this.overlay = new Overlay(board);
+
+    this.messenger = new Messenger();
   }
 
   // event handlers
@@ -161,7 +163,7 @@ class GameController {
   }
 
   private congratulate(fleet: Fleet) {
-    alert("Game Over! " + fleet.name + " have won");
+    this.messenger.send("Game Over! ", fleet.name + " have won");
   }
 }
 
