@@ -6,6 +6,7 @@ import { Port } from './port';
 // GameMap holds board data — how many cells in a row/column and
 // special features of the cells
 class GameMap {
+  public static dummyCell = {x: -1, y: -1};
 
   public static getCellsAround(coords: Coordinates, radius = 1): Coordinates[] {
     const rng: number[] = range(-radius, radius + 1);
@@ -66,18 +67,18 @@ class GameMap {
            cell.y >= 0 && cell.y < this.rows;
   }
 
+  public getPort(coordinates: Coordinates): Port {
+    return this.features.ports.filter(port =>
+             GameMap.isSameCell(port.coordinates, coordinates)
+           )[0];
+  }
+
   private getFeature(cell: Coordinates): string {
     // console.log("trying for a feature at" + cell.x + "," + cell.y);
 
     if (this.isRock(cell)) { return FeatureTypes.rock; }
     if (this.isPort(cell)) { return FeatureTypes.port; }
     return FeatureTypes.sea;
-  }
-
-  private getPort(coordinates: Coordinates): Port {
-    return this.features.ports.filter(port => {
-             return (GameMap.isSameCell(port.coordinates, coordinates));
-           })[0];
   }
 
   private isFeature(cell: Coordinates, featureSet: Coordinates[]) {

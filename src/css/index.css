@@ -1,11 +1,15 @@
 * {
   padding: 0;
   margin: 0;
+
+  box-sizing: border-box;
 }
 
 html {
   overflow-x: scroll;
   scroll-behavior: smooth;
+
+  background-color: rgba(199,193,172);
 }
 
 canvas {
@@ -24,6 +28,7 @@ canvas#highlight { z-index: 10; }
 canvas#ships { z-index: 20; }
 canvas#foreground{ z-index: 30; }
 .message { z-index: 100 }
+.cell-tip { z-index: 100 }
 
 resources {
   display: none;
@@ -31,16 +36,19 @@ resources {
 
 div#telemetry {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0;  left: 0;
+
   width: 100%;
   background-color: rgba(255, 255, 255, 0.5);
-  /* opacity: 0.5; */
-  font-size: 2em;
 
+  font-size: 2em;
   display: none;
 }
 
-* {
-  box-sizing: border-box;
+.hidden {
+  visibility: hidden;
+}
+
+.transparent {
+  opacity: 0;
 }

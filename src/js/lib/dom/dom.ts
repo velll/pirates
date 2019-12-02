@@ -1,11 +1,9 @@
-class DOM {
-  public static $(id: string): HTMLElement {
-   return document.getElementById(id);
-  }
-
-  public static $$(klass: string): HTMLCollectionOf<Element> {
-    return document.getElementsByClassName(klass);
-  }
-}
+const DOM = {
+  $: (id: string): HTMLElement => document.getElementById(id),
+  $$: (selector: string): HTMLElement => document.querySelector(selector),
+  $$$: (selector: string): NodeListOf<HTMLElement> => (
+    document.querySelectorAll(selector)
+  )
+};
 
 export { DOM };

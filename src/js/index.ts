@@ -29,6 +29,8 @@ document.body.style.width = canvasDimensions.width.toString() + "px";
 
 window.onload = () => {
   const resources = collectResources();
+  pirates.flag = resources.flags.pirates;
+  spaniards.flag = resources.flags.spain;
 
   const shipyard = new Shipyard([
     {icon: resources.ships.galleon,            type: "galleon",    fleet: spaniards, wreck: false, golden: false},
@@ -43,7 +45,7 @@ window.onload = () => {
                                                type: "galleon",    fleet: pirates,   wreck: true,  golden: true}
   ]);
 
-  const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet,
+  const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet, row.nation,
                                               {anchor: resources.anchor, flag: resources.flags[row.nation]}));
 
   const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
@@ -63,6 +65,7 @@ window.onload = () => {
   const gameController = new GameController(game, board);
 
   canvasFG.element.addEventListener('click', gameController.click.bind(gameController));
+  canvasFG.element.addEventListener('mousemove', gameController.mousemove.bind(gameController));
 
   (window as any).game = game;
   (window as any).shipyard = shipyard;

@@ -1,0 +1,25 @@
+.cell-tip {
+  position: absolute;
+  
+  background-color: rgba(199,193,172, 0.8);
+  border: solid 1px;
+  box-shadow: 10px 10px 20px grey;
+  
+  text-transform: capitalize;
+
+  transition: opacity 0.25s linear;
+}
+
+.cell-tip .flag {
+  box-shadow: 2px 2px grey;
+}
+
+.media-left figure{
+  margin-left: 1em;
+}
+
+.occupied-by {
+  text-align: center;
+  font-style: italic;
+  margin: 0.5em 0;
+}

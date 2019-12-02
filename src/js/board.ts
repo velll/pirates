@@ -60,9 +60,13 @@ class Board {
     return this.getPorts().filter(port => port.fleet.is(fleet));
   }
 
+  public getPort(cell: Coordinates) { return this.map.getPort(cell); }
+
   public getPorts() { return this.map.getPorts(); }
   public getRocks() { return this.map.getRocks(); }
   public isOnMap(cell: Coordinates) { return this.map.isOnMap(cell); }
+
+  public getCellCenter(cell: Coordinates) { return this.grid.getCellCenter(cell); }
 
   // ***********************
   // drawing cells and ports

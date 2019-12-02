@@ -9,6 +9,8 @@ class Fleet {
       throw Error("Unknown fleet " + fleet);
     }
   }
+
+  public flag: CanvasImageSource;
   public name: string;
   public playable: boolean;
 

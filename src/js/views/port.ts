@@ -4,9 +4,9 @@ import { Position } from "../lib/position";
 import { Port } from "../board/port";
 
 class PortView implements Drawable {
+  public flag: CanvasImageSource;
   private model: Port;
   private icon: CanvasImageSource;
-  private flag: CanvasImageSource;
 
   private readonly PORT_CROSS_TO_CELL_RATIO = 0.8;
   private readonly PORT_FLAG_TO_CELL_RATIO = 0.5;

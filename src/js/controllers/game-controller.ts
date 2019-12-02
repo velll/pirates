@@ -8,6 +8,7 @@ import { Ship } from "../game/ship";
 import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
 import { Messenger } from "../UI/messenger";
+import { CellTip } from "../UI/cell-tip";
 
 class GameController {
   private game: Game;
@@ -16,6 +17,7 @@ class GameController {
   private panel: StatusPanel;
   private overlay: Overlay;
   private messenger: Messenger;
+  private cellTip: CellTip;
 
   constructor(game: Game, board: Board) {
     this.game = game;
@@ -27,7 +29,7 @@ class GameController {
                         "button-surrender": this.surrender.bind(this)});
 
     this.overlay = new Overlay(board);
-
+    this.cellTip = new CellTip();
     this.messenger = new Messenger();
   }
 
@@ -57,6 +59,22 @@ class GameController {
       turn.ship.repair();
       this.panel.report(turn);
       this.nextTurn();
+    }
+  }
+
+  public mousemove(e: MouseEvent) {
+    const cell = this.board.locateCell({left: e.offsetX, top: e.offsetY});
+    const position = this.board.getCellCenter(cell);
+
+    const port = this.board.getPort(cell);
+    const ship = this.game.findShipByCoordinates(cell);
+
+    if (this.cellTip.hasMoved(cell)) {
+      if (port || ship) {
+        this.cellTip.render(cell, position, port, ship);
+      } else if (this.cellTip.isVisible()) {
+        this.cellTip.hide();
+      }
     }
   }
 
