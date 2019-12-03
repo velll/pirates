@@ -64,7 +64,7 @@ class GameController {
 
   public mousemove(e: MouseEvent) {
     const cell = this.board.locateCell({left: e.offsetX, top: e.offsetY});
-    const position = this.board.getCellCenter(cell);
+    const position = this.board.getCellEnd(cell);
 
     const port = this.board.getPort(cell);
     const ship = this.game.findShipByCoordinates(cell);
@@ -80,12 +80,16 @@ class GameController {
 
   // event handlers done
 
-  public nextTurn() {
+  public async nextTurn() {
     let turn = this.game.nextTurn();
 
     if (turn.ship.isSunk()) {
       this.board.removeShip(turn.ship.coordinates);
       turn = this.game.nextTurn();
+    }
+
+    if (turn.wind.isStorm()) {
+      await this.drawStorm(turn);
     }
 
     if (!turn.ship.isReady()) { this.game.nextTurn(); }
@@ -147,6 +151,33 @@ class GameController {
     } else {
       this.drawOverlay(turn);
     }
+  }
+
+  private async drawStorm(turn: Turn) {
+    if (this.game.isCaughtInStorm(turn)) {
+      this.messenger.send("Storm!",
+                          `The ${turn.wind.getName()} wind is howling and your ship moves 1 cell`,
+                          true);
+
+      const to = turn.wind.follow(turn.ship.coordinates);
+      await this.moveByStorm(turn, to);
+    } else {
+      this.messenger.send("Storm!",
+                          `The ${turn.wind.getName()} wind is howling. You cannot move this turn`,
+                          true);
+    }
+  }
+
+  private async moveByStorm(turn: Turn, to: Coordinates) {
+    this.highlightWind(turn);
+
+    const from = turn.ship.coordinates;
+    turn.makeMove(to);
+
+    await this.board.moveShip(turn.ship.view, from, to);
+    this.game.followStorm(turn.ship, to);
+
+    this.board.drawShip(turn.ship.view, to);
   }
 
   private captureGold() {

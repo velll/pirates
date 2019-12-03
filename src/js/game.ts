@@ -63,6 +63,20 @@ class Game {
     return turn;
   }
 
+  public isCaughtInStorm(turn: Turn): boolean {
+    const to = turn.wind.follow(turn.ship.coordinates);
+
+    return !(this.isInPort(turn.ship) || this.findShipByCoordinates(to));
+  }
+
+  public followStorm(ship: Ship, to: Coordinates) {
+    if (this.board.isRock(to) || !this.board.isOnMap(to)) {
+      ship.damage();
+      ship.damage();
+      ship.damage();
+    }
+  }
+
   // Current game state
 
   public getCurrentTurn() { return last(this.turns); }

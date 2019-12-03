@@ -1,4 +1,6 @@
 import { WindView } from "../views/wind";
+import { Vector2d } from "../lib/vector-2d";
+import { Coordinates } from "../board/gamemap";
 
 interface Direction {
   name: string;
@@ -54,6 +56,17 @@ class Wind {
     return this.force == ForceScale.calm;
   }
 
+  public isStorm() {
+    return this.force == ForceScale.storm;
+  }
+
+  public toVector(): Vector2d {
+    return new Vector2d({x: this.direction.x, y: this.direction.y});
+  }
+
+  public follow(from: Coordinates) {
+    return this.toVector().apply(from);
+  }
 }
 
 export { Wind, ForceScale };

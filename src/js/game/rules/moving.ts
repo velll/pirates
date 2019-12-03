@@ -58,6 +58,7 @@ function getCalmRange(shipType: ShipType, where: Coordinates) {
 // I'm not proud of this
 function getRange(wind: Wind, shipType: ShipType, where: Coordinates): Coordinates[] {
   if (wind.isCalm()) { return getCalmRange(shipType, where); }
+  if (wind.isStorm()) { return []; }
 
   const windVector = new Vector2d(wind.direction);
   const aft = windVector.apply(where, -1);

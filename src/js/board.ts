@@ -48,9 +48,8 @@ class Board {
   // **************
   // cells and grid
   // **************
-  public isPort(cell: Coordinates) {
-    return this.map.isPort(cell);
-  }
+  public isPort(cell: Coordinates) { return this.map.isPort(cell); }
+  public isRock(cell: Coordinates) { return this.map.isRock(cell); }
 
   public isPortOf(cell: Coordinates, fleet: Fleet) {
     return this.map.isPortOf(cell, fleet);
@@ -67,6 +66,7 @@ class Board {
   public isOnMap(cell: Coordinates) { return this.map.isOnMap(cell); }
 
   public getCellCenter(cell: Coordinates) { return this.grid.getCellCenter(cell); }
+  public getCellEnd(cell: Coordinates) { return this.grid.getCellEnd(cell); }
 
   // ***********************
   // drawing cells and ports
