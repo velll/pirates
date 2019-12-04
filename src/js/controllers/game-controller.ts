@@ -49,6 +49,7 @@ class GameController {
   }
 
   public start() {
+    this.game.start();
     this.nextTurn();
   }
 

@@ -14,7 +14,7 @@ class Shipyard {
   }
   public build(order: Order) {
     return new Ship(order.type, order.fleet, order.name,
-      order.coords, this.getIconsFor(order.type), order.gold);
+      order.coords, this.getIconsFor(order.type));
   }
 
   public getIconsFor(type: ShipType): Design[] {
@@ -35,7 +35,6 @@ interface Order {
   fleet: Fleet;
   name: string;
   coords: Coordinates,
-  gold?: boolean;
 }
 
 export { Shipyard, Design, Order};

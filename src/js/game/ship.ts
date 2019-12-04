@@ -36,20 +36,19 @@ class Ship {
   private readonly REPAIR_BY = 10;
 
   constructor(type: ShipType, fleet: Fleet, name: string,
-              initialCoordinates: Coordinates, icons: Design[],
-              carriesGold: boolean = false) {
+              initialCoordinates: Coordinates, icons: Design[]) {
     this.type = type;
     this.fleet = fleet;
     this.name = name;
 
     this.coordinates = initialCoordinates;
-    this.carriesGold = carriesGold;
     this.status = ShipStatus.ready;
 
     this.maxHP = this.HP_VALUES[type];
     this.HP = this.HP_VALUES[type];
 
     this.view = new ShipView(this, icons);
+    this.carriesGold = false;
   }
 
   public move(coordinates: Coordinates) {
@@ -88,6 +87,10 @@ class Ship {
 
     this.fleet = fleet;
     this.repair();
+  }
+
+  public loadGold() {
+    this.carriesGold = true;
   }
 
   public isReady(): boolean { return this.status == ShipStatus.ready; }

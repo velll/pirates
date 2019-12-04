@@ -10,6 +10,7 @@ import { GameMap } from "./board/gamemap";
 import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 import { filterOut } from "./lib/filter-out";
 import { Ship } from "./game/ship";
+import { getRndInt } from "./lib/rnd-int";
 
 class Game {
   public telemetry: Reportable;
@@ -32,7 +33,13 @@ class Game {
     this.turns = [];
 
     this.windGen = new WindGenerator();
-    this.goldenShip = ships.filter(ship => (ship.carriesGold))[0];
+  }
+
+  public start() {
+    const spanishShips = this.ships.filter(ship => ship.fleet.is(spaniards));
+
+    this.goldenShip = spanishShips[getRndInt(spanishShips.length)];
+    this.goldenShip.loadGold();
   }
 
   public nextTurn(): Turn {

@@ -3,7 +3,7 @@ import { ShipType } from '../game/ship';
 import { spaniards, pirates } from '../game/fleet';
 
 const orders: Order[] = [
-  {type: ShipType.galleon, fleet: spaniards, name: "Santa Clara", coords: {x: 1, y: 16}, gold: true},
+  {type: ShipType.galleon, fleet: spaniards, name: "Santa Clara", coords: {x: 1, y: 16}},
   {type: ShipType.galleon, fleet: spaniards, name: "Domingo",     coords: {x: 7, y: 20}},
   {type: ShipType.galleon, fleet: spaniards, name: "Idalho",      coords: {x: 5, y: 14}},
   {type: ShipType.brigantine, fleet: pirates, name: "Black Hawk",       coords:  {x: 8, y: 7}},
