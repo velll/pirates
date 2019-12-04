@@ -13,7 +13,7 @@ class Telemetry implements Reportable {
   constructor() {
     // you have to manually turn it on
     this.working = false;
-    this.renderer = new AsyncRenderer("templates/telemetry.html",
+    this.renderer = new AsyncRenderer("templates/telemetry.ejs",
                                       DOM.$("telemetry"),
                                       this.update);
   }

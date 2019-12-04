@@ -8,7 +8,7 @@ class Messenger {
   constructor() {
     this.element = DOM.$("message");
 
-    this.renderer = new AsyncRenderer("templates/message.html",
+    this.renderer = new AsyncRenderer("templates/message.ejs",
                                       this.element,
                                       this.update,
                                       this.bindEvents.bind(this));

@@ -13,7 +13,7 @@ class StatusPanel {
     this.model = model;
     this.buttonHandlers = buttonHandlers;
 
-    this.renderer = new AsyncRenderer("templates/status.html",
+    this.renderer = new AsyncRenderer("templates/status.ejs",
                                       DOM.$("status"),
                                       this.update,
                                       this.bindEvents.bind(this));

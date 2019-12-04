@@ -14,7 +14,7 @@ class CellTip {
     this.element = DOM.$("cell-tip");
     this.currentCell = GameMap.dummyCell;
 
-    this.renderer = new AsyncRenderer("templates/cell-tip.html",
+    this.renderer = new AsyncRenderer("templates/cell-tip.ejs",
                                       this.element,
                                       this.update);
 

@@ -6,6 +6,8 @@ To render an object provide:
   - an `updater` — a function that's gonna update contents of the template
 An updater is a callback — it must accept a single parameter of a type State (down below)
 */
+import { template } from 'lodash';
+
 class AsyncRenderer {
   private templateURL: string;
   private root: HTMLElement;
@@ -28,8 +30,10 @@ class AsyncRenderer {
   }
 
   private async initializeElement() {
-    const response = await fetch(this.templateURL);
-    this.root.innerHTML = await response.text();
+    const templateText = await fetch(this.templateURL).then(response => response.text());
+    const compiled = template(templateText);
+
+    this.root.innerHTML = compiled();
 
     if (this.afterInit) { this.afterInit(); }
 

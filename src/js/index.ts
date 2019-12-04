@@ -16,6 +16,8 @@ import { collectResources } from './resources';
 
 import { GameController } from "./controllers/game-controller";
 
+import { t } from './data/i18n';
+
 const canvasDimensions = {width: 2000, height: 1221};
 
 const canvasBG = CanvasAdapter.getCanvas("background");
@@ -71,3 +73,5 @@ window.onload = () => {
   (window as any).shipyard = shipyard;
   gameController.start();
 };
+
+(window as any).t = t;
