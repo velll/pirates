@@ -71,7 +71,7 @@ window.onload = () => {
 
   (window as any).game = game;
   (window as any).shipyard = shipyard;
-  gameController.start();
+  gameController.prepare();
 };
 
 (window as any).t = t;

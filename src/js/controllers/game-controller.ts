@@ -9,6 +9,7 @@ import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
 import { Messenger } from "../UI/messenger";
 import { CellTip } from "../UI/cell-tip";
+import { PreGameDialog } from "../UI/pre-game";
 
 class GameController {
   private game: Game;
@@ -18,6 +19,7 @@ class GameController {
   private overlay: Overlay;
   private messenger: Messenger;
   private cellTip: CellTip;
+  private preGameDialog: PreGameDialog;
 
   constructor(game: Game, board: Board) {
     this.game = game;
@@ -31,6 +33,7 @@ class GameController {
     this.overlay = new Overlay(board);
     this.cellTip = new CellTip();
     this.messenger = new Messenger();
+    this.preGameDialog = new PreGameDialog(this.start.bind(this));
   }
 
   // event handlers
@@ -48,8 +51,14 @@ class GameController {
     if (this.game.isOver()) { this.congratulate(turn.ship.fleet); }
   }
 
+  public prepare() {
+    const goldenShip = this.game.loadGold();
+    const port = this.board.getPort(goldenShip.coordinates);
+
+    this.preGameDialog.show(goldenShip.name, port.name);
+  }
+
   public start() {
-    this.game.start();
     this.nextTurn();
   }
 

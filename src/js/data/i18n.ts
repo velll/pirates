@@ -3,6 +3,12 @@ import i18next from 'i18next';
 const en = {
   "key": "hello world",
   "nono": "not hello world",
+  "pre-game": {
+    "header": "Start game",
+    "gold-on-ship": "The Spaniards have loaded gold on a ship named",
+    "gold-at": "It is currently at",
+    "start": "Start game"
+  },
   "status": {
     round: "Round"
   },

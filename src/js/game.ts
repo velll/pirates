@@ -35,11 +35,13 @@ class Game {
     this.windGen = new WindGenerator();
   }
 
-  public start() {
+  public loadGold(): Ship {
     const spanishShips = this.ships.filter(ship => ship.fleet.is(spaniards));
 
     this.goldenShip = spanishShips[getRndInt(spanishShips.length)];
     this.goldenShip.loadGold();
+
+    return this.goldenShip;
   }
 
   public nextTurn(): Turn {
