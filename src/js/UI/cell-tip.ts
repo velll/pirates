@@ -17,8 +17,6 @@ class CellTip {
     this.renderer = new AsyncRenderer("templates/cell-tip.ejs",
                                       this.element,
                                       this.update);
-
-    this.element.addEventListener("transitionend", this.hideCompletely);
   }
 
   public hasMoved(cell: Coordinates) {
@@ -58,6 +56,7 @@ class CellTip {
 
   public hide() {
     this.element.classList.add("transparent");
+    this.element.classList.add("hidden");
   }
 
   public isVisible() {
@@ -67,14 +66,6 @@ class CellTip {
   private show() {
     this.element.classList.remove("hidden");
     this.element.classList.remove("transparent");
-  }
-
-  private hideCompletely(event: TransitionEvent) {
-    const target = event.target as HTMLElement;
-
-    if (target.classList.contains("transparent")) {
-      target.classList.add("hidden");
-    }
   }
 
   private update(state: State) {
