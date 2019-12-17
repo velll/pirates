@@ -1,5 +1,5 @@
 import { AsyncRenderer, State } from "../lib/dom/async-renderer";
-import { DOM } from "../lib/dom/dom";
+import { $ } from "dollarsigns";
 
 class PreGameDialog {
   private element: HTMLElement;
@@ -7,7 +7,7 @@ class PreGameDialog {
   private starter: GameStarter;
 
   constructor(starter: GameStarter) {
-    this.element = DOM.$("pre-game");
+    this.element = $("pre-game");
     this.starter = starter;
     this.renderer = new AsyncRenderer("templates/pre-game.ejs",
                                       this.element,
@@ -25,12 +25,12 @@ class PreGameDialog {
 
   private update(state: State) {
     state.element.classList.remove("hidden");
-    DOM.$("pre-game-golden-ship").textContent = state.ship;
-    DOM.$("pre-game-golden-port").textContent = state.port;
+    $("pre-game-golden-ship").textContent = state.ship;
+    $("pre-game-golden-port").textContent = state.port;
   }
 
   private bindEvents() {
-    DOM.$("start-game").addEventListener("click", () => {
+    $("start-game").addEventListener("click", () => {
       this.element.classList.add("hidden");
       this.starter();
     });

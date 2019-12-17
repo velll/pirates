@@ -1,5 +1,5 @@
 import { Game } from '../game';
-import { DOM } from '../lib/dom/dom';
+import { $ } from 'dollarsigns';
 import { AsyncRenderer, State } from '../lib/dom/async-renderer';
 import { each } from 'lodash';
 
@@ -14,7 +14,7 @@ class StatusPanel {
     this.buttonHandlers = buttonHandlers;
 
     this.renderer = new AsyncRenderer("templates/status.ejs",
-                                      DOM.$("status"),
+                                      $("status"),
                                       this.update,
                                       this.bindEvents.bind(this));
   }
@@ -36,20 +36,20 @@ class StatusPanel {
   }
 
   private update(state: State) {
-    DOM.$("status-turn-no").innerText = state.turnNo;
-    DOM.$("status-active-ship").innerText = state.shipName;
-    DOM.$("status-wind").innerText = state.wind;
-    DOM.$("status-HP").innerText = state.shipHP;
+    $("status-turn-no").innerText = state.turnNo;
+    $("status-active-ship").innerText = state.shipName;
+    $("status-wind").innerText = state.wind;
+    $("status-HP").innerText = state.shipHP;
 
-    (DOM.$("status-rose-img") as HTMLImageElement).src = state.roseImg;
+    ($("status-rose-img") as HTMLImageElement).src = state.roseImg;
 
     const HPBarStyle = `linear-gradient(to top, rgba(51, 153, 0, 0.8) ${state.shipHPPercentage}%, red ${state.shipHPPercentage}%)`;
-    DOM.$("status-hp-bar") .style.background = HPBarStyle;
+    $("status-hp-bar") .style.background = HPBarStyle;
   }
 
   private bindEvents() {
     each(this.buttonHandlers, (f, elementId) => (
-      DOM.$(elementId).addEventListener("click", f)
+      $(elementId).addEventListener("click", f)
     ));
   }
 }

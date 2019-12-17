@@ -2,7 +2,7 @@ import { Drawable } from "../board";
 import { Wind } from "../game/wind";
 import { CanvasAdapter } from "../lib/canvas/canvas-adapter";
 import { Position } from "../lib/position";
-import { DOM } from "../lib/dom/dom";
+import { $ } from "dollarsigns";
 
 class WindView implements Drawable {
   private wind: Wind;
@@ -21,7 +21,7 @@ class WindView implements Drawable {
   }
 
   public getImage(): CanvasImageSource {
-    return DOM.$(`wind-${this.wind.getName()}`) as CanvasImageSource;
+    return $(`wind-${this.wind.getName()}`) as CanvasImageSource;
   }
 }
 

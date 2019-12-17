@@ -2,14 +2,14 @@ import { Moveable } from '../board';
 import { CanvasAdapter } from '../lib/canvas/canvas-adapter';
 import { MovingImage } from '../lib/canvas/moving-image';
 import { Position } from '../lib/position';
-import { DOM } from '../lib/dom/dom';
+import { $ } from 'dollarsigns';
 
 class CannonballView implements Moveable {
   private readonly ICON_TO_CELL_RATIO = 0.5;
   private img: CanvasImageSource;
 
   constructor() {
-    this.img = DOM.$('cannonball') as CanvasImageSource;
+    this.img = $('cannonball') as CanvasImageSource;
   }
 
   public drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number) {

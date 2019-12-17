@@ -2,7 +2,7 @@ import { Port } from "../board/port";
 import { Ship } from "../game/ship";
 import { Coordinates, GameMap } from "../board/gamemap";
 import { Position } from "../lib/position";
-import { DOM } from "../lib/dom/dom";
+import { DOM } from "dollarsigns";
 import { AsyncRenderer, State } from "../lib/dom/async-renderer";
 
 class CellTip {

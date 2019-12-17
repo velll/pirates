@@ -1,12 +1,12 @@
 import { AsyncRenderer, State } from '../lib/dom/async-renderer';
-import { DOM } from '../lib/dom/dom';
+import { $ } from 'dollarsigns';
 
 class Messenger {
   private renderer: AsyncRenderer;
   private element: HTMLElement;
 
   constructor() {
-    this.element = DOM.$("message");
+    this.element = $("message");
 
     this.renderer = new AsyncRenderer("templates/message.ejs",
                                       this.element,
@@ -25,22 +25,22 @@ class Messenger {
   }
 
   private update(state: State) {
-    DOM.$("message-header-text").innerText = state.header;
-    DOM.$("message-body-text").innerText = state.text;
+    $("message-header-text").innerText = state.header;
+    $("message-body-text").innerText = state.text;
 
-    DOM.$("message").classList.remove("hidden");
+    $("message").classList.remove("hidden");
 
     if (state.flash) {
-      DOM.$("message").classList.add("flash");
+      $("message").classList.add("flash");
     }
   }
 
   private bindEvents() {
-    DOM.$("message-close").addEventListener("click", event => {
-      DOM.$("message").classList.add("hidden");
+    $("message-close").addEventListener("click", event => {
+      $("message").classList.add("hidden");
     });
 
-    DOM.$("message").addEventListener("transitionend", event => {
+    $("message").addEventListener("transitionend", event => {
       (event.target as HTMLElement).classList.remove("flash");
       (event.target as HTMLElement).classList.add("hidden");
     });

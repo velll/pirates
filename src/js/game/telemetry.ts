@@ -1,6 +1,6 @@
 import { Turn } from './turn';
 import { Reportable } from '../game';
-import { DOM } from '../lib/dom/dom';
+import { $ } from 'dollarsigns';
 import { AsyncRenderer, State } from '../lib/dom/async-renderer';
 
 class Telemetry implements Reportable {
@@ -14,18 +14,18 @@ class Telemetry implements Reportable {
     // you have to manually turn it on
     this.working = false;
     this.renderer = new AsyncRenderer("templates/telemetry.ejs",
-                                      DOM.$("telemetry"),
+                                      $("telemetry"),
                                       this.update);
   }
 
   public switchOn() {
     this.working = true;
-    DOM.$("telemetry").style.display = this.TELEMETRY_DISPLAY;
+    $("telemetry").style.display = this.TELEMETRY_DISPLAY;
   }
 
   public switchOff() {
     this.working = false;
-    DOM.$("telemetry").style.display = "none";
+    $("telemetry").style.display = "none";
   }
 
   public report(turn: Turn) {
@@ -45,13 +45,13 @@ class Telemetry implements Reportable {
   }
 
   private update(state: State) {
-    DOM.$("telemetry-turn-no").innerText = state.turnNo;
-    DOM.$("telemetry-active-ship").innerText = state.shipName;
-    DOM.$("telemetry-active-fleet").innerText = state.shipFleetName;
-    DOM.$("telemetry-HP").innerText = state.shipHP;
-    DOM.$("telemetry-max-HP").innerText = state.shipMaxHP;
-    DOM.$("telemetry-wind").innerText = state.windName;
-    DOM.$("telemetry-wind-force").innerText = state.windForce;
+    $("telemetry-turn-no").innerText = state.turnNo;
+    $("telemetry-active-ship").innerText = state.shipName;
+    $("telemetry-active-fleet").innerText = state.shipFleetName;
+    $("telemetry-HP").innerText = state.shipHP;
+    $("telemetry-max-HP").innerText = state.shipMaxHP;
+    $("telemetry-wind").innerText = state.windName;
+    $("telemetry-wind-force").innerText = state.windForce;
   }
 }
 
