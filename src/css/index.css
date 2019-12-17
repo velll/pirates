@@ -49,6 +49,10 @@ div#telemetry {
   visibility: hidden;
 }
 
+.none {
+  display: none;
+}
+
 .transparent {
   opacity: 0;
 }

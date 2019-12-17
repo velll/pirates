@@ -1,0 +1,37 @@
+.help {
+  position: absolute;
+  left: 20%;
+  top: 5%;
+  width: 70%;
+
+  box-shadow: 10px 10px 20px grey;
+}
+
+.help-container {
+  display: flex;
+}
+
+.help-chapter {
+  display: none;
+}
+
+.active-chapter {
+  display: block;
+}
+
+.help-container .menu {
+  flex: 0 0 20%;
+}
+
+.help .help-chapter img {
+  display: block;
+  padding: 0.5em 0;
+}
+
+.help .help-chapter ul, .help .help-chapter ol {
+  padding-left: 2em;
+} 
+
+.help .help-chapter ul {
+  list-style: circle;
+}

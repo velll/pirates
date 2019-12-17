@@ -10,6 +10,7 @@ import { CannonballView } from "../views/cannonball";
 import { Messenger } from "../UI/messenger";
 import { CellTip } from "../UI/cell-tip";
 import { PreGameDialog } from "../UI/pre-game";
+import { HelpDialog } from '../UI/help';
 
 class GameController {
   private game: Game;
@@ -20,6 +21,7 @@ class GameController {
   private messenger: Messenger;
   private cellTip: CellTip;
   private preGameDialog: PreGameDialog;
+  private helpDialog: HelpDialog;
 
   constructor(game: Game, board: Board) {
     this.game = game;
@@ -28,12 +30,14 @@ class GameController {
     this.panel = new StatusPanel(this.game,
                        {"button-next-turn": this.nextTurn.bind(this),
                         "button-repair": this.repair.bind(this),
-                        "button-surrender": this.surrender.bind(this)});
+                        "button-surrender": this.surrender.bind(this),
+                        "button-help": this.showHelp.bind(this)});
 
     this.overlay = new Overlay(board);
     this.cellTip = new CellTip();
     this.messenger = new Messenger();
     this.preGameDialog = new PreGameDialog(this.start.bind(this));
+    this.helpDialog = new HelpDialog();
   }
 
   // event handlers
@@ -86,6 +90,10 @@ class GameController {
         this.cellTip.hide();
       }
     }
+  }
+
+  public showHelp() {
+    this.helpDialog.show();
   }
 
   // event handlers done
