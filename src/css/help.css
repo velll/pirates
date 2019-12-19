@@ -35,3 +35,9 @@
 .help .help-chapter ul {
   list-style: circle;
 }
+
+.help-chapter p {
+  padding-top: 1em;
+
+  line-height: 1.6;
+}
