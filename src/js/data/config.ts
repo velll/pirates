@@ -4,9 +4,11 @@ import { MapConfig } from '../board/gamemap';
 interface Config {
   map: MapConfig;
   grid: GridConfig;
+  locale: string;
 }
 
 const config: Config = {
+  locale: 'en',
   map: {
     rows: 23,
     columns: 41
