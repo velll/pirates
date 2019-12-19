@@ -36,7 +36,8 @@ class GameController {
     this.overlay = new Overlay(board);
     this.cellTip = new CellTip();
     this.messenger = new Messenger();
-    this.preGameDialog = new PreGameDialog(this.start.bind(this));
+    this.preGameDialog = new PreGameDialog(this.start.bind(this),
+                                           this.showHelp.bind(this));
     this.helpDialog = new HelpDialog();
   }
 

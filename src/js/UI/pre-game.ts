@@ -4,11 +4,14 @@ import { $ } from "dollarsigns";
 class PreGameDialog {
   private element: HTMLElement;
   private renderer: AsyncRenderer;
-  private starter: GameStarter;
+  private starter: Procedure;
+  private helper: Procedure;
 
-  constructor(starter: GameStarter) {
+  constructor(starter: Procedure, helper: Procedure) {
     this.element = $("pre-game");
     this.starter = starter;
+    this.helper = helper;
+
     this.renderer = new AsyncRenderer("templates/pre-game.ejs",
                                       this.element,
                                       this.update,
@@ -34,9 +37,13 @@ class PreGameDialog {
       this.element.classList.add("hidden");
       this.starter();
     });
+
+    $("read-manual").addEventListener("click", () => {
+      this.helper();
+    });
   }
 }
 
-type GameStarter = () => void;
+type Procedure = () => void;
 
 export { PreGameDialog };
