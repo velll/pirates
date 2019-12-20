@@ -13,6 +13,7 @@ steps:
   - yarn install
   - yarn jest
   - yarn tslint -p .
+  - yarn webpack
   environment:
     LANG: "C.UTF-8"
 - name: deploy
