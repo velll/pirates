@@ -7,7 +7,8 @@ steps:
 - name: build
   # this is an image created manually using
   # https://github.com/yarnpkg/yarn/blob/master/Dockerfile.dev
-  image: yarn:latest
+  image: yarn
+  pull: never
   commands:
   - yarn install
   - yarn jest
