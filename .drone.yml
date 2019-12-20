@@ -1,0 +1,37 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  # this is an image created manually using
+  # https://github.com/yarnpkg/yarn/blob/master/Dockerfile.dev
+  image: yarn:latest
+  commands:
+  - yarn install
+  - yarn jest
+  - yarn tslint -p .
+  environment:
+    LANG: "C.UTF-8"
+- name: deploy
+  image: drillster/drone-rsync
+  settings:
+    hosts: [ "vps608404.ovh.net" ]
+    user: pirates
+    source: dist/
+    target: /home/pirates/pirates/
+    recursive: true
+    delete: true
+    key:
+      from_secret: pirates_ssh_key
+  when:
+    branch:
+    - master
+    status:
+    - success
+
+
+trigger:
+  branch:
+  - master
