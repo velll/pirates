@@ -11,6 +11,8 @@ import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 import { filterOut } from "./lib/filter-out";
 import { Ship } from "./game/ship";
 import { getRndInt } from "./lib/rnd-int";
+import { Area } from "./board/area";
+import { Position } from "./lib/position";
 
 class Game {
   public telemetry: Reportable;
@@ -116,6 +118,16 @@ class Game {
     const hostiles = this.getReadyEnemyShips().map(el => (el.coordinates));
 
     return hostiles.filter(coords => includes(range, coords));
+  }
+
+  public getActiveArea(expandBy: number): Area {
+    const turn = this.getCurrentTurn();
+    const activeCells = [turn.ship.coordinates, ...turn.availableMoves];
+
+    return Area.build(
+             activeCells).expand(
+              expandBy).crop(
+                 this.board.isOnMap.bind(this.board));
   }
 
   public isValidMove(to: Coordinates): boolean {

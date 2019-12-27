@@ -32,16 +32,13 @@ class Board {
     this.painter = new Painter(this.grid);
   }
 
-  // window
-
-  public scrollTo(coordinates: Coordinates) {
-    const position = this.grid.getCellPosition(coordinates);
-    window.scrollTo(position.left, position.top);
-  }
-
   // *********************
   // Coordinate conversion
   // *********************
+
+  public getCellPosition(coordinates: Coordinates) {
+    return this.grid.getCellPosition(coordinates);
+  }
 
   public locateCell(position: Position): Coordinates {
     return this.grid.locateCell(position);

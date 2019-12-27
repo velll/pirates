@@ -9,7 +9,7 @@ class Turn {
   public no: number;
   public ship: Ship;
   public wind: Wind;
-  public cellsForMove: Coordinates[];
+  public availableMoves: Coordinates[];
 
   public move: Move;
   public shot: Move;
@@ -22,7 +22,7 @@ class Turn {
     this.wind = wind;
     this.offLimitCells = offLimitCells;
 
-    this.cellsForMove = filterOut(movement, offLimitCells.move);
+    this.availableMoves = filterOut(movement, offLimitCells.move);
   }
 
   public makeMove(to: Coordinates) {
@@ -44,7 +44,7 @@ class Turn {
 
   // a move is valid if "to" is in the list of available moves
   public isValidMove(to: Coordinates): boolean {
-    return includes(this.cellsForMove, to);
+    return includes(this.availableMoves, to);
   }
 
   public isValidShot(at: Coordinates): boolean {

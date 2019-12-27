@@ -33,7 +33,7 @@ class GameController {
                         "button-surrender": this.surrender.bind(this),
                         "button-help": this.showHelp.bind(this)});
 
-    this.overlay = new Overlay(board);
+    this.overlay = new Overlay(board, game);
     this.cellTip = new CellTip();
     this.messenger = new Messenger();
     this.preGameDialog = new PreGameDialog(this.start.bind(this),
@@ -107,6 +107,8 @@ class GameController {
       turn = this.game.nextTurn();
     }
 
+    this.scrollTo(this.overlay.getActiveArea().start);
+
     if (turn.wind.isStorm()) {
       await this.drawStorm(turn);
     }
@@ -115,9 +117,6 @@ class GameController {
 
     this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 
-    // FIXME: Find some better idea
-    // this.board.scrollTo(turn.ship.coordinates);
-
     this.panel.report(turn);
     this.drawOverlay(turn);
   }
@@ -125,6 +124,11 @@ class GameController {
   public surrender() {
     const enemy = Fleet.getEnemyFleet(this.game.getCurrentFleet());
     this.congratulate(enemy);
+  }
+
+  private scrollTo(to: Coordinates) {
+    const position = this.board.getCellPosition(to);
+    window.scrollTo(position.left, position.top);
   }
 
   // game actions
@@ -217,10 +221,10 @@ class GameController {
   private drawOverlay(turn: Turn) {
     this.overlay.clear();
 
-    this.overlay.showActiveArea([turn.ship.coordinates, ...turn.cellsForMove]);
+    this.overlay.showActiveArea();
 
     if (!turn.hasMoved()) {
-      this.overlay.highlightMoves(turn.cellsForMove);
+      this.overlay.highlightMoves(turn.availableMoves);
       this.highlightWind(turn);
     } else {
       this.overlay.highlightShip(turn.ship.coordinates);
