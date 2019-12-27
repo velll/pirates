@@ -143,6 +143,7 @@ interface Layers {
   background: CanvasAdapter;
   ships: CanvasAdapter;
   highlight: CanvasAdapter;
+  cover: CanvasAdapter;
   foreground: CanvasAdapter;
 }
 

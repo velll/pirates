@@ -23,9 +23,10 @@ const canvasDimensions = {width: 2000, height: 1221};
 const canvasBG = CanvasAdapter.getCanvas("background");
 const canvasHL = CanvasAdapter.getCanvas("highlight");
 const canvasSH = CanvasAdapter.getCanvas("ships");
+const canvasCO = CanvasAdapter.getCanvas("cover");
 const canvasFG = CanvasAdapter.getCanvas("foreground");
 
-[canvasBG, canvasHL, canvasSH, canvasFG].forEach(canvas => canvas.setElementDimensions(canvasDimensions));
+[canvasBG, canvasHL, canvasSH, canvasCO, canvasFG].forEach(canvas => canvas.setElementDimensions(canvasDimensions));
 
 document.body.style.width = canvasDimensions.width.toString() + "px";
 
@@ -50,7 +51,7 @@ window.onload = () => {
   const ports = portsData.map(row => new Port(row.coordinates, row.name, row.fleet, row.nation,
                                               {anchor: resources.anchor, flag: resources.flags[row.nation]}));
 
-  const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasFG);
+  const builder = new BoardBuilder(canvasBG, canvasHL, canvasSH, canvasCO, canvasFG);
   const map = builder.buildMap(config.map, rocks, ports);
   const grid = builder.buildGrid(map, config.grid, {width: canvasBG.element.width, height: canvasBG.element.height});
   const board = builder.build(map, grid);

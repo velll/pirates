@@ -6,16 +6,11 @@ import { Grid, GridConfig } from "./board/grid";
 import { Coordinates } from "./lib/coordinates";
 
 class BoardBuilder {
-  private background: CanvasAdapter;
-  private highlight: CanvasAdapter;
-  private ships: CanvasAdapter;
-  private foreground: CanvasAdapter;
-
-  constructor(background: CanvasAdapter, highlight: CanvasAdapter, ships: CanvasAdapter, foreground: CanvasAdapter) {
-    this.background = background;
-    this.highlight = highlight;
-    this.ships = ships;
-    this.foreground = foreground;
+  constructor(private background: CanvasAdapter,
+              private highlight: CanvasAdapter,
+              private ships: CanvasAdapter,
+              private cover: CanvasAdapter,
+              private foreground: CanvasAdapter) {
   }
 
   public buildMap(mapConfig: MapConfig, rocks: Coordinates[], ports: Port[]) {
@@ -30,6 +25,7 @@ class BoardBuilder {
     const layers = {background: this.background,
                     highlight: this.highlight,
                     ships: this.ships,
+                    cover: this.cover,
                     foreground: this.foreground};
 
     const board = new Board(layers, map, grid);

@@ -26,7 +26,8 @@ canvas#background{
 
 canvas#highlight { z-index: 10; }
 canvas#ships { z-index: 20; }
-canvas#foreground{ z-index: 30; }
+canvas#cover { z-index: 30; }
+canvas#foreground{ z-index: 40; }
 .message { z-index: 100 }
 .cell-tip { z-index: 100 }
 
