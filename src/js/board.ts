@@ -1,10 +1,10 @@
 import { GameMap } from "./board/gamemap";
 import { Grid } from "./board/grid";
+import { Painter } from "./board/painter";
 
 import { Coordinates } from './lib/coordinates';
 import { Position } from './lib/position';
 
-import { MovingImage } from "./lib/canvas/moving-image";
 import { CanvasAdapter } from "./lib/canvas/canvas-adapter";
 import { Fleet } from "./game/fleet";
 
@@ -21,13 +21,15 @@ class Board {
   // grid knows where to draw them
   private grid: Grid;
 
-  constructor(
-    layers: Layers,
-    map: GameMap,
-    grid: Grid) {
+  // A composite module responsible for painting
+  private painter: Painter;
+
+  constructor(layers: Layers, map: GameMap, grid: Grid) {
     this.layers = layers;
     this.map = map;
     this.grid = grid;
+
+    this.painter = new Painter(this.grid);
   }
 
   // window
@@ -45,9 +47,9 @@ class Board {
     return this.grid.locateCell(position);
   }
 
-  // **************
-  // cells and grid
-  // **************
+  // ******************************
+  // map data: ports, rocks, cells
+  // ******************************
   public isPort(cell: Coordinates) { return this.map.isPort(cell); }
   public isRock(cell: Coordinates) { return this.map.isRock(cell); }
 
@@ -65,6 +67,10 @@ class Board {
   public getRocks() { return this.map.getRocks(); }
   public isOnMap(cell: Coordinates) { return this.map.isOnMap(cell); }
 
+  // **********************
+  // grid positioning info
+  // **********************
+
   public getCellCenter(cell: Coordinates) { return this.grid.getCellCenter(cell); }
   public getCellEnd(cell: Coordinates) { return this.grid.getCellEnd(cell); }
 
@@ -73,21 +79,19 @@ class Board {
   // ***********************
 
   public drawCell(layer: CanvasAdapter, coordinates: Coordinates, color: string) {
-    const pos = this.grid.getCellPosition(coordinates);
-
-    layer.drawSquare(pos, this.grid.cellSize, color);
+    this.painter.drawCell(layer, coordinates, color);
   }
 
   public clearCell(layer: CanvasAdapter, coordinates: Coordinates) {
-    layer.clearSquare(this.grid.getCellPosition(coordinates), this.grid.cellSize);
+    this.painter.clearCell(layer, coordinates);
   }
 
   public drawPorts() {
-    this.map.getPorts().forEach(port => this.drawPort(port.view, port.coordinates));
+    this.painter.drawPorts(this.layers.background, this.map.getPorts());
   }
 
   public drawBoard(transparent = true, coordinates = false) {
-     this.drawGrid(transparent, coordinates);
+    this.painter.drawBoard(this.layers.background, this.map, transparent, coordinates);
   }
 
   // **********************
@@ -95,16 +99,15 @@ class Board {
   // **********************
 
   public highlightCell(coordinates: Coordinates, color: string) {
-    this.drawCell(this.layers.highlight, coordinates, color);
+    this.painter.drawCell(this.layers.highlight, coordinates, color);
   }
 
   public highlightShip(coordinates: Coordinates, color: string) {
-    const position = this.grid.getCellCenter(coordinates);
-    this.layers.highlight.drawBlurryCircle(position, this.grid.cellSize, color);
+    this.painter.highlightShip(this.layers.highlight, coordinates, color);
   }
 
   public highlightWind(at: Coordinates, wind: Drawable) {
-    wind.draw(this.layers.highlight, this.grid.getCellPosition(at), this.grid.cellSize);
+    this.painter.highlightWind(this.layers.highlight, at, wind);
   }
 
   public clearHighlight() {
@@ -116,86 +119,26 @@ class Board {
   // *************************
 
   public drawShip(shipView: Drawable, coordinates: Coordinates) {
-    shipView.draw(this.layers.ships,
-                  this.grid.getCellPosition(coordinates),
-                  this.grid.cellSize);
+    this.painter.drawShip(this.layers.ships, shipView, coordinates);
   }
 
   public moveShip(shipView: Moveable, from: Coordinates, to: Coordinates) {
-    this.layers.foreground.clearAll();
-
-    this.clearCell(this.layers.ships, from);
-
-    return shipView.drawMove(this.layers.foreground,
-                             this.grid.getCellPosition(from),
-                             this.grid.getCellPosition(to),
-                             this.grid.cellSize);
+    return this.painter.moveShip(this.layers.ships,
+                                 this.layers.foreground,
+                                 shipView,
+                                 from,
+                                 to);
   }
 
   public shoot(cannonballView: Moveable, from: Coordinates, to: Coordinates) {
-    this.layers.foreground.clearAll();
-
-    return cannonballView.drawMove(this.layers.foreground,
-                                   this.grid.getCellPosition(from),
-                                   this.grid.getCellPosition(to),
-                                   this.grid.cellSize);
+    return this.painter.shoot(this.layers.foreground, cannonballView, from, to);
   }
 
   public removeShip(coordinates: Coordinates) {
     this.clearCell(this.layers.ships, coordinates);
   }
-
-  // *******************
-  // static map features
-  // *******************
-  private drawPort(portView: Drawable, coordinates: Coordinates) {
-    portView.draw(this.layers.background,
-                  this.grid.getCellPosition(coordinates),
-                  this.grid.cellSize);
-  }
-
-  // *********************
-  // dynamic stuff (ships)
-  // *********************
-
-  private dragImage(image: CanvasImageSource, size: number, start: Position, finish: Position) {
-    const animation = new MovingImage(this.layers.foreground, image, size);
-    animation.run(start, finish);
-  }
-
-  // debugging shoved at the tail end of the class
-
-  private drawGrid(transparent = true, coordinates = false) {
-    const cellSize = this.grid.cellSize;
-    const layer = this.layers.background;
-
-    for (let row: number = 0; row < this.map.rows; row++) {
-      for (let col: number = 0; col < this.map.columns; col++) {
-        const color = transparent ? "transparent" : this.grid.getColor({x: col, y: row});
-
-        if (!this.map.isRock({x: col, y: row})) {
-          this.drawCell(layer, {x: col, y: row}, color);
-        }
-
-        if (coordinates) {
-          const pos = this.grid.getCellPosition({x: col, y: row});
-          this.drawCoords(pos, cellSize, {x: col, y: row});
-        }
-      }
-    }
-  }
-
-  private drawCoords(pos: Position, size: number, coords: Coordinates) {
-    const text = coords.x + "," + coords.y;
-    const offsettedPosition = {left: pos.left + size / 3, top: pos.top + size / 3};
-
-    this.layers.background.drawText(text, offsettedPosition);
-  }
 }
 
-type ShipModelsDict = Record<string, CanvasImageSource>;
-
-// What we expect from our canvas adapter
 interface Layers {
   background: CanvasAdapter;
   ships: CanvasAdapter;
@@ -212,4 +155,4 @@ interface Moveable {
   drawMove(layer: CanvasAdapter, from: Position, to: Position, cellSize: number): Promise<boolean>;
 }
 
-export { Board, ShipModelsDict, Layers, Drawable, Moveable};
+export { Board, Layers, Drawable, Moveable};
