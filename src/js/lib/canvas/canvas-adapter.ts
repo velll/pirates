@@ -13,11 +13,17 @@ interface Kanvas {
   drawText(text: string, pos: Position): void;
   drawLine(start: Position, finish: Position, color?: string, width?: number): void;
   drawCross(pos: Position, width: number): void;
+  drawRadialGradient(position: Position, dimensions: Dimensions, colorStops: [ColorStop]): void;
   fill(color: string): void;
 
   clear(position: Position, dimensions: Dimensions): void;
   clearSquare(pos: Position, width: number): void;
   clearAll(): void;
+}
+
+interface ColorStop {
+  stop: number,
+  color: string
 }
 
 class CanvasAdapter implements Kanvas {
@@ -130,6 +136,25 @@ class CanvasAdapter implements Kanvas {
     }).do(() => this.ctx.fillText(text, pos.left, pos.top));
   }
 
+  public drawRadialGradient(position: Position, dimensions: Dimensions, colorStops: ColorStop[]) {
+    const center = {left: position.left + dimensions.width / 2,
+                    top: position.top + dimensions.height / 2, };
+
+    const radSmall =  0.1 * Math.min(dimensions.width, dimensions.height) / 2;
+    const radLarge =  Math.max(dimensions.width, dimensions.height) / 2;
+
+    const gradient = this.ctx.createRadialGradient(
+                       center.left, center.top, radSmall,
+                       center.left, center.top, radLarge);
+
+    colorStops.forEach(stop => gradient.addColorStop(stop.stop, stop.color));
+
+    // Fill with gradient
+    this.withTmpContext(() => this.ctx.fillStyle = gradient).do(() => {
+      this.ctx.fillRect(position.left, position.top, dimensions.width, dimensions.height);
+    });
+  }
+
   public fill(color: string) {
     this.drawBox(this.START, this.getElementDimensions(), color);
   }
@@ -151,4 +176,4 @@ class CanvasAdapter implements Kanvas {
   }
 }
 
-export { CanvasAdapter };
+export { CanvasAdapter, ColorStop };

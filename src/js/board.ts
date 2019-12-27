@@ -5,7 +5,7 @@ import { Painter } from "./board/painter";
 import { Coordinates } from './lib/coordinates';
 import { Position } from './lib/position';
 
-import { CanvasAdapter } from "./lib/canvas/canvas-adapter";
+import { CanvasAdapter, ColorStop } from "./lib/canvas/canvas-adapter";
 import { Fleet } from "./game/fleet";
 
 class Board {
@@ -118,11 +118,8 @@ class Board {
     this.layers.cover.clearAll();
   }
 
-  public uncoverArea(area: MapArea) {
-    this.layers.cover.clear(
-      this.grid.getCellPosition(area.start),
-      {width: area.width * this.grid.cellSize,
-       height: area.height * this.grid.cellSize});
+  public uncoverArea(area: MapArea, gradientStops: ColorStop[] = []) {
+    this.painter.uncoverArea(this.layers.cover, area, gradientStops);
   }
 
   public gridArea(area: MapArea) {

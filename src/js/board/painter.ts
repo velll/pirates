@@ -1,8 +1,8 @@
 import { Board, Drawable, Moveable } from "../board";
-import { CanvasAdapter } from "../lib/canvas/canvas-adapter";
+import { CanvasAdapter, ColorStop } from "../lib/canvas/canvas-adapter";
 import { Grid } from "./grid";
 import { Coordinates } from "../lib/coordinates";
-import { GameMap } from "./gamemap";
+import { GameMap, MapArea } from "./gamemap";
 import { Position } from "../lib/position";
 import { Port } from "./port";
 
@@ -42,6 +42,18 @@ class Painter {
 
   public highlightWind(layer: CanvasAdapter, at: Coordinates, wind: Drawable) {
     wind.draw(layer, this.grid.getCellPosition(at), this.grid.cellSize);
+  }
+
+  public uncoverArea(layer: CanvasAdapter, area: MapArea, gradientStops: ColorStop[]) {
+    const position = this.grid.getCellPosition(area.start);
+    const dimensions = {width: area.width * this.grid.cellSize,
+                        height: area.height * this.grid.cellSize};
+
+    layer.clear(position, dimensions);
+
+    if (gradientStops.length > 0) {
+      layer.drawRadialGradient(position, dimensions, gradientStops);
+    }
   }
 
   // *************************
