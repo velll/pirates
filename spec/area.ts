@@ -57,3 +57,9 @@ test('area should be able to expand', () => {
   expect(area.start).toEqual({x: 8, y: 8});
   expect(area.end).toEqual({x: 13, y: 13});
 });
+
+test('area can be cropped using a keeper function', () => {
+  const area = new Area({x: 10, y: 10}, {x: 11, y: 11}).crop(cell => cell.x <= 10)
+
+  expect(area.end).toEqual({x: 10, y: 11})
+})

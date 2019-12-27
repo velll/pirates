@@ -42,6 +42,13 @@ class Area implements MapArea {
 
     return new Area(newLeftTop, newRightBottom);
   }
+
+  // only cells satisfying the `keep` function are kept
+  public crop(keep: Keeper): Area {
+    return Area.build(this.cells.filter(cell => keep(cell)));
+  }
 }
+
+type Keeper = (keep: Coordinates) => boolean;
 
 export { Area };

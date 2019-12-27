@@ -37,7 +37,10 @@ class Overlay {
   }
 
   public showActiveArea(movement: Coordinates[]) {
-    const area = Area.build(movement).expand(this.ACTIVE_AREA_PADDING);
+    const area = Area.build(
+                   movement).expand(
+                     this.ACTIVE_AREA_PADDING).crop(
+                       this.board.isOnMap.bind(this.board));
 
     this.board.clearCover();
     this.board.cover(this.COVER_COLOR);
