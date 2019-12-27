@@ -104,4 +104,4 @@ enum FeatureTypes {
   sea = "sea"
 }
 
-export { GameMap, Coordinates, Port, Features, MapConfig };
+export { GameMap, Port, Features, MapConfig };

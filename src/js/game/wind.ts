@@ -1,6 +1,6 @@
 import { WindView } from "../views/wind";
 import { Vector2d } from "../lib/vector-2d";
-import { Coordinates } from "../board/gamemap";
+import { Coordinates } from "../lib/coordinates";
 
 interface Direction {
   name: string;

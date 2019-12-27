@@ -3,7 +3,7 @@ import { StatusPanel } from "../UI/status-panel";
 import { Fleet } from "../game/fleet";
 import { Board } from "../board";
 import { Overlay } from "../UI/overlay";
-import { Coordinates } from "../board/gamemap";
+import { Coordinates } from "../lib/coordinates";
 import { Ship } from "../game/ship";
 import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";

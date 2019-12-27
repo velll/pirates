@@ -1,6 +1,7 @@
 import { Port } from "../board/port";
 import { Ship } from "../game/ship";
-import { Coordinates, GameMap } from "../board/gamemap";
+import { GameMap } from "../board/gamemap";
+import { Coordinates } from "../lib/coordinates";
 import { Position } from "../lib/position";
 import { DOM } from "dollarsigns";
 import { AsyncRenderer, State } from "../lib/dom/async-renderer";
