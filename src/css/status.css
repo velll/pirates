@@ -1,8 +1,8 @@
 div#status {
-  position: absolute;
-  left: 45px;
-  top: 45px;
-  width: 300px;
+  position: fixed;
+  left: 1em;
+  top: 1em;
+  width: 20rem;
   
   padding: 1rem;
   
@@ -23,7 +23,7 @@ div#status {
 .rose > img {
   display: block;
   margin: 0 auto;
-  width: 250px;
+  width: 200px;
 }
 
 div#status .lower-rose-corners {
