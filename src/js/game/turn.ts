@@ -3,6 +3,7 @@ import { includes } from '../lib/includes';
 import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
 import { Ship } from './ship';
+import { GameMap } from '../board/gamemap';
 
 class Turn {
   public no: number;

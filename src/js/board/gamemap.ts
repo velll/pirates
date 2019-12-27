@@ -98,10 +98,19 @@ interface Features {
   rocks: Coordinates[];
 }
 
+interface MapArea {
+  start: Coordinates,
+  end: Coordinates,
+
+  width: number,
+  height: number,
+  cells: Coordinates[]
+}
+
 enum FeatureTypes {
   rock = "rock",
   port = "port",
   sea = "sea"
 }
 
-export { GameMap, Port, Features, MapConfig };
+export { GameMap, Port, Features, MapConfig, MapArea };

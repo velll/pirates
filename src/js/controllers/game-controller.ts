@@ -216,6 +216,9 @@ class GameController {
 
   private drawOverlay(turn: Turn) {
     this.overlay.clear();
+
+    this.overlay.showActiveArea([turn.ship.coordinates, ...turn.cellsForMove]);
+
     if (!turn.hasMoved()) {
       this.overlay.highlightMoves(turn.cellsForMove);
       this.highlightWind(turn);

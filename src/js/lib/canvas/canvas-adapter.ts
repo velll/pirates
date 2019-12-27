@@ -13,6 +13,7 @@ interface Kanvas {
   drawText(text: string, pos: Position): void;
   drawLine(start: Position, finish: Position, color?: string, width?: number): void;
   drawCross(pos: Position, width: number): void;
+  fill(color: string): void;
 
   clear(position: Position, dimensions: Dimensions): void;
   clearSquare(pos: Position, width: number): void;
@@ -28,12 +29,15 @@ class CanvasAdapter implements Kanvas {
   public element: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
 
+  private readonly START = {left: 0, top: 0};
+
   private readonly TEXT_FONT = "15px Arial";
   private readonly TEXT_STYLE = "black";
   private readonly BOX_STROKE_STYLE = "grey";
   private readonly LINE_STROKE_STYLE = "rgba(102, 102, 102, 0.8)";
   private readonly IMAGE_SHADOW_OFFSET = {x: 3, y: 3};
   private readonly SHADOW_COLOR = "grey";
+  private readonly COVER = "rgba(1,1,1, 0.2)";
 
   constructor(canvas: HTMLCanvasElement) {
     this.element = canvas;
@@ -43,6 +47,10 @@ class CanvasAdapter implements Kanvas {
   public setElementDimensions(dimensions: Dimensions) {
     this.element.width = dimensions.width;
     this.element.height = dimensions.height;
+  }
+
+  public getElementDimensions(): Dimensions {
+    return {width: this.element.width, height: this.element.height};
   }
 
   public drawLine(start: Position, finish: Position, color = this.LINE_STROKE_STYLE, width = this.ctx.lineWidth) {
@@ -120,6 +128,10 @@ class CanvasAdapter implements Kanvas {
       this.ctx.font = this.TEXT_FONT;
       this.ctx.fillStyle = this.TEXT_STYLE;
     }).do(() => this.ctx.fillText(text, pos.left, pos.top));
+  }
+
+  public fill(color: string) {
+    this.drawBox(this.START, this.getElementDimensions(), color);
   }
 
   public clear(position: Position, dimensions: Dimensions) {

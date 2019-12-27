@@ -6,6 +6,8 @@ import { GameMap } from "./gamemap";
 import { Position } from "../lib/position";
 import { Port } from "./port";
 
+import { range } from 'lodash';
+
 class Painter {
 
   constructor(private grid: Grid) {
@@ -74,6 +76,12 @@ class Painter {
                                    this.grid.getCellPosition(from),
                                    this.grid.getCellPosition(to),
                                    this.grid.cellSize);
+  }
+
+  public drawCellGrid(layer: CanvasAdapter, cells: Coordinates[]) {
+    cells.forEach(cell => (
+      this.drawCell(layer, {x: cell.x, y: cell.y}, "transparent")
+    ));
   }
 
   // *******************

@@ -1,4 +1,4 @@
-import { GameMap } from "./board/gamemap";
+import { GameMap, MapArea } from "./board/gamemap";
 import { Grid } from "./board/grid";
 import { Painter } from "./board/painter";
 
@@ -108,6 +108,25 @@ class Board {
 
   public highlightWind(at: Coordinates, wind: Drawable) {
     this.painter.highlightWind(this.layers.highlight, at, wind);
+  }
+
+  public cover(color: string) {
+    this.layers.cover.fill(color);
+  }
+
+  public clearCover() {
+    this.layers.cover.clearAll();
+  }
+
+  public uncoverArea(area: MapArea) {
+    this.layers.cover.clear(
+      this.grid.getCellPosition(area.start),
+      {width: area.width * this.grid.cellSize,
+       height: area.height * this.grid.cellSize});
+  }
+
+  public gridArea(area: MapArea) {
+    this.painter.drawCellGrid(this.layers.cover, area.cells);
   }
 
   public clearHighlight() {
