@@ -1,6 +1,6 @@
 import { CanvasAdapter } from './canvas-adapter';
 import { Position } from '../position';
-import { Pledge } from '../pledge';
+import { Promissary } from 'promissary';
 
 class MovingImage {
   private readonly FPS = 60;
@@ -18,7 +18,7 @@ class MovingImage {
 
   private position: Position;
 
-  private finished: Pledge<boolean>;
+  private finished: Promissary<boolean>;
 
   constructor(
     canvas: CanvasAdapter,
@@ -38,11 +38,11 @@ class MovingImage {
 
     this.position = start;
 
-    this.finished = new Pledge<boolean>();
+    this.finished = new Promissary<boolean>();
 
     this.draw();
 
-    return this.finished.get();
+    return this.finished.getPromise();
   }
 
   public draw() {
@@ -59,7 +59,7 @@ class MovingImage {
        (Math.sqrt(this.dx ** 2 + this.dy ** 2))) {
           this.position = this.finish;
           more = false;
-          this.finished.fulfil(true);
+          this.finished.resolve(true);
     } else {
       this.canvas.drawImage(this.image, this.position, this.imageSize);
     }
