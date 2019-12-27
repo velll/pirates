@@ -12,6 +12,13 @@
 }
 
 .flash {
-  transition: opacity 2s ease-in 1s;
+  transition: opacity 2s ease-in 3s;
   opacity: 0;
+}
+
+.message-buttons {
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }

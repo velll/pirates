@@ -36,8 +36,10 @@ class Messenger {
   }
 
   private bindEvents() {
-    $("message-close").addEventListener("click", event => {
-      $("message").classList.add("hidden");
+    [$("message-close"), $("button-message-dismiss")].forEach(closer => {
+      closer.addEventListener("click", event => {
+        $("message").classList.add("hidden");
+      });
     });
 
     $("message").addEventListener("transitionend", event => {
