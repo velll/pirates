@@ -1,8 +1,10 @@
 .alert {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 30%;
+  position: fixed;
+  
+  left: 50vw;
+  top: 50vh;
+  width: 30vw;
+  transform: translate(-50%, -50%);
 
   box-shadow: 10px 10px 20px grey;
 
