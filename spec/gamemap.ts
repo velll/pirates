@@ -52,7 +52,7 @@ test('map should be able to check if the coordinates are the same', () => {
 });
 
 
-test('map should be able to find cells around a given cells', () => {
+test('map should be able to find cells around a given cell', () => {
   const cell = {x: 10, y: 10}
   const around = [
     {x: 9, y: 9},   {x: 10, y: 9},  {x: 11, y: 9},
@@ -63,7 +63,7 @@ test('map should be able to find cells around a given cells', () => {
   expect(GameMap.getCellsAround(cell)).toEqual(around);
 });
 
-test('map should be able to find 2 cells around a given cells', () => {
+test('map should be able to find 2 cells around a given cell', () => {
   const cell = {x: 5, y: 5}
   const around = [
     {x: 3, y: 3}, {x: 4, y: 3}, {x: 5, y: 3}, {x: 6, y: 3}, {x: 7, y: 3},
