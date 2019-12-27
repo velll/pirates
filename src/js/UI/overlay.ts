@@ -9,7 +9,7 @@ class Overlay {
   private readonly TARGET_HIGHLIGHT_COLOR = "rgba(255, 0, 51, 0.5)";
   private readonly SHIP_HIGHLIGHT_COLOR = "rgba(51,102,204, 0.5)";
 
-  private readonly COVER_COLOR = "rgba(1, 1, 1, 0.2)";
+  private readonly COVER_COLOR = "rgba(1, 1, 1, 0.1)";
   private readonly ACTIVE_AREA_PADDING = 1;
 
   constructor(board: Board) {
