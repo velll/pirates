@@ -61,6 +61,8 @@ class GameController {
     const port = this.board.getPort(goldenShip.coordinates);
 
     this.preGameDialog.show(goldenShip.name, port.name);
+
+    this.removeLoadingOverlay();
   }
 
   public start() {
@@ -239,6 +241,10 @@ class GameController {
 
   private congratulate(fleet: Fleet) {
     this.messenger.send("Game Over! ", fleet.name + " have won");
+  }
+
+  private removeLoadingOverlay() {
+    document.getElementById("loading-overlay").remove();
   }
 }
 

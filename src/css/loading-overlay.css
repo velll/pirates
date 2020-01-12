@@ -1,0 +1,32 @@
+#loading-overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 1000;
+
+  background-color: rgba(199,193,172, 0.9);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#loading-overlay h1 {
+  font-size: 5em;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+
+  padding-left: 0.4em;
+}
+
+#loading-overlay img {
+  display: block;
+  width: 50vh;
+
+  animation:spin 5s linear infinite;
+}
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
