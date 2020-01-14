@@ -67,6 +67,8 @@ class GameController {
 
   public start() {
     this.nextTurn();
+
+    this.panel.toggleCollapse();
   }
 
   public repair() {

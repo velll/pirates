@@ -1,5 +1,5 @@
 import { Game } from '../game';
-import { $ } from 'dollarsigns';
+import { $, $$ } from 'dollarsigns';
 import { AsyncRenderer, State } from '../lib/dom/async-renderer';
 import { each } from 'lodash';
 
@@ -19,6 +19,16 @@ class StatusPanel {
                                       this.bindEvents.bind(this));
   }
 
+  public toggleCollapse() {
+    [$$(".status-collapsed-row"), $$(".status-full")].forEach(el => (
+      el.classList.toggle("collapse")));
+
+    const icon = $$("#status-chevron > svg");
+
+    icon.setAttribute("data-icon",
+      icon.getAttribute("data-icon") == "chevron-up" ? "chevron-down" : "chevron-up");
+  }
+
   public report(turn: Reportable) {
     const ship = turn.ship;
 
@@ -29,7 +39,8 @@ class StatusPanel {
       shipMaxHP: ship.maxHP.toString(),
       shipHPPercentage: Math.round(ship.HP * 100 / ship.maxHP).toString(),
       wind: turn.wind.description(),
-      roseImg: `img/wind-rose-${ship.fleet.name}.png`
+      roseImg: `img/wind-rose-${ship.fleet.name}.png`,
+      smallFlag: `img/flags/${ship.fleet.name}.png`
     };
 
     this.renderer.update(state);
@@ -43,6 +54,9 @@ class StatusPanel {
 
     ($("status-rose-img") as HTMLImageElement).src = state.roseImg;
 
+    ($("status-collapsed-flag") as HTMLImageElement).src = state.smallFlag;
+    $("status-collapsed-turn-no").innerText = state.turnNo;
+
     const HPBarStyle = `linear-gradient(to top, rgba(51, 153, 0, 0.8) ${state.shipHPPercentage}%, red ${state.shipHPPercentage}%)`;
     $("status-hp-bar") .style.background = HPBarStyle;
   }
@@ -51,6 +65,8 @@ class StatusPanel {
     each(this.buttonHandlers, (f, elementId) => (
       $(elementId).addEventListener("click", f)
     ));
+
+    $('status-chevron').addEventListener("click", () => this.toggleCollapse());
   }
 }
 

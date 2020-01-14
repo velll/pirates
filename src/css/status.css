@@ -72,3 +72,36 @@ div#status #buttons {
   flex-direction: row; 
   justify-content: space-around;
 }
+
+/* collapse and expand */
+
+div#status #status-chevron {
+  position: absolute;
+  
+  top: 1em; right: 1em;
+  width: 1em; height: 1em;
+
+  color: inherit;
+}
+
+div#status > div {
+  overflow: hidden;
+}
+
+div#status .collapse {
+  height: 0;
+}
+
+/* collapsed row */
+
+div#status .status-collapsed-row {
+  display: flex;
+}
+
+div#status .status-collapsed-row {
+  display: flex;
+}
+
+div#status span {
+  padding-left: 0.5em;
+}
