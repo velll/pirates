@@ -7,7 +7,7 @@ const ru = {
     "read-manual": "Читать правила"
   },
   "status": {
-    round: "Ход"
+
   },
   "cell-tip": {
     "occupied-by": "Занят кораблем",

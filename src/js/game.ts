@@ -13,6 +13,7 @@ import { Ship } from "./game/ship";
 import { getRndInt } from "./lib/rnd-int";
 import { Area } from "./board/area";
 import { Position } from "./lib/position";
+import { Calendar } from "./game/calendar";
 
 class Game {
   public telemetry: Reportable;
@@ -22,19 +23,22 @@ class Game {
 
   private turns: Turn[];
   private windGen: WindGenerator;
+  private readonly calendar: Calendar;
 
   private goldenShip: Ship;
 
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
+  private readonly START_DATE = new Date(1634, 5, 1);
 
   constructor(board: Board, ships: Ship[], telemetry: Reportable) {
     this.board = board;
     this.ships = ships;
     this.telemetry = telemetry;
 
-    this.turns = [];
-
+    this.calendar = new Calendar(this.START_DATE);
     this.windGen = new WindGenerator();
+
+    this.turns = [];
   }
 
   public loadGold(): Ship {
@@ -53,6 +57,8 @@ class Game {
     const wind = this.windGen.getRandomWind();
     const mvmt = ship.getMovingRange(wind).filter(cell => this.board.isOnMap(cell));
 
+    const date = this.calendar.add(turnNo);
+
     // cannot move to already occupied cells
     // cannot shoot into ports
     const offLimitCells = {move: this.board.getRocks().concat(
@@ -61,7 +67,7 @@ class Game {
                                       Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates))),
                            shot: this.board.getPorts().map(port => port.coordinates)};
 
-    const turn = new Turn(turnNo, ship, wind, mvmt, offLimitCells);
+    const turn = new Turn(turnNo, date, ship, wind, mvmt, offLimitCells);
     this.turns[this.turns.length] = turn;
 
     if (ship.isSunk()) {

@@ -7,7 +7,7 @@ const en = {
     "read-manual": "Read manual"
   },
   "status": {
-    round: "Round"
+
   },
   "cell-tip": {
     "occupied-by": "Occupied by",

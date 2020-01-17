@@ -12,7 +12,7 @@ const startingCoordinates: Coordinates = {x: 10, y: 10};
 const wind = new WindGenerator().getBreeze("N");
 const ship = new Ship(ShipType.brigantine, pirates, "Tester's rage", startingCoordinates, designs);
 const movement = ship.getMovingRange(wind);
-const turn = new Turn(0, ship, wind, movement, offLimit);
+const turn = new Turn(0, new Date(), ship, wind, movement, offLimit);
 
 const validCoordinates: Coordinates = {x: 11, y: 10};
 const invalidCoordinates: Coordinates = {x: 27, y: 4};

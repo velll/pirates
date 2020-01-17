@@ -34,6 +34,8 @@ class StatusPanel {
 
     const state: State = {
       turnNo: turn.no.toString(),
+      dateWOYear: turn.date.toLocaleDateString('en', {month: 'short', day: 'numeric' }),
+      date: turn.date.toLocaleDateString('en', {year: 'numeric', month: 'short', day: 'numeric' }),
       shipName: ship.name,
       shipHP: ship.HP.toString(),
       shipMaxHP: ship.maxHP.toString(),
@@ -47,7 +49,8 @@ class StatusPanel {
   }
 
   private update(state: State) {
-    $("status-turn-no").innerText = state.turnNo;
+    $("status-date").innerText = state.dateWOYear;
+
     $("status-active-ship").innerText = state.shipName;
     $("status-wind").innerText = state.wind;
     $("status-HP").innerText = state.shipHP;
@@ -55,7 +58,7 @@ class StatusPanel {
     ($("status-rose-img") as HTMLImageElement).src = state.roseImg;
 
     ($("status-collapsed-flag") as HTMLImageElement).src = state.smallFlag;
-    $("status-collapsed-turn-no").innerText = state.turnNo;
+    $("status-collapsed-date").innerText = state.date;
 
     const HPBarStyle = `linear-gradient(to top, rgba(51, 153, 0, 0.8) ${state.shipHPPercentage}%, red ${state.shipHPPercentage}%)`;
     $("status-hp-bar") .style.background = HPBarStyle;
@@ -76,6 +79,7 @@ interface Describable {
 
 interface Reportable {
   no: number;
+  date: Date;
   wind: Describable;
 
   ship: {

@@ -7,6 +7,7 @@ import { GameMap } from '../board/gamemap';
 
 class Turn {
   public no: number;
+  public date: Date;
   public ship: Ship;
   public wind: Wind;
   public availableMoves: Coordinates[];
@@ -16,8 +17,9 @@ class Turn {
 
   private offLimitCells: OffLimits;
 
-  constructor(no: number, ship: Ship, wind: Wind, movement: Coordinates[], offLimitCells: OffLimits) {
+  constructor(no: number, date: Date, ship: Ship, wind: Wind, movement: Coordinates[], offLimitCells: OffLimits) {
     this.no = no;
+    this.date = date;
     this.ship = ship;
     this.wind = wind;
     this.offLimitCells = offLimitCells;
