@@ -8,7 +8,7 @@ interface Config {
 }
 
 const config: Config = {
-  locale: 'en',
+  locale: 'ru',
   map: {
     rows: 23,
     columns: 41
