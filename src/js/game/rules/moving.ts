@@ -4,7 +4,7 @@ import { GameMap } from "../../board/gamemap";
 import { Wind } from "../wind";
 import { Vector2d } from "../../lib/vector-2d";
 import { ShipType } from "../ship";
-import { range, concat } from 'lodash';
+import { range, concat, uniqWith } from 'lodash';
 
 // Let me tell you what this does real quick
 /*
@@ -82,18 +82,20 @@ function getRange(wind: Wind, shipType: ShipType, where: Coordinates): Coordinat
   const leftRun = windVector.rotate(-45);
   const rightRun = windVector.rotate(45);
 
-  return concat(
-           // close-hauling one cell only
-           around,
-           // Tacking is 2 cells
-           getCellsBetween(leftTack.apply(where, 2), leftRun.apply(where, 2)),
-           getCellsBetween(rightTack.apply(where, 2), rightRun.apply(where, 2)),
-           // Running course and downwind — three cells
-           getCellsBetween(leftRun.apply(where, 2), windVector.apply(where, 2)),
-           getCellsBetween(rightRun.apply(where, 2), windVector.apply(where, 2)),
-           getCellsBetween(leftRun.apply(where, 3), windVector.apply(where, 3)),
-           getCellsBetween(rightRun.apply(where, 3), windVector.apply(where, 3))
-         );
+  return uniqWith(
+           concat(
+            // close-hauling one cell only
+            around,
+            // Tacking is 2 cells
+            getCellsBetween(leftTack.apply(where, 2), leftRun.apply(where, 2)),
+            getCellsBetween(rightTack.apply(where, 2), rightRun.apply(where, 2)),
+            // Running course and downwind — three cells
+            getCellsBetween(leftRun.apply(where, 2), windVector.apply(where, 2)),
+            getCellsBetween(rightRun.apply(where, 2), windVector.apply(where, 2)),
+            getCellsBetween(leftRun.apply(where, 3), windVector.apply(where, 3)),
+            getCellsBetween(rightRun.apply(where, 3), windVector.apply(where, 3))
+          ), (first, second) => (first.x == second.x && first.y == second.y)
+        );
 }
 
 export { getRange };
