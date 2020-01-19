@@ -1,5 +1,5 @@
-import { BoardBuilder } from "./board-builder";
-import { GameBuilder } from "./game-builder";
+import { BoardBuilder } from "./board/board-builder";
+import { GameBuilder } from "./game/game-builder";
 
 import { Shipyard } from "./shipyard";
 import { Port } from "./board/port";

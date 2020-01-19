@@ -1,9 +1,9 @@
-import { Board } from "./board";
-import { CanvasAdapter } from './lib/canvas/canvas-adapter';
-import { Dimensions } from "./lib/dimensions";
-import { GameMap, MapConfig, Port } from "./board/gamemap";
-import { Grid, GridConfig } from "./board/grid";
-import { Coordinates } from "./lib/coordinates";
+import { Board } from "../board";
+import { CanvasAdapter } from '../lib/canvas/canvas-adapter';
+import { Dimensions } from "../lib/dimensions";
+import { GameMap, MapConfig, Port } from "./gamemap";
+import { Grid, GridConfig } from "./grid";
+import { Coordinates } from "../lib/coordinates";
 
 class BoardBuilder {
   constructor(private background: CanvasAdapter,

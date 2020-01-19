@@ -1,7 +1,7 @@
-import { Game } from './game';
-import { Ship } from './game/ship';
-import { Board } from './board';
-import { Telemetry } from './game/telemetry';
+import { Game } from '../game';
+import { Ship } from './ship';
+import { Board } from '../board';
+import { Telemetry } from './telemetry';
 
 class GameBuilder {
 
