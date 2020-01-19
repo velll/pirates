@@ -203,7 +203,7 @@ class GameController {
   }
 
   private removeLoadingOverlay() {
-    document.getElementById("loading-overlay").remove();
+    document.getElementById("loading").remove();
   }
 }
 

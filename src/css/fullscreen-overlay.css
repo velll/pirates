@@ -1,4 +1,4 @@
-#loading-overlay {
+.fullscreen-overlay {
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -13,7 +13,7 @@
   justify-content: center;
 }
 
-#loading-overlay h1 {
+#loading h1 {
   font-size: 5em;
   text-align: center;
   text-transform: uppercase;
@@ -22,7 +22,7 @@
   padding-left: 0.4em;
 }
 
-#loading-overlay img {
+#loading img {
   display: block;
   width: 50vh;
 
