@@ -85,8 +85,12 @@ div#status #status-chevron {
   color: inherit;
 }
 
-div#status > div {
+div#status div {
   overflow: hidden;
+}
+
+div#status #details {
+  overflow: visible;
 }
 
 div#status .collapse {

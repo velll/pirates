@@ -73,13 +73,7 @@ class GameController {
     const port = this.board.getPort(cell);
     const ship = this.game.findShipByCoordinates(cell);
 
-    if (this.UI.cellTip.hasMoved(cell)) {
-      if (port || ship) {
-        this.UI.cellTip.render(cell, position, port, ship);
-      } else if (this.UI.cellTip.isVisible()) {
-        this.UI.cellTip.hide();
-      }
-    }
+    this.UI.handleMove(cell, position, port, ship);
   }
 
   public showHelp() {
