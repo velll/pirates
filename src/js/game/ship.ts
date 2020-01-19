@@ -22,7 +22,7 @@ class Ship {
   public view: ShipView;
 
   private status: ShipStatus;
-  private goldDiscovered: boolean = false;
+  private goldDiscovered: boolean = true;
 
   private readonly HP_VALUES: Record<ShipType, number> = {
     galleon: 30, brigantine: 20
