@@ -92,4 +92,4 @@ interface Reportable {
   }
 }
 
-export { StatusPanel };
+export { StatusPanel, Reportable };

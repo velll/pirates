@@ -1,44 +1,29 @@
 import { Game } from "../game";
-import { StatusPanel } from "../UI/status-panel";
 import { Fleet } from "../game/fleet";
 import { Board } from "../board";
-import { Overlay } from "../UI/overlay";
 import { Coordinates } from "../lib/coordinates";
 import { Ship } from "../game/ship";
 import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
-import { Messenger } from "../UI/messenger";
-import { CellTip } from "../UI/cell-tip";
-import { PreGameDialog } from "../UI/pre-game";
-import { HelpDialog } from '../UI/help';
+import { UserInterface } from "../UI";
 
 class GameController {
   private game: Game;
   private board: Board;
 
-  private panel: StatusPanel;
-  private overlay: Overlay;
-  private messenger: Messenger;
-  private cellTip: CellTip;
-  private preGameDialog: PreGameDialog;
-  private helpDialog: HelpDialog;
+  private UI: UserInterface;
 
   constructor(game: Game, board: Board) {
     this.game = game;
     this.board = board;
 
-    this.panel = new StatusPanel(this.game,
-                       {"button-next-turn": this.nextTurn.bind(this),
-                        "button-repair": this.repair.bind(this),
-                        "button-surrender": this.surrender.bind(this),
-                        "button-help": this.showHelp.bind(this)});
-
-    this.overlay = new Overlay(board, game);
-    this.cellTip = new CellTip();
-    this.messenger = new Messenger();
-    this.preGameDialog = new PreGameDialog(this.start.bind(this),
-                                           this.showHelp.bind(this));
-    this.helpDialog = new HelpDialog();
+    this.UI = new UserInterface(game, board,
+                               {"button-next-turn": this.nextTurn.bind(this),
+                                "button-repair": this.repair.bind(this),
+                                "button-surrender": this.surrender.bind(this),
+                                "button-help": this.showHelp.bind(this)},
+                               {starter: this.start.bind(this),
+                                helper: this.showHelp.bind(this)});
   }
 
   // event handlers
@@ -60,7 +45,7 @@ class GameController {
     const goldenShip = this.game.loadGold();
     const port = this.board.getPort(goldenShip.coordinates);
 
-    this.preGameDialog.show(goldenShip.name, port.name);
+    this.UI.preGameDialog.show(goldenShip.name, port.name);
 
     this.removeLoadingOverlay();
   }
@@ -68,7 +53,7 @@ class GameController {
   public start() {
     this.nextTurn();
 
-    this.panel.toggleCollapse();
+    this.UI.toggleStatusPanel();
   }
 
   public repair() {
@@ -76,7 +61,7 @@ class GameController {
 
     if (this.game.canRepair()) {
       turn.ship.repair();
-      this.panel.report(turn);
+      this.UI.reportStatus(turn);
       this.nextTurn();
     }
   }
@@ -88,17 +73,17 @@ class GameController {
     const port = this.board.getPort(cell);
     const ship = this.game.findShipByCoordinates(cell);
 
-    if (this.cellTip.hasMoved(cell)) {
+    if (this.UI.cellTip.hasMoved(cell)) {
       if (port || ship) {
-        this.cellTip.render(cell, position, port, ship);
-      } else if (this.cellTip.isVisible()) {
-        this.cellTip.hide();
+        this.UI.cellTip.render(cell, position, port, ship);
+      } else if (this.UI.cellTip.isVisible()) {
+        this.UI.cellTip.hide();
       }
     }
   }
 
   public showHelp() {
-    this.helpDialog.show();
+    this.UI.helpDialog.show();
   }
 
   // event handlers done
@@ -111,7 +96,7 @@ class GameController {
       turn = this.game.nextTurn();
     }
 
-    this.scrollTo(this.overlay.getActiveArea().start);
+    this.UI.scrollToActiveArea();
 
     if (turn.wind.isStorm()) {
       await this.drawStorm(turn);
@@ -121,18 +106,13 @@ class GameController {
 
     this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 
-    this.panel.report(turn);
-    this.drawOverlay(turn);
+    this.UI.reportStatus(turn);
+    this.UI.drawOverlay(turn);
   }
 
   public surrender() {
     const enemy = Fleet.getEnemyFleet(this.game.getCurrentFleet());
     this.congratulate(enemy);
-  }
-
-  private scrollTo(to: Coordinates) {
-    const position = this.board.getCellPosition(to);
-    window.scrollTo(position.left, position.top);
   }
 
   // game actions
@@ -153,7 +133,7 @@ class GameController {
     if (turn.hasShot() || this.game.getTargets(ship).length == 0) {
       this.nextTurn();
     } else {
-      this.drawOverlay(turn);
+      this.UI.drawOverlay(turn);
     }
   }
 
@@ -176,27 +156,27 @@ class GameController {
     if (turn.hasMoved()) {
        this.nextTurn();
     } else {
-      this.drawOverlay(turn);
+      this.UI.drawOverlay(turn);
     }
   }
 
   private async drawStorm(turn: Turn) {
     if (this.game.isCaughtInStorm(turn)) {
-      this.messenger.send("Storm!",
+      this.UI.sendMessage("Storm!",
                           `The ${turn.wind.getName()} wind is howling and your ship moves 1 cell`,
                           true);
 
       const to = turn.wind.follow(turn.ship.coordinates);
       await this.moveByStorm(turn, to);
     } else {
-      this.messenger.send("Storm!",
+      this.UI.sendMessage("Storm!",
                           `The ${turn.wind.getName()} wind is howling. You cannot move this turn`,
                           true);
     }
   }
 
   private async moveByStorm(turn: Turn, to: Coordinates) {
-    this.highlightWind(turn);
+    this.UI.highlightWind(turn.ship.coordinates, turn.wind);
 
     const from = turn.ship.coordinates;
     turn.makeMove(to);
@@ -214,35 +194,12 @@ class GameController {
 
   // UI
 
-  private highlightWind(turn: Turn) {
-    if (turn.wind.isCalm()) {
-      this.overlay.highlightShip(turn.ship.coordinates);
-    } else {
-      this.overlay.highlightWind(turn.ship.coordinates, turn.wind.view);
-    }
-  }
-
-  private drawOverlay(turn: Turn) {
-    this.overlay.clear();
-
-    this.overlay.showActiveArea();
-
-    if (!turn.hasMoved()) {
-      this.overlay.highlightMoves(turn.availableMoves);
-      this.highlightWind(turn);
-    } else {
-      this.overlay.highlightShip(turn.ship.coordinates);
-    }
-
-    this.overlay.highlightTargets(this.game.getTargets(turn.ship));
-  }
-
   private drawShips(ships: Ship[]) {
     ships.forEach(ship => ( this.board.drawShip(ship.view, ship.coordinates)));
   }
 
   private congratulate(fleet: Fleet) {
-    this.messenger.send("Game Over! ", fleet.name + " have won");
+    this.UI.sendMessage("Game Over! ", fleet.name + " have won");
   }
 
   private removeLoadingOverlay() {

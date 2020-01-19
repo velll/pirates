@@ -10,7 +10,6 @@ class Overlay {
 
   private readonly COVER_COLOR = "rgba(64, 64, 64, 0.4";
   private readonly LIGHT_COVER_COLOR = "rgba(178, 178, 178, 0.1)";
-  private readonly ACTIVE_AREA_PADDING = 2;
 
   private readonly AREA_GRADIENT = [{stop: 0, color: "transparent"},
                                     {stop: 0.5, color: this.LIGHT_COVER_COLOR},
@@ -39,13 +38,7 @@ class Overlay {
     this.board.highlightWind(at, wind);
   }
 
-  public getActiveArea(): Area {
-    return this.game.getActiveArea(this.ACTIVE_AREA_PADDING);
-  }
-
-  public showActiveArea() {
-    const area = this.getActiveArea();
-
+  public highlightActiveArea(area: Area) {
     this.board.clearCover();
     this.board.cover(this.COVER_COLOR);
 
