@@ -195,7 +195,7 @@ class GameController {
   // UI
 
   private drawShips(ships: Ship[]) {
-    ships.forEach(ship => ( this.board.drawShip(ship.view, ship.coordinates)));
+    this.board.reDrawAllShips(ships.map(ship => ({coordinates: ship.coordinates, view: ship.view})));
   }
 
   private congratulate(fleet: Fleet) {

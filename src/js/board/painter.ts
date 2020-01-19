@@ -66,6 +66,12 @@ class Painter {
                   this.grid.cellSize);
   }
 
+  public reDrawAllShips(layer: CanvasAdapter, ships: Array<{coordinates: Coordinates, view: Drawable}>) {
+    layer.clearAll();
+
+    ships.forEach(ship => ( this.drawShip(layer, ship.view, ship.coordinates)));
+  }
+
   public moveShip(staticLayer: CanvasAdapter,
                   dynamicLayer: CanvasAdapter,
                   shipView: Moveable,

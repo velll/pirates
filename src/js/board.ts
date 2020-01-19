@@ -150,6 +150,10 @@ class Board {
   public removeShip(coordinates: Coordinates) {
     this.clearCell(this.layers.ships, coordinates);
   }
+
+  public reDrawAllShips(ships: Array<{coordinates: Coordinates, view: Drawable}>) {
+    this.painter.reDrawAllShips(this.layers.ships, ships);
+  }
 }
 
 interface Layers {
