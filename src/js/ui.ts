@@ -23,13 +23,12 @@ import { GameOverScreen } from "./UI/components/game-over-screen/game-over-scree
 import { $ } from 'dollarsigns';
 
 class UserInterface {
-
-  public overlay: Overlay;
-  public messenger: Message;
-  public cellTip: CellTip;
   public preGameDialog: PreGameDialog;
   public helpDialog: HelpDialog;
 
+  private overlay: Overlay;
+  private cellTip: CellTip;
+  private messenger: Message;
   private panel: StatusPanel;
 
   private readonly ACTIVE_AREA_PADDING = 2;
