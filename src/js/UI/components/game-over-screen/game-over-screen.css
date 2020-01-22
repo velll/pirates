@@ -1,0 +1,17 @@
+#game-over h1 {
+  font-size: 5em;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+
+  padding-left: 0.4em;
+}
+
+#game-over img {
+  display: block;
+  width: 50vh;
+
+  animation:spin 5s linear infinite;
+}
+
+@keyframes spin { 100% { transform:rotate(360deg); } }

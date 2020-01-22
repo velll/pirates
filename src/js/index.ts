@@ -72,5 +72,3 @@ window.onload = () => {
 };
 
 (window as any).t = t;
-
-window.onbeforeunload = () => ( true );

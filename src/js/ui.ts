@@ -18,6 +18,7 @@ import * as React from "react";
 import { Message } from "./UI/components/message/message";
 import { StatusPanel, Reportable } from "./UI/components/status-panel/status-panel";
 import { CellTip } from "./UI/components/cell-tip/cell-tip";
+import { GameOverScreen } from "./UI/components/game-over-screen/game-over-screen";
 
 import { $ } from 'dollarsigns';
 
@@ -51,6 +52,7 @@ class UserInterface {
                                   {buttonHandlers: statusButtonHandlers}),
                                  $("status"));
 
+    this.protectPage();
   }
 
   public scrollToActiveArea() {
@@ -110,6 +112,18 @@ class UserInterface {
 
     this.overlay.highlightTargets(this.game.getTargets(turn.ship));
   }
+
+  // game over screen
+
+  public congratulate(winner: {name: string, code: string}) {
+    this.revokePageProtection();
+    ReactDOM.render(React.createElement(GameOverScreen, winner), $('game-over'));
+  }
+
+  // confirm leaving page
+
+  private protectPage() { window.onbeforeunload = () => ( true ); }
+  private revokePageProtection() { window.onbeforeunload = null; }
 }
 
 type Procedure = () => void;

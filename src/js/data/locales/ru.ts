@@ -58,6 +58,10 @@ const ru = {
   },
   "cell-tip": {
     "occupied-by": "Занят кораблем"
+  },
+  "game-over": {
+    "won": "{{ winner }} победили!",
+    "new-game": "Начать новую игру?"
   }
 };
 

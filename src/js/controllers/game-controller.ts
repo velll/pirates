@@ -38,7 +38,7 @@ class GameController {
       this.move(coordinates);
     }
 
-    if (this.game.isOver()) { this.congratulate(turn.ship.fleet); }
+    if (this.game.isOver()) { this.UI.congratulate(turn.ship.fleet); }
   }
 
   public prepare() {
@@ -106,7 +106,7 @@ class GameController {
 
   public surrender() {
     const enemy = Fleet.getEnemyFleet(this.game.getCurrentFleet());
-    this.congratulate(enemy);
+    this.UI.congratulate(enemy);
   }
 
   // game actions
@@ -190,10 +190,6 @@ class GameController {
 
   private drawShips(ships: Ship[]) {
     this.board.reDrawAllShips(ships.map(ship => ({coordinates: ship.coordinates, view: ship.view})));
-  }
-
-  private congratulate(fleet: Fleet) {
-    this.UI.sendMessage("Game Over! ", fleet.name + " have won");
   }
 
   private removeLoadingOverlay() {

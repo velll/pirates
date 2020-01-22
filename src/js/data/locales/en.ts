@@ -59,6 +59,10 @@ const en = {
   "cell-tip": {
     "occupied-by": "Occupied by",
     "HP": "HP"
+  },
+  "game-over": {
+    "won": "{{ winner }} have won!",
+    "new-game": "New game?"
   }
 };
 
