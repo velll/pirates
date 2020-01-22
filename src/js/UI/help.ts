@@ -1,5 +1,5 @@
 import { AsyncRenderer, State } from "../lib/dom/async-renderer";
-import { DOM } from "dollarsigns";
+import * as DOM from "dollarsigns";
 
 class HelpDialog {
   private element: HTMLElement;
