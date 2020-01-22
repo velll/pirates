@@ -7,6 +7,8 @@ import { Turn } from "../game/turn";
 import { CannonballView } from "../views/cannonball";
 import { UserInterface } from "../UI";
 
+import { t } from '../data/i18n';
+
 class GameController {
   private game: Game;
   private board: Board;
@@ -156,15 +158,15 @@ class GameController {
 
   private async drawStorm(turn: Turn) {
     if (this.game.isCaughtInStorm(turn)) {
-      this.UI.sendMessage("Storm!",
-                          `The ${turn.wind.getName()} wind is howling and your ship moves 1 cell`,
+      this.UI.sendMessage(t("messages.storm"),
+                          t("messages.storm_caught", {ship: turn.ship.name}),
                           true);
 
       const to = turn.wind.follow(turn.ship.coordinates);
       await this.moveByStorm(turn, to);
     } else {
-      this.UI.sendMessage("Storm!",
-                          `The ${turn.wind.getName()} wind is howling. You cannot move this turn`,
+      this.UI.sendMessage(t("messages.storm"),
+                          t("messages.storm_stranded", {ship: turn.ship.name}),
                           true);
     }
   }
