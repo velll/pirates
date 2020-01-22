@@ -49,7 +49,7 @@ class GameController {
 
     this.UI.preGameDialog.show(goldenShip.name, port.name);
 
-    this.removeLoadingOverlay();
+    this.removeLoadingScreen();
   }
 
   public start() {
@@ -194,7 +194,7 @@ class GameController {
     this.board.reDrawAllShips(ships.map(ship => ({coordinates: ship.coordinates, view: ship.view})));
   }
 
-  private removeLoadingOverlay() {
+  private removeLoadingScreen() {
     document.getElementById("loading").remove();
   }
 }

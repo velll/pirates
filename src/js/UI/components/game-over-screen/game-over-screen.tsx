@@ -13,7 +13,7 @@ class GameOverScreen extends React.Component<Props> {
   }
 
   public render() {
-    return <div className="fullscreen-overlay">
+    return <div className="fullscreen">
               <img src={ `img/wind-rose-${ this.props.code}.png` }/>
               <h1 className="Title"> { t("game-over.won", {winner: this.props.name }) }</h1>
               <a onClick={ this.newGame } className="button is-light is-large">{ t("game-over.new-game")}</a>
