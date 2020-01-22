@@ -16,8 +16,6 @@ import { Position } from "./lib/position";
 import { Calendar } from "./game/calendar";
 
 class Game {
-  public telemetry: Reportable;
-
   public board: Board;
   public ships: Ship[];
 
@@ -30,10 +28,9 @@ class Game {
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly START_DATE = new Date(1634, 5, 1);
 
-  constructor(board: Board, ships: Ship[], telemetry: Reportable) {
+  constructor(board: Board, ships: Ship[]) {
     this.board = board;
     this.ships = ships;
-    this.telemetry = telemetry;
 
     this.calendar = new Calendar(this.START_DATE);
     this.windGen = new WindGenerator();
@@ -76,7 +73,6 @@ class Game {
 
     if (ship.isWrecked()) { ship.sink(); }
 
-    this.telemetry.report(turn);
     return turn;
   }
 

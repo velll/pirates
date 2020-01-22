@@ -61,10 +61,6 @@ window.onload = () => {
   const ships = shipyard.buildAll(shipOrders);
   const game = new GameBuilder().build(board, ships);
 
-  // game.telemetry.switchOn();
-  // board.drawBoard();
-  // if (game.telemetry.working) { board.drawBoard(false, true); }
-
   const gameController = new GameController(game, board);
 
   canvasFG.element.addEventListener('click', gameController.click.bind(gameController));
