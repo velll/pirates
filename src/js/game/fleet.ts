@@ -1,3 +1,5 @@
+import { t } from '../data/i18n';
+
 class Fleet {
 
   public static getEnemyFleet(fleet: Fleet) {
@@ -11,20 +13,18 @@ class Fleet {
   }
 
   public flag: CanvasImageSource;
-  public name: string;
-  public playable: boolean;
 
-  constructor(name: string, playable: boolean) {
-     this.name = name;
-     this.playable = playable;
+  constructor(public readonly code: string,
+              public readonly name: string,
+              public readonly playable: boolean) {
   }
 
   public is(fleet: Fleet) {
-    return this.name == fleet.name;
+    return this.code == fleet.code;
   }
 
   public isHostileTo(fleet: Fleet) {
-    return this.playable && fleet.playable && this.name != fleet.name;
+    return this.playable && fleet.playable && this.code != fleet.code;
   }
 
   public isFriendlyTo(fleet: Fleet) {
@@ -32,8 +32,8 @@ class Fleet {
   }
 }
 
-const spaniards = new Fleet("spaniards", true);
-const pirates = new Fleet("pirates", true);
-const neutrals = new Fleet("neutrals", false);
+const spaniards = new Fleet('spaniards', t("fleets.spaniards"), true);
+const pirates   = new Fleet('pirates',   t("fleets.pirates"),   true);
+const neutrals  = new Fleet('neutrals',  t("fleets.neutrals"),  false);
 
 export { Fleet, spaniards, pirates, neutrals };
