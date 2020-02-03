@@ -31,5 +31,18 @@ module.exports = {
       { from: 'static'}
     ]),
   ],
-  devtool: 'source-map'
+  devtool: 'source-map',
+  devServer: {
+    hot: false,
+    inline: false,
+    proxy: {
+      "/api": {
+          "target": "http://localhost:9393/",
+          "pathRewrite": {
+                  "^/api" : ""
+          },
+          "changeOrigin": true
+      }
+    }
+  }
 };
