@@ -2,7 +2,7 @@ import { spaniards, pirates, neutrals, Fleet } from '../game/fleet';
 import { t } from './i18n';
 
 const portsData = [
- [16, 1,  t("ports.cinewfoundland"),    neutrals,  "france"],
+ [16, 1,  t("ports.newfoundland"),      neutrals,  "france"],
  [8, 7,   t("ports.maryland"),          pirates,   "pirates"],
  [13, 9,  t("ports.bermudas"),          spaniards, "spain"],
  [5, 14,  t("ports.havana"),            spaniards, "spain"],
