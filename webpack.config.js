@@ -25,6 +25,7 @@ module.exports = {
   plugins: [
     new CopyPlugin([
       { from: 'src/index.html'},
+      { from: 'src/game.html'},
       { from: 'src/css', to: 'css/'},
       { from: 'src/templates', to: 'templates/'},
       { from: 'static'}

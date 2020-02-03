@@ -13,7 +13,7 @@
   justify-content: center;
 }
 
-#loading h1 {
+.fullscreen h1 {
   font-size: 5em;
   text-align: center;
   text-transform: uppercase;
@@ -22,7 +22,7 @@
   padding-left: 0.4em;
 }
 
-#loading img {
+.fullscreen img {
   display: block;
   width: 50vh;
 

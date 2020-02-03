@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Golitsin pirates</title>
+
+    <link href="css/fullscreen.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js"></script>
+
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/pre-game.css" rel="stylesheet">
+    <link href="css/help.css" rel="stylesheet">
+</head> 
+<body>
+<div id="loading" class="fullscreen">
+    <img src="img/wind-rose-pirates.png">
+    <h1 class="Title">Pirates</h1>
+</div>
+<resources>
+    <img id="galleon" src="icons/galleon.svg"/>
+    <img id="galleon-wreck" src="icons/galleon-ship-wreck.svg"/>
+    <img id="sailboat" src="icons/sailboat.svg"/>
+    <img id="sailboat-wreck" src="icons/sailboat-ship-wreck.svg"/>
+
+    <img id="gold-galleon-pirates" src="icons/gold/gold-galleon-pirates.svg"/>
+    <img id="gold-galleon-spaniards" src="icons/gold/gold-galleon-spaniards.svg"/>
+    <img id="gold-ship-wreck-pirates" src="icons/gold/gold-ship-wreck-pirates.svg"/>
+    <img id="gold-ship-wreck-spaniards" src="icons/gold/gold-ship-wreck-spaniards.svg"/>
+
+    <img id="flag-pirates" src="img/flags/pirates.png"/>
+    <img id="flag-spaniards" src="img/flags/spain.png"/>
+    <img id="flag-dutch" src="img/flags/netherlands.png"/>
+    <img id="flag-portuguese" src="img/flags/portugal.png"/>
+    <img id="flag-british" src="img/flags/britain.png"/>
+    <img id="flag-french" src="img/flags/france.png"/>
+
+    <img id="anchor" src="icons/anchor.svg"/>
+
+    <img id="wind-N" src="icons/wind/N.svg"/>
+    <img id="wind-NE" src="icons/wind/NE.svg"/>
+    <img id="wind-E" src="icons/wind/E.svg"/>
+    <img id="wind-SE" src="icons/wind/SE.svg"/>
+    <img id="wind-S" src="icons/wind/S.svg"/>
+    <img id="wind-SW" src="icons/wind/SW.svg"/>
+    <img id="wind-W" src="icons/wind/W.svg"/>
+    <img id="wind-NW" src="icons/wind/NW.svg"/>
+
+    <img id="cannonball" src="icons/cannonball.svg"/>
+</resources>
+<canvas id="background" width="2000" height="1221"></canvas>
+<canvas id="highlight"  width="2000" height="1221"></canvas>
+<canvas id="cover" width="2000" height="1221"></canvas>
+<canvas id="ships" width="2000" height="1221"></canvas>
+<canvas id="foreground" width="2000" height="1221"></canvas>
+<div id="status">
+</div>
+<article id="message" class="message alert hidden"></article>
+<div id="cell-tip" class="cell-tip box hidden transparent"></div>
+<div id="pre-game" class="message alert hidden"></div>
+<div id="help" class="message help hidden"></div>
+<div id="game-over"></div>
+
+<script src="bundle.js"></script>
+
+</body>
+</html>
