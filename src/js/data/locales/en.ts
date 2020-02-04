@@ -68,6 +68,12 @@ const en = {
   "game-over": {
     "won": "{{ winner }} have won!",
     "new-game": "New game?"
+  },
+  "lobby": {
+    "game": "Game",
+    "created-by": "Created by",
+    "created-at": "Created at",
+    "join-as": "Join as {{ fleet }}"
   }
 };
 

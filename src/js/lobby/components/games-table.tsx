@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { GameRow } from './game-row';
 import { LobbyGame } from "../../lobby";
+import { Fleet } from "../../game/fleet";
+import { t } from "../../data/i18n";
 
 class GamesTable extends React.Component<Props, State>  {
   constructor(props: Props) {
@@ -10,7 +12,7 @@ class GamesTable extends React.Component<Props, State>  {
     this.state = {games: []};
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
     this.props.fetcher().then(games => this.setState({games: games}));
   }
 
@@ -18,9 +20,9 @@ class GamesTable extends React.Component<Props, State>  {
    return <table className="table">
             <thead>
               <tr>
-                <th>Game id</th>
-                <th>Game started by</th>
-                <th>Game started at</th>
+                <th> { t("lobby.game") } </th>
+                <th> { t("lobby.created-by") } </th>
+                <th> { t("lobby.created-at") } </th>
                 <th></th>
               </tr>
             </thead>

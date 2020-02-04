@@ -1,15 +1,16 @@
 import { t } from '../data/i18n';
 
 class Fleet {
-
-  public static getEnemyFleet(fleet: Fleet) {
-    if (fleet.is(spaniards)) {
-      return pirates;
-    } else if (fleet.is(pirates)) {
-      return spaniards;
-    } else {
-      throw Error("Unknown fleet " + fleet);
+  public static getEnemyFleet(fleet: Fleet): Fleet {
+    if (!fleet.is(spaniards) && !fleet.is(pirates)) {
+      throw Error("Unknown fleet " + fleet.code);
     }
+
+    return fleet.is(pirates) ? spaniards : pirates;
+  }
+
+  public static find(fleetCode: string) {
+    return [spaniards, pirates, neutrals].find(fleet => fleet.code == fleetCode);
   }
 
   public flag: CanvasImageSource;
@@ -29,6 +30,10 @@ class Fleet {
 
   public isFriendlyTo(fleet: Fleet) {
     return !this.isHostileTo(fleet);
+  }
+
+  public getEnemyFleet() {
+    return Fleet.getEnemyFleet(this);
   }
 }
 

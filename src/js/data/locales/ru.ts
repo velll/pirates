@@ -67,6 +67,12 @@ const ru = {
   "game-over": {
     "won": "{{ winner }} победили!",
     "new-game": "Начать новую игру?"
+  },
+  "lobby": {
+    "game": "Игра",
+    "created-by": "Создали",
+    "created-at": "Создали в",
+    "join-as": "Присоединиться как {{ fleet }}"
   }
 };
 
