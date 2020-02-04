@@ -1,13 +1,4 @@
-import { GridConfig } from '../board/grid';
-import { MapConfig } from '../board/gamemap';
-
-interface Config {
-  map: MapConfig;
-  grid: GridConfig;
-  locale: string;
-}
-
-const config: Config = {
+const config = {
   locale: 'ru',
   map: {
     rows: 23,
