@@ -4,7 +4,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 
 module.exports = {
-  entry: './src/js/index.ts',
+  entry: {
+    game: './src/js/index.ts',
+    lobby: './src/js/lobby.ts'
+  },
   module: {
     rules: [
       {
@@ -19,13 +22,14 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle-[name].js',
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
     new CopyPlugin([
       { from: 'src/index.html'},
       { from: 'src/game.html'},
+      { from: 'src/lobby.html'},
       { from: 'src/css', to: 'css/'},
       { from: 'src/templates', to: 'templates/'},
       { from: 'static'}

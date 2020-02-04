@@ -1,0 +1,28 @@
+* {
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: scroll;
+
+  background-color: rgba(199,193,172);
+}
+
+div#lobby {
+  position: fixed;
+  width: 100vw; height: 100vh;
+  background-color: rgba(199,193,172);
+
+  display: flex;
+  justify-content: center;
+  
+  padding: 3em;
+}
+
+table.table {
+  background-color: rgba(199,193,172);
+}
+
