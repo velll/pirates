@@ -73,7 +73,9 @@ const en = {
     "game": "Game",
     "created-by": "Created by",
     "created-at": "Created at",
-    "join-as": "Join as {{ fleet }}"
+    "join-as": "Join as {{ fleet }}",
+    "new-game": "Start new game",
+    "choose-side": "Choose a side you will be playing"
   }
 };
 

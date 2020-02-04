@@ -6,6 +6,7 @@ interface Props {
   fleet: string;
   created_at: string;
   join_as: string;
+  joiner: () => void;
 }
 
 const GameRow: React.SFC<Props> = (props: Props) =>  {
@@ -15,7 +16,7 @@ const GameRow: React.SFC<Props> = (props: Props) =>  {
           <td> { props.created_at }</td>
           <td>
             <a className="button is-small is-light is-warning"
-               href="/game.html">
+               onClick={ props.joiner } >
                { t("lobby.join-as", {fleet: props.join_as}) }
             </a>
           </td>

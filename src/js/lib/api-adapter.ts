@@ -5,7 +5,7 @@ class APIAdapter {
     });
   }
 
-  public async post(path: string, body: Record<string, string>) {
+  public async post(path: string, body: Record<string, string> = {}) {
     const req = new Request(path, { method: "post", body: JSON.stringify(body) });
 
     return await fetch(req).then(response => response.json()).catch(e => {
