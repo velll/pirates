@@ -15,6 +15,11 @@ import { Area } from "./board/area";
 import { Position } from "./lib/position";
 import { Calendar } from "./game/calendar";
 
+/*
+Main class holding the game state. The only changes to the game are done
+via game Actions (game/actions/).
+*/
+
 class Game {
   public board: Board;
   public ships: Ship[];
@@ -80,14 +85,6 @@ class Game {
     const to = turn.wind.follow(turn.ship.coordinates);
 
     return !(this.isInPort(turn.ship) || this.findShipByCoordinates(to));
-  }
-
-  public followStorm(ship: Ship, to: Coordinates) {
-    if (this.board.isRock(to) || !this.board.isOnMap(to)) {
-      ship.damage();
-      ship.damage();
-      ship.damage();
-    }
   }
 
   // Current game state
@@ -196,4 +193,12 @@ interface Reportable {
   report(turn: Turn): void;
 }
 
-export { Game, Reportable };
+interface Action {
+  actionType: ActionType;
+
+  perform(): void;
+}
+
+enum ActionType { abstract, storm, move, shot, capture, repair }
+
+export { Game, Reportable, Action, ActionType };

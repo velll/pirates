@@ -1,13 +1,13 @@
-import { Game } from "../game";
+import { Game, ActionType } from "../game";
 import { Fleet } from "../game/fleet";
 import { Board } from "../board";
 import { Coordinates } from "../lib/coordinates";
 import { Ship } from "../game/ship";
-import { Turn } from "../game/turn";
-import { CannonballView } from "../views/cannonball";
 import { UserInterface } from "../UI";
-
-import { t } from '../data/i18n';
+import { Move } from "../game/actions/move";
+import { Shot } from "../game/actions/shot";
+import { Storm } from "../game/actions/storm";
+import { Repair } from "../game/actions/repair";
 
 class GameController {
   private game: Game;
@@ -62,8 +62,7 @@ class GameController {
     const turn = this.game.getCurrentTurn();
 
     if (this.game.canRepair()) {
-      turn.ship.repair();
-      this.UI.reportStatus(turn);
+      new Repair(this.game, this.board, turn, this.UI).perform();
       this.nextTurn();
     }
   }
@@ -82,8 +81,6 @@ class GameController {
     this.UI.helpDialog.show();
   }
 
-  // event handlers done
-
   public async nextTurn() {
     let turn = this.game.nextTurn();
 
@@ -95,7 +92,7 @@ class GameController {
     this.UI.scrollToActiveArea();
 
     if (turn.wind.isStorm()) {
-      await this.drawStorm(turn);
+      await new Storm(this.game, this.board, turn, this.UI).perform();
     }
 
     if (!turn.ship.isReady()) { this.game.nextTurn(); }
@@ -115,18 +112,16 @@ class GameController {
 
   private async move(to: Coordinates) {
     const turn = this.game.getCurrentTurn();
-    const ship = turn.ship;
-    const from = ship.coordinates;
 
-    turn.makeMove(to);
+    const action = new Move(this.game,
+                            this.board,
+                            turn,
+                            to);
 
-    await this.board.moveShip(ship.view, from, to);
-    this.board.drawShip(ship.view, to);
-
-    if (this.game.canCaptureGold()) { this.captureGold(); }
+    await action.perform();
 
     // We made the move. If we also made the shot, then let's go for a next turn
-    if (turn.hasShot() || this.game.getTargets(ship).length == 0) {
+    if (turn.hasShot() || this.game.getTargets(turn.ship).length == 0) {
       this.nextTurn();
     } else {
       this.UI.drawOverlay(turn);
@@ -136,17 +131,7 @@ class GameController {
   private async shoot(at: Coordinates) {
     const turn = this.game.getCurrentTurn();
 
-    const target = this.game.findShipByCoordinates(at);
-    target.damage();
-    turn.makeShot(at);
-
-    const cannonball = new CannonballView();
-
-    await this.board.shoot(cannonball, turn.ship.coordinates, at);
-
-    this.board.drawShip(target.view, target.coordinates);
-
-    if (this.game.canCaptureGold()) { this.captureGold(); }
+    await new Shot(this.game, this.board, turn, at).perform();
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (turn.hasMoved()) {
@@ -154,38 +139,6 @@ class GameController {
     } else {
       this.UI.drawOverlay(turn);
     }
-  }
-
-  private async drawStorm(turn: Turn) {
-    if (this.game.isCaughtInStorm(turn)) {
-      this.UI.sendMessage(t("messages.storm"),
-                          t("messages.storm_caught", {ship: turn.ship.name}),
-                          true);
-
-      const to = turn.wind.follow(turn.ship.coordinates);
-      await this.moveByStorm(turn, to);
-    } else {
-      this.UI.sendMessage(t("messages.storm"),
-                          t("messages.storm_stranded", {ship: turn.ship.name}),
-                          true);
-    }
-  }
-
-  private async moveByStorm(turn: Turn, to: Coordinates) {
-    this.UI.highlightWind(turn.ship.coordinates, turn.wind);
-
-    const from = turn.ship.coordinates;
-    turn.makeMove(to);
-
-    await this.board.moveShip(turn.ship.view, from, to);
-    this.game.followStorm(turn.ship, to);
-
-    this.board.drawShip(turn.ship.view, to);
-  }
-
-  private captureGold() {
-    const goldenShip = this.game.captureGoldenShip();
-    this.board.drawShip(goldenShip.view, goldenShip.coordinates);
   }
 
   // UI

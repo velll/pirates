@@ -4,6 +4,7 @@ import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
 import { Ship } from './ship';
 import { GameMap } from '../board/gamemap';
+import { Action, ActionType } from '../game';
 
 class Turn {
   public no: number;
@@ -12,8 +13,7 @@ class Turn {
   public wind: Wind;
   public availableMoves: Coordinates[];
 
-  public move: Move;
-  public shot: Move;
+  public actions: Action[];
 
   private offLimitCells: OffLimits;
 
@@ -25,23 +25,15 @@ class Turn {
     this.offLimitCells = offLimitCells;
 
     this.availableMoves = filterOut(movement, offLimitCells.move);
-  }
-
-  public makeMove(to: Coordinates) {
-    this.move = {from: this.ship.coordinates, to: to};
-    this.ship.move(to);
-  }
-
-  public makeShot(at: Coordinates) {
-    this.shot = {from: this.ship.coordinates, to: at};
+    this.actions = [];
   }
 
   public hasMoved(): boolean {
-    return !!this.move;
+    return !!this.actions.find(act => act.actionType == ActionType.move);
   }
 
   public hasShot(): boolean {
-    return !!this.shot;
+    return !!this.actions.find(act => act.actionType == ActionType.shot);
   }
 
   // a move is valid if "to" is in the list of available moves
