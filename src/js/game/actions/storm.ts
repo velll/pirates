@@ -6,20 +6,21 @@ import { Coordinates } from "../../lib/coordinates";
 import { Move } from "./move";
 import { UserInterface } from "../../UI";
 import { Ship } from "../ship";
+import { AbstractAction } from "./abstract-action";
 
-class Storm implements Action {
+class Storm extends AbstractAction implements Action {
   public readonly actionType = ActionType.storm;
 
+  private readonly UI: UserInterface;
   private readonly caught: boolean;
   private readonly ship: Ship;
   private readonly from: Coordinates;
   private readonly to: Coordinates;
 
-  constructor(private readonly game: Game,
-              private readonly board: Board,
-              private readonly turn: Turn,
-              private readonly UI: UserInterface) {
+  constructor(game: Game, board: Board, turn: Turn, UI: UserInterface) {
+    super(game, board, turn);
 
+    this.UI = UI;
     this.ship = turn.ship;
     this.caught = this.game.isCaughtInStorm(this.turn);
     this.from = this.turn.ship.coordinates;

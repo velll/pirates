@@ -7,6 +7,8 @@ import { CannonballView } from "../../views/cannonball";
 import { Capture } from "./capture";
 import { AbstractAction } from "./abstract-action";
 
+import { extend } from 'lodash';
+
 class Shot extends AbstractAction implements Action {
   public readonly actionType = ActionType.shot;
 
@@ -47,6 +49,10 @@ class Shot extends AbstractAction implements Action {
   public async perform() {
     await super.perform();
     this.after();
+  }
+
+  public toJSON() {
+    return extend(super.toJSON(), {tox: this.to.x, toy: this.to.y});
   }
 }
 

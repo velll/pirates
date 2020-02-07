@@ -1,7 +1,7 @@
 import { APIAdapter } from '../adapters/api-adapter';
 
 class FetchGame {
-  private readonly PATH = '/api/game/$id';
+  public readonly PATH = '/api/game/$id';
 
   constructor(private readonly api: APIAdapter) {
   }

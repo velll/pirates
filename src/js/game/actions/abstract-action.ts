@@ -32,6 +32,14 @@ class AbstractAction implements Action {
     // displays are often asynchronous
     await this.display();
   }
+
+  public toJSON() {
+    return {
+      game_id: this.game.id,
+      turn_no: this.turn.no.toString(),
+      type: ActionType[this.actionType]
+    };
+  }
 }
 
 export { AbstractAction };

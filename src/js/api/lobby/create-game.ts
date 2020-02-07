@@ -11,7 +11,7 @@ class CreateGame {
   }
 
   public async call(body: {fleet: string}) {
-    const response = await this.api.post(this.PATH, {}, body);
+    const response = await this.api.post(this.PATH, {}, JSON.stringify(body));
 
     return this.processResponse(response);
   }

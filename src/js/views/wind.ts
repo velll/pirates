@@ -21,7 +21,7 @@ class WindView implements Drawable {
   }
 
   public getImage(): CanvasImageSource {
-    return $(`wind-${this.wind.getName()}`) as CanvasImageSource;
+    return $(`wind-${this.wind.bearing}`) as CanvasImageSource;
   }
 }
 

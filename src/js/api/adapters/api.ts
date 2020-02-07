@@ -10,7 +10,7 @@ class API {
 
 interface HTTPAdapter {
   get(path: string, params: URLSubsts): any;
-  post(path: string, params: URLSubsts, body: Record<string, string>): any;
+  post(path: string, params: URLSubsts, body: string): any;
 }
 
 export { API, HTTPAdapter };

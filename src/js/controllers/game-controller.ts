@@ -53,7 +53,7 @@ class GameController {
   }
 
   public start() {
-    this.nextTurn();
+    this.firstTurn();
 
     this.UI.toggleStatusPanel();
   }
@@ -81,12 +81,25 @@ class GameController {
     this.UI.helpDialog.show();
   }
 
+  public async firstTurn() {
+    const turn = await this.game.nextTurn();
+
+    this.UI.scrollToActiveArea();
+
+    if (turn.wind.isStorm()) {
+      await new Storm(this.game, this.board, turn, this.UI).perform();
+    }
+
+    this.UI.reportStatus(turn);
+    this.UI.drawOverlay(turn);
+  }
+
   public async nextTurn() {
-    let turn = this.game.nextTurn();
+    let turn = await this.game.endTurn();
 
     if (turn.ship.isSunk()) {
       this.board.removeShip(turn.ship.coordinates);
-      turn = this.game.nextTurn();
+      turn = await this.game.nextTurn();
     }
 
     this.UI.scrollToActiveArea();
@@ -95,7 +108,7 @@ class GameController {
       await new Storm(this.game, this.board, turn, this.UI).perform();
     }
 
-    if (!turn.ship.isReady()) { this.game.nextTurn(); }
+    if (!turn.ship.isReady()) { this.game.endTurn(); }
 
     this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 

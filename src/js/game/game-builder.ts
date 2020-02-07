@@ -3,15 +3,16 @@ import { Ship } from './ship';
 import { Board } from '../board';
 import { HTTPAdapter } from '../api/adapters/api';
 import { spaniards } from './fleet';
+import { FetchGame } from '../api/game/fetch-game';
 
 class GameBuilder {
   constructor(private readonly api: HTTPAdapter) {}
 
-  public build(board: Board, ships: Ship[], goldenShip: number): Game {
-    this.loadGold(ships, goldenShip);
-    const game = new Game(this.api, board, ships);
+  public async build(id: string, board: Board, ships: Ship[]): Promise<Game> {
+    const remoteGame = await new FetchGame(this.api).call({id: id});
+    this.loadGold(ships, remoteGame.golden_ship);
 
-    return game;
+    return new Game(this.api, id, board, ships);
   }
 
   private loadGold(ships: Ship[], goldenShip: number) {

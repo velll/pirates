@@ -17,13 +17,15 @@ import { collectResources } from './resources';
 import { GameController } from "./controllers/game-controller";
 
 import { t } from './data/i18n';
+import { logger } from './lib/logger';
 
 import { API } from "./api/adapters/api";
 import { URLParams } from "./lib/url/params";
 import { FetchGame } from "./api/game/fetch-game";
 
 const params = new URLParams(window.location.href);
-const api = API.adapter_for(params.get('game'));
+const gameId = params.get('game');
+const api = API.adapter_for(gameId);
 
 const canvasDimensions = {width: 2000, height: 1221};
 
@@ -65,10 +67,8 @@ window.onload = async () => {
 
   board.drawPorts();
 
-  const remoteGame = await new FetchGame(api).call({id: params.get('game')});
-
   const ships = shipyard.buildAll(shipOrders);
-  const game = new GameBuilder(api).build(board, ships, remoteGame.golden_ship);
+  const game = await new GameBuilder(api).build(gameId, board, ships);
 
   const gameController = new GameController(game, board);
 
@@ -81,3 +81,6 @@ window.onload = async () => {
 };
 
 (window as any).t = t;
+(window as any).logger = logger;
+
+

@@ -5,16 +5,18 @@ import { Turn } from './game/turn';
 
 import { last } from 'lodash';
 import { includes } from './lib/includes';
-import { WindGenerator } from "./game/wind-generator";
 import { GameMap } from "./board/gamemap";
 import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 import { filterOut } from "./lib/filter-out";
 import { Ship } from "./game/ship";
-import { getRndInt } from "./lib/rnd-int";
 import { Area } from "./board/area";
-import { Position } from "./lib/position";
 import { Calendar } from "./game/calendar";
+import { Wind } from "./game/wind";
+
 import { HTTPAdapter } from "./api/adapters/api";
+import { FetchTurn } from "./api/game/fetch-turn";
+import { SaveActions } from "./api/game/save-actions";
+import { logger } from "./lib/logger";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -22,12 +24,13 @@ via game Actions (game/actions/).
 */
 
 class Game {
+  public id: string;
+
   public board: Board;
   public ships: Ship[];
   public goldenShip: Ship;
 
   private turns: Turn[];
-  private windGen: WindGenerator;
   private readonly calendar: Calendar;
 
   private api: HTTPAdapter;
@@ -35,23 +38,28 @@ class Game {
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly START_DATE = new Date(1634, 5, 1);
 
-  constructor(api: HTTPAdapter, board: Board, ships: Ship[]) {
+  constructor(api: HTTPAdapter, id: string, board: Board, ships: Ship[]) {
     this.api = api;
+    this.id = id;
+
     this.board = board;
     this.ships = ships;
 
     this.calendar = new Calendar(this.START_DATE);
-    this.windGen = new WindGenerator();
     this.goldenShip = ships.find(ship => ship.carriesGold);
 
     this.turns = [];
   }
 
-  public nextTurn(): Turn {
+  public async nextTurn(): Promise<Turn> {
     const turnNo = this.turns.length;
-    const ship = this.ships[turnNo % this.ships.length];
 
-    const wind = this.windGen.getRandomWind();
+    const remoteTurn = await new FetchTurn(this.api).call({game_id: this.id,
+                                                           turn_no: turnNo.toString()});
+
+    const ship = this.ships[remoteTurn.ship_index];
+
+    const wind = new Wind(remoteTurn.wind_bearing, remoteTurn.wind_force);
     const mvmt = ship.getMovingRange(wind).filter(cell => this.board.isOnMap(cell));
 
     const date = this.calendar.add(turnNo);
@@ -68,12 +76,25 @@ class Game {
     this.turns[this.turns.length] = turn;
 
     if (ship.isSunk()) {
-      return this.nextTurn();
+      return this.endTurn();
     }
 
     if (ship.isWrecked()) { ship.sink(); }
 
     return turn;
+  }
+
+  public async endTurn(): Promise<Turn> {
+    const turn = this.getCurrentTurn();
+    const actions = JSON.stringify(turn.actions);
+
+    logger.debug(`saving turn ${turn.no.toString()}`);
+    logger.debug(actions);
+
+    new SaveActions(this.api).call({ game_id: this.id, turn_no: turn.no.toString() },
+                                   { actions: actions });
+
+    return this.nextTurn();
   }
 
   public isCaughtInStorm(turn: Turn): boolean {
@@ -192,6 +213,7 @@ interface Action {
   actionType: ActionType;
 
   perform(): void;
+  toJSON(): Record<string, string>;
 }
 
 enum ActionType { abstract, storm, move, shot, capture, repair }

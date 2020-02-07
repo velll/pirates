@@ -2,13 +2,11 @@ import { getRndInt } from '../lib/rnd-int';
 import { Wind, ForceScale } from "./wind";
 
 class WindGenerator {
-  private readonly FORCE_ROLL_D = 6;
-
   public getRandomWind() {
     const bearing = Wind.BEARINGS[getRndInt(Wind.BEARINGS.length)];
-    const force = this.rollWindForce();
+    const force = getRndInt(Wind.SCALE.length);
 
-    return this.getWind(bearing, force);
+    return new Wind(bearing, force);
   }
 
   public getBreeze(bearing: string) {
@@ -16,23 +14,9 @@ class WindGenerator {
   }
 
   public getWind(bearing: string, force: ForceScale) {
-    return new Wind(Wind.DIRECTIONS[bearing], force);
-  }
+    const forceValue = Wind.SCALE.find(val => val == force);
 
-  private rollWindForce(): ForceScale {
-    const forceRoll = getRndInt(this.FORCE_ROLL_D);
-
-    let force: ForceScale;
-
-    if (forceRoll == 0) {
-      force = ForceScale.calm;
-    } else if (forceRoll == 1) {
-      force = ForceScale.storm;
-    } else {
-      force = ForceScale.breeze;
-    }
-
-    return force;
+    return new Wind(bearing, forceValue);
   }
 }
 
