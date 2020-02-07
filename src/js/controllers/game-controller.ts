@@ -53,6 +53,8 @@ class GameController {
   }
 
   public start() {
+    this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
+
     this.firstTurn();
 
     this.UI.toggleStatusPanel();
