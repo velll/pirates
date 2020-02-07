@@ -9,15 +9,17 @@ import { t } from "../../data/i18n";
 
 class GamesTable extends React.Component<Props, State>  {
   private readonly FETCH_INTERVAL = 3000;
+  private readonly boundFetch: () => void;
 
   constructor(props: Props) {
     super(props);
 
     this.state = {games: []};
+    this.boundFetch = this.fetch.bind(this);
   }
 
   public async componentDidMount() {
-    setInterval(this.fetch.bind(this), this.FETCH_INTERVAL);
+    this.boundFetch();
   }
 
   public render() {
@@ -49,6 +51,8 @@ class GamesTable extends React.Component<Props, State>  {
 
   private fetch() {
     this.props.fetcher().then(games => this.setState({games: games}));
+
+    setTimeout(this.boundFetch, this.FETCH_INTERVAL);
   }
 }
 
