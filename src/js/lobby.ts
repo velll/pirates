@@ -5,10 +5,12 @@ import { $ } from "dollarsigns";
 import { APIAdapter } from './lib/api-adapter';
 import { Fleet } from "./game/fleet";
 
+import { FetchOpenGames } from './api-requests/lobby/fetch-open-games';
+import { CreateGame } from "./api-requests/lobby/create-game";
+import { JoinGame } from "./api-requests/lobby/join-game";
+
 class Lobby {
   private api: APIAdapter;
-  private readonly FETCH_PATH = '/api/games';
-  private readonly NEW_GAME_PATH = '/api/games';
 
   constructor() {
     this.api = new APIAdapter();
@@ -24,40 +26,28 @@ class Lobby {
   }
 
   private async join(id: string) {
-    const game = await this.api.post(`/api/game/${id}/player`);
+    const game = await new JoinGame(this.api).call({id: id});
 
-    window.location.href = `/game.html?game=${game.id}&fleet=${game.guest_fleet}`;
-  }
-
-  // FIXME: move outside
-  private brushUpGame(game: any) {
-    return {
-             game_id: game.id,
-             fleet: Fleet.find(game.host_fleet).name,
-             created_at: game.created_at,
-             join_as: Fleet.find(game.guest_fleet).name
-           };
-  }
-
-  private createGame(fleet: string) {
-    return this.api.post(this.NEW_GAME_PATH, {fleet: fleet});
+    window.location.href = this.newGameLocation(game.id, game.guest_fleet);
   }
 
   private async startGame(fleet: string) {
-    const game = await this.createGame(fleet);
+    const game = await new CreateGame(this.api).call({fleet: fleet});
 
-    window.location.href = `/game.html?game=${game.id}&fleet=${fleet}`;
+    window.location.href = this.newGameLocation(game.id, fleet);
   }
 
-  private async fetchGames(): Promise<LobbyGame[]> {
-    const games: any[] = await this.api.get(this.FETCH_PATH);
+  private fetchGames(): Promise<LobbyGame[]> {
+    return new FetchOpenGames(this.api).call();
+  }
 
-    return games.map(game => this.brushUpGame(game));
+  private newGameLocation(id: string, fleet: string) {
+    return `/game.html?game=${id}&fleet=${fleet}`;
   }
 }
 
 interface LobbyGame {
-  game_id: string;
+  id: string;
   fleet: string;
   created_at: string;
   join_as: string;

@@ -35,11 +35,11 @@ class GamesTable extends React.Component<Props, State>  {
             <tbody>
               {
                 this.state.games.map((game, key) => (
-                  <GameRow game_id={game.game_id}
+                  <GameRow game_id={game.id}
                            fleet={game.fleet}
                            created_at={game.created_at}
                            join_as={game.join_as}
-                           joiner={ () => this.props.joiner(game.game_id)  }
+                           joiner={ () => this.props.joiner(game.id)  }
                            key={key} />
                 ))
               }
