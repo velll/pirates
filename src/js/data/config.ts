@@ -1,5 +1,6 @@
 const config = {
   locale: 'ru',
+  i18n_debug: false,
   map: {
     rows: 23,
     columns: 41

@@ -5,7 +5,7 @@ import { config } from './config';
 
 i18next.init({
   lng: config.locale,
-  debug: true,
+  debug: config.i18n_debug,
   resources: {
     en: {
       translation: en
