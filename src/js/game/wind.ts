@@ -27,7 +27,7 @@ class Wind {
     NW: {name: "NW", x: 1,  y: 1}
   };
 
-  public static readonly BEARINGS = ["N", "NE", "E", "SE", "S", "SW", "W", "NE"];
+  public static readonly BEARINGS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   public direction: Direction;
   public force: ForceScale;
 
