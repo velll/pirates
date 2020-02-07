@@ -17,6 +17,7 @@ import { HTTPAdapter } from "./api/adapters/api";
 import { FetchTurn } from "./api/game/fetch-turn";
 import { SaveActions } from "./api/game/save-actions";
 import { logger } from "./lib/logger";
+import { Player } from "./player";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -38,7 +39,7 @@ class Game {
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly START_DATE = new Date(1634, 5, 1);
 
-  constructor(api: HTTPAdapter, id: string, board: Board, ships: Ship[]) {
+  constructor(api: HTTPAdapter, id: string, player: Player, board: Board, ships: Ship[]) {
     this.api = api;
     this.id = id;
 

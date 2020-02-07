@@ -25,6 +25,7 @@ import { FetchGame } from "./api/game/fetch-game";
 
 const params = new URLParams(window.location.href);
 const gameId = params.get('game');
+const playerFleet = params.get('fleet');
 const api = API.adapter_for(gameId);
 
 const canvasDimensions = {width: 2000, height: 1221};
@@ -68,7 +69,7 @@ window.onload = async () => {
   board.drawPorts();
 
   const ships = shipyard.buildAll(shipOrders);
-  const game = await new GameBuilder(api).build(gameId, board, ships);
+  const game = await new GameBuilder(api).build(gameId, playerFleet, board, ships);
 
   const gameController = new GameController(game, board);
 
