@@ -18,6 +18,13 @@ import { GameController } from "./controllers/game-controller";
 
 import { t } from './data/i18n';
 
+import { API } from "./api/adapters/api";
+import { URLParams } from "./lib/url/params";
+import { FetchGame } from "./api/game/fetch-game";
+
+const params = new URLParams(window.location.href);
+const api = API.adapter_for(params.get('game'));
+
 const canvasDimensions = {width: 2000, height: 1221};
 
 const canvasBG = CanvasAdapter.getCanvas("background");
@@ -30,7 +37,7 @@ const canvasFG = CanvasAdapter.getCanvas("foreground");
 
 document.body.style.width = canvasDimensions.width.toString() + "px";
 
-window.onload = () => {
+window.onload = async () => {
   const resources = collectResources();
   pirates.flag = resources.flags.pirates;
   spaniards.flag = resources.flags.spain;
@@ -58,8 +65,10 @@ window.onload = () => {
 
   board.drawPorts();
 
+  const remoteGame = await new FetchGame(api).call({id: params.get('game')});
+
   const ships = shipyard.buildAll(shipOrders);
-  const game = new GameBuilder().build(board, ships);
+  const game = new GameBuilder(api).build(board, ships, remoteGame.golden_ship);
 
   const gameController = new GameController(game, board);
 

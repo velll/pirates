@@ -1,4 +1,4 @@
-import { APIAdapter } from '../../lib/api-adapter';
+import { APIAdapter } from '../adapters/api-adapter';
 
 class CreateGame {
   private readonly PATH = '/api/games';
@@ -11,7 +11,7 @@ class CreateGame {
   }
 
   public async call(body: {fleet: string}) {
-    const response = await this.api.post(this.PATH, body);
+    const response = await this.api.post(this.PATH, {}, body);
 
     return this.processResponse(response);
   }

@@ -2,12 +2,12 @@ import * as ReactDOM from "react-dom";
 import * as React from "react";
 import { GamesTable } from "./lobby/components/games-table";
 import { $ } from "dollarsigns";
-import { APIAdapter } from './lib/api-adapter';
+import { APIAdapter } from './api/adapters/api-adapter';
 import { Fleet } from "./game/fleet";
 
-import { FetchOpenGames } from './api-requests/lobby/fetch-open-games';
-import { CreateGame } from "./api-requests/lobby/create-game";
-import { JoinGame } from "./api-requests/lobby/join-game";
+import { FetchOpenGames } from './api/lobby/fetch-open-games';
+import { CreateGame } from "./api/lobby/create-game";
+import { JoinGame } from "./api/lobby/join-game";
 
 class Lobby {
   private api: APIAdapter;

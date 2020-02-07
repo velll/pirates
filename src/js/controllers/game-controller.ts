@@ -44,7 +44,7 @@ class GameController {
   }
 
   public prepare() {
-    const goldenShip = this.game.loadGold();
+    const goldenShip = this.game.goldenShip;
     const port = this.board.getPort(goldenShip.coordinates);
 
     this.UI.preGameDialog.show(goldenShip.name, port.name);

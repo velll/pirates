@@ -1,4 +1,4 @@
-import { APIAdapter } from '../../lib/api-adapter';
+import { APIAdapter } from '../adapters/api-adapter';
 
 class JoinGame {
   private readonly PATH = '/api/game/$id/player';
@@ -11,13 +11,9 @@ class JoinGame {
   }
 
   public async call(params: {id: string}) {
-    const response = await this.api.post(this.path_with(params.id));
+    const response = await this.api.post(this.PATH, {id: params.id});
 
     return this.processResponse(response);
-  }
-
-  private path_with(id: string) {
-    return this.PATH.replace('$id', id);
   }
 }
 

@@ -1,5 +1,5 @@
 import { Fleet } from '../../game/fleet';
-import { APIAdapter } from '../../lib/api-adapter';
+import { APIAdapter } from '../adapters/api-adapter';
 
 class FetchOpenGames {
   private readonly PATH = '/api/games';

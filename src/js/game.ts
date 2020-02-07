@@ -14,6 +14,7 @@ import { getRndInt } from "./lib/rnd-int";
 import { Area } from "./board/area";
 import { Position } from "./lib/position";
 import { Calendar } from "./game/calendar";
+import { HTTPAdapter } from "./api/adapters/api";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -23,33 +24,27 @@ via game Actions (game/actions/).
 class Game {
   public board: Board;
   public ships: Ship[];
+  public goldenShip: Ship;
 
   private turns: Turn[];
   private windGen: WindGenerator;
   private readonly calendar: Calendar;
 
-  private goldenShip: Ship;
+  private api: HTTPAdapter;
 
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly START_DATE = new Date(1634, 5, 1);
 
-  constructor(board: Board, ships: Ship[]) {
+  constructor(api: HTTPAdapter, board: Board, ships: Ship[]) {
+    this.api = api;
     this.board = board;
     this.ships = ships;
 
     this.calendar = new Calendar(this.START_DATE);
     this.windGen = new WindGenerator();
+    this.goldenShip = ships.find(ship => ship.carriesGold);
 
     this.turns = [];
-  }
-
-  public loadGold(): Ship {
-    const spanishShips = this.ships.filter(ship => ship.fleet.is(spaniards));
-
-    this.goldenShip = spanishShips[getRndInt(spanishShips.length)];
-    this.goldenShip.loadGold();
-
-    return this.goldenShip;
   }
 
   public nextTurn(): Turn {
