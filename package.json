@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.19",
     "@types/lodash": "^4.14.142",
+    "canvas": "^2.6.1",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.4.2",
     "jest": "^24.9.0",

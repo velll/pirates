@@ -1,21 +1,4 @@
-import { Grid, GridConfig } from "../src/js/board/grid";
-import { MapConfig, GameMap } from "../src/js/board/gamemap";
-
-const mapConfig: MapConfig = { rows: 10, columns: 10 };
-const map = new GameMap(mapConfig, [], []);
-
-const gridDimensions = { width: 1000, height: 1000 };
-
-// 10 % offset and 80% width
-const gridConfig: GridConfig = {
-  X_OFFSET: 0.1,
-  Y_OFFSET: 0.2,
-  X_WIDTH: 0.8
-};
-const grid = new Grid(map, gridDimensions, gridConfig);
-
-const expectedCellSize = 80; // 800 pixels for 10 columns
-const expectedStartPoint = {left: 100, top: 200};
+import { grid, expectedCellSize, expectedStartPoint } from "./examples/even-grid";
 
 test('grid should be able to calculate cell size', () => {
   expect(grid.cellSize).toEqual(expectedCellSize);
