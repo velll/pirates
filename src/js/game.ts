@@ -73,11 +73,7 @@ class Game {
 
     // cannot move to already occupied cells
     // cannot shoot into ports
-    const offLimitCells = {move: this.board.getRocks().concat(
-                                   this.getOccupiedCells().concat(
-                                    this.board.getPortsOf(
-                                      Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates))),
-                           shot: this.board.getPorts().map(port => port.coordinates)};
+    const offLimitCells = this.getOffLimitCells(ship);
 
     const turn = new Turn(turnNo, date, ship, wind, mvmt, offLimitCells);
     this.turns[this.turns.length] = turn;
@@ -152,6 +148,14 @@ class Game {
                  this.board.isOnMap.bind(this.board));
   }
 
+  public getOffLimitCells(ship: Ship): OffLimits {
+    return {move: this.board.getRocks().concat(
+                  this.getOccupiedCells().concat(
+                  this.board.getPortsOf(
+                    Fleet.getEnemyFleet(ship.fleet)).map(port => port.coordinates))),
+            shot: this.board.getPorts().map(port => port.coordinates)};
+  }
+
   public isValidMove(to: Coordinates): boolean {
     return this.getCurrentTurn().isValidMove(to);
   }
@@ -210,6 +214,12 @@ class Game {
   private isInPort(ship: Ship) {
     return this.board.isPort(ship.coordinates);
   }
+}
+
+// Unplayable cells
+interface OffLimits {
+  move: Coordinates[],
+  shot: Coordinates[]
 }
 
 interface Reportable {

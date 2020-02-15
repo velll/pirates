@@ -4,7 +4,7 @@ import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
 import { Ship } from './ship';
 import { GameMap } from '../board/gamemap';
-import { Action, ActionType } from '../game';
+import { Action, ActionType, OffLimits } from '../game';
 
 class Turn {
   public no: number;
@@ -48,11 +48,6 @@ class Turn {
   public getCellsForShot(): Coordinates[] {
     return filterOut(this.ship.getShootingRange(), this.offLimitCells.shot);
   }
-}
-
-interface OffLimits {
-  move: Coordinates[],
-  shot: Coordinates[]
 }
 
 export { Turn, OffLimits };
