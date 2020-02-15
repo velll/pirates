@@ -10,7 +10,13 @@ class Fleet {
   }
 
   public static find(fleetCode: string) {
-    return [spaniards, pirates, neutrals].find(fleet => fleet.code == fleetCode);
+    const found = [spaniards, pirates, neutrals].find(fleet => fleet.code == fleetCode);
+
+    if (!found) {
+      throw Error("Unknown fleet " + fleetCode);
+    }
+
+    return found;
   }
 
   public flag: CanvasImageSource;
