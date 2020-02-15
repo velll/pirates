@@ -18,6 +18,7 @@ import { FetchTurn } from "./api/game/fetch-turn";
 import { SaveActions } from "./api/game/save-actions";
 import { logger } from "./lib/logger";
 import { Player } from "./player";
+import { UserInterface } from "./UI";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -30,6 +31,7 @@ class Game {
   public board: Board;
   public ships: Ship[];
   public goldenShip: Ship;
+  public UI: UserInterface;
 
   private turns: Turn[];
   private readonly calendar: Calendar;
@@ -50,6 +52,10 @@ class Game {
     this.goldenShip = ships.find(ship => ship.carriesGold);
 
     this.turns = [];
+  }
+
+  public registerUI(UI: UserInterface) {
+    this.UI = UI;
   }
 
   public async nextTurn(): Promise<Turn> {

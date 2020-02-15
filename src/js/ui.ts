@@ -21,6 +21,7 @@ import { CellTip } from "./UI/components/cell-tip/cell-tip";
 import { GameOverScreen } from "./UI/components/game-over-screen/game-over-screen";
 
 import { $ } from 'dollarsigns';
+import { LockableState } from "./UI/lockable-state";
 
 class UserInterface {
   public preGameDialog: PreGameDialog;
@@ -31,6 +32,8 @@ class UserInterface {
   private messenger: Message;
   private panel: StatusPanel;
 
+  private state: LockableState;
+
   private readonly ACTIVE_AREA_PADDING = 2;
 
   constructor(private readonly game: Game,
@@ -39,6 +42,7 @@ class UserInterface {
               preGameButtonHandlers: Record<string, Procedure>) {
 
     this.overlay = new Overlay(board, game);
+    this.state = new LockableState();
 
     this.preGameDialog = new PreGameDialog(preGameButtonHandlers.starter, preGameButtonHandlers.helper);
     this.helpDialog = new HelpDialog();
@@ -117,6 +121,18 @@ class UserInterface {
   public congratulate(winner: {name: string, code: string}) {
     this.revokePageProtection();
     ReactDOM.render(React.createElement(GameOverScreen, winner), $('game-over'));
+  }
+
+  // lockable state
+
+  public lock() { this.state.lock(); }
+  public unlock() { this.state.unlock(); }
+  public isLocked() { return this.state.locked; }
+
+  public async withLocked(f: () => void) {
+    this.lock();
+    await f();
+    this.unlock();
   }
 
   // confirm leaving page

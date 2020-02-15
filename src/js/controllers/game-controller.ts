@@ -26,11 +26,16 @@ class GameController {
                                 "button-help": this.showHelp.bind(this)},
                                {starter: this.start.bind(this),
                                 helper: this.showHelp.bind(this)});
+
+    this.UI.lock();
+    this.game.registerUI(this.UI);
   }
 
   // event handlers
 
   public click(e: MouseEvent) {
+    if (this.UI.isLocked()) { return false; }
+
     const turn = this.game.getCurrentTurn();
     const coordinates = this.board.locateCell({left: e.offsetX, top: e.offsetY});
 
@@ -57,6 +62,7 @@ class GameController {
 
     this.firstTurn();
 
+    this.UI.unlock();
     this.UI.toggleStatusPanel();
   }
 
@@ -64,7 +70,7 @@ class GameController {
     const turn = this.game.getCurrentTurn();
 
     if (this.game.canRepair()) {
-      new Repair(this.game, this.board, turn, this.UI).perform();
+      new Repair(this.game, this.board, turn).perform();
       this.nextTurn();
     }
   }
@@ -89,7 +95,7 @@ class GameController {
     this.UI.scrollToActiveArea();
 
     if (turn.wind.isStorm()) {
-      await new Storm(this.game, this.board, turn, this.UI).perform();
+      await new Storm(this.game, this.board, turn).perform();
     }
 
     this.UI.reportStatus(turn);
@@ -107,7 +113,7 @@ class GameController {
     this.UI.scrollToActiveArea();
 
     if (turn.wind.isStorm()) {
-      await new Storm(this.game, this.board, turn, this.UI).perform();
+      await new Storm(this.game, this.board, turn).perform();
     }
 
     if (!turn.ship.isReady()) { this.game.endTurn(); }
@@ -133,7 +139,7 @@ class GameController {
                             turn,
                             to);
 
-    await action.perform();
+    await this.UI.withLocked(() => action.perform());
 
     // We made the move. If we also made the shot, then let's go for a next turn
     if (turn.hasShot() || this.game.getTargets(turn.ship).length == 0) {
@@ -145,8 +151,9 @@ class GameController {
 
   private async shoot(at: Coordinates) {
     const turn = this.game.getCurrentTurn();
+    const action = new Shot(this.game, this.board, turn, at);
 
-    await new Shot(this.game, this.board, turn, at).perform();
+    await this.UI.withLocked(() => action.perform());
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (turn.hasMoved()) {
