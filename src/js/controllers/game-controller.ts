@@ -8,6 +8,7 @@ import { Move } from "../game/actions/move";
 import { Shot } from "../game/actions/shot";
 import { Storm } from "../game/actions/storm";
 import { Repair } from "../game/actions/repair";
+import { Turn } from "../game/turn";
 
 class GameController {
   private game: Game;
@@ -15,12 +16,14 @@ class GameController {
 
   private UI: UserInterface;
 
+  private readonly WAIT_AFTER_SCROLL = 500;
+
   constructor(game: Game, board: Board) {
     this.game = game;
     this.board = board;
 
     this.UI = new UserInterface(game, board,
-                               {"button-next-turn": this.nextTurn.bind(this),
+                               {"button-next-turn": this.endTurn.bind(this),
                                 "button-repair": this.repair.bind(this),
                                 "button-surrender": this.surrender.bind(this),
                                 "button-help": this.showHelp.bind(this)},
@@ -92,41 +95,52 @@ class GameController {
   public async firstTurn() {
     const turn = await this.game.nextTurn();
 
-    this.UI.scrollToActiveArea();
-
-    if (turn.wind.isStorm()) {
-      await new Storm(this.game, this.board, turn).perform();
-    }
-
-    this.UI.reportStatus(turn);
-    this.UI.drawOverlay(turn);
+    await this.actOutTurn(turn);
   }
 
-  public async nextTurn() {
-    let turn = await this.game.endTurn();
-
-    if (turn.ship.isSunk()) {
-      this.board.removeShip(turn.ship.coordinates);
-      turn = await this.game.nextTurn();
-    }
-
-    this.UI.scrollToActiveArea();
-
-    if (turn.wind.isStorm()) {
-      await new Storm(this.game, this.board, turn).perform();
-    }
-
-    if (!turn.ship.isReady()) { this.game.endTurn(); }
-
+  public async actOutTurn(turn: Turn) {
     this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 
     this.UI.reportStatus(turn);
     this.UI.drawOverlay(turn);
+
+    this.UI.scrollToActiveArea();
+
+    if (turn.wind.isStorm()) {
+      await new Storm(this.game, this.board, turn).perform(false, turn.finished);
+      this.UI.reportStatus(turn);
+      this.UI.drawOverlay(turn);
+    }
+
+    if (turn.finished) {
+      await this.playFinishedTurn(turn);
+      await this.nextTurn();
+    }
+  }
+
+  public async nextTurn() {
+    // Fetch the next turn and present it
+    this.actOutTurn(await this.game.nextTurn());
+  }
+
+  public async endTurn() {
+    // Save current turn, fetch the next one and present it
+    this.actOutTurn(await this.game.endTurn());
   }
 
   public surrender() {
     const enemy = Fleet.getEnemyFleet(this.game.getCurrentFleet());
     this.UI.congratulate(enemy);
+  }
+
+  private async playFinishedTurn(turn: Turn) {
+    await this.UI.scrollToActiveArea(this.WAIT_AFTER_SCROLL);
+
+    for (const action of turn.actions) {
+      this.UI.drawOverlay(turn);
+
+      await action.perform(false);
+    }
   }
 
   // game actions
@@ -139,11 +153,11 @@ class GameController {
                             turn,
                             to);
 
-    await this.UI.withLocked(() => action.perform());
+    await this.UI.withLocked(action.perform.bind(action));
 
     // We made the move. If we also made the shot, then let's go for a next turn
     if (turn.hasShot() || this.game.getTargets(turn.ship).length == 0) {
-      this.nextTurn();
+      this.endTurn();
     } else {
       this.UI.drawOverlay(turn);
     }
@@ -157,7 +171,7 @@ class GameController {
 
     // We made the shot. If we also made the move, then let's go for a next turn
     if (turn.hasMoved()) {
-       this.nextTurn();
+       this.endTurn();
     } else {
       this.UI.drawOverlay(turn);
     }

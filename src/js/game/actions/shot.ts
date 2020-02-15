@@ -13,19 +13,19 @@ class Shot extends AbstractAction implements Action {
   public readonly actionType = ActionType.shot;
 
   private readonly from: Coordinates;
-  private readonly to: Coordinates;
 
   private readonly ship: Ship;
   private readonly target: Ship;
 
-  constructor(game: Game, board: Board, turn: Turn, to: Coordinates) {
-    super(game, board, turn);
+  // 'cell' — is a cell at which the ship is shooting (to/at)
 
-    this.to = to;
+  constructor(game: Game, board: Board, turn: Turn, cell: Coordinates) {
+    super(game, board, turn, cell);
+
     this.ship = turn.ship;
     this.from = turn.ship.coordinates;
 
-    this.target = this.game.findShipByCoordinates(this.to);
+    this.target = this.game.findShipByCoordinates(this.cell);
   }
 
   public apply() {
@@ -35,7 +35,7 @@ class Shot extends AbstractAction implements Action {
   public async display() {
     const cannonball = new CannonballView();
 
-    await this.board.shoot(cannonball, this.ship.coordinates, this.to);
+    await this.board.shoot(cannonball, this.ship.coordinates, this.cell);
 
     this.board.drawShip(this.target.view, this.target.coordinates);
   }
@@ -46,13 +46,9 @@ class Shot extends AbstractAction implements Action {
     }
   }
 
-  public async perform() {
-    await super.perform();
+  public async perform(persist = true) {
+    await super.perform(persist);
     this.after();
-  }
-
-  public toJSON() {
-    return extend(super.toJSON(), {tox: this.to.x, toy: this.to.y});
   }
 }
 

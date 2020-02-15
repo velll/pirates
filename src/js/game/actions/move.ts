@@ -16,23 +16,22 @@ class Move extends AbstractAction implements Action {
   private readonly from: Coordinates;
   private readonly ship: Ship;
 
-  private readonly to: Coordinates;
+  // 'cell' — is a cell to which the ship is moving (to)
 
-  constructor(game: Game, board: Board, turn: Turn, to: Coordinates) {
-    super(game, board, turn);
+  constructor(game: Game, board: Board, turn: Turn, cell: Coordinates) {
+    super(game, board, turn, cell);
 
-    this.from = turn.ship.coordinates;
-    this.to = to;
     this.ship = turn.ship;
+    this.from = turn.ship.coordinates;
   }
 
   public apply() {
-    this.ship.move(this.to);
+    this.ship.move(this.cell);
   }
 
   public async display() {
-    await this.board.moveShip(this.ship.view, this.from, this.to);
-    this.board.drawShip(this.ship.view, this.to);
+    await this.board.moveShip(this.ship.view, this.from, this.cell);
+    this.board.drawShip(this.ship.view, this.cell);
   }
 
   public after() {
@@ -41,14 +40,10 @@ class Move extends AbstractAction implements Action {
     }
   }
 
-  public async perform() {
-    await super.perform();
+  public async perform(persist = true) {
+    await super.perform(persist);
 
     this.after();
-  }
-
-  public toJSON() {
-    return extend(super.toJSON(), {tox: this.to.x, toy: this.to.y});
   }
 }
 

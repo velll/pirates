@@ -11,7 +11,9 @@ function offlineFetchTurn(params: {game_id: string, turn_no: string}) {
     fleet: ships[activeShipIndex].fleet.name,
     ship_id: activeShipIndex,
     wind_bearing: wind.bearing,
-    wind_force: wind.forceValue
+    wind_force: wind.forceValue,
+    finished: false,
+    actions: '[]'
   };
 }
 

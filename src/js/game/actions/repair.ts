@@ -9,11 +9,9 @@ class Repair extends AbstractAction implements Action {
   public readonly actionType = ActionType.repair;
 
   private readonly ship: Ship;
-  private readonly UI: UserInterface;
 
-  constructor(game: Game, board: Board, turn: Turn, UI: UserInterface) {
+  constructor(game: Game, board: Board, turn: Turn) {
     super(game, board, turn);
-    this.UI = UI;
     this.ship = turn.ship;
   }
 
@@ -22,7 +20,7 @@ class Repair extends AbstractAction implements Action {
   }
 
   public display() {
-    this.UI.reportStatus(this.turn);
+    this.game.UI.reportStatus(this.turn);
   }
 }
 

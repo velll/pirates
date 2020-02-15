@@ -58,11 +58,15 @@ class UserInterface {
     this.protectPage();
   }
 
-  public scrollToActiveArea() {
+  public async scrollToActiveArea(wait = 0) {
     const start = this.getActiveArea().start;
 
     const position = this.board.getCellPosition(start);
     window.scrollTo(position.left, position.top);
+
+    if (wait > 0) {
+      await new Promise(r => setTimeout(r, wait));
+    }
   }
 
   public getActiveArea() {

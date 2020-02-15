@@ -11,6 +11,7 @@ class Turn {
   public date: Date;
   public ship: Ship;
   public wind: Wind;
+  public finished: boolean = false;
   public availableMoves: Coordinates[];
 
   public actions: Action[];

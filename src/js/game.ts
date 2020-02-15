@@ -14,11 +14,12 @@ import { Calendar } from "./game/calendar";
 import { Wind } from "./game/wind";
 
 import { HTTPAdapter } from "./api/adapters/api";
-import { FetchTurn } from "./api/game/fetch-turn";
+import { FetchTurn, FetchTurnReponse } from "./api/game/fetch-turn";
 import { SaveActions } from "./api/game/save-actions";
 import { logger } from "./lib/logger";
 import { Player } from "./player";
 import { UserInterface } from "./UI";
+import { ActionBuilder } from "./game/actions/action-builder";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -36,6 +37,8 @@ class Game {
   private turns: Turn[];
   private readonly calendar: Calendar;
 
+  private actionBuilder: ActionBuilder;
+
   private api: HTTPAdapter;
 
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
@@ -49,6 +52,8 @@ class Game {
     this.ships = ships;
 
     this.calendar = new Calendar(this.START_DATE);
+    this.actionBuilder = new ActionBuilder(this, board);
+
     this.goldenShip = ships.find(ship => ship.carriesGold);
 
     this.turns = [];
@@ -58,44 +63,41 @@ class Game {
     this.UI = UI;
   }
 
+  // ask a server for a next turn
+
   public async nextTurn(): Promise<Turn> {
     const turnNo = this.turns.length;
 
     const remoteTurn = await new FetchTurn(this.api).call({game_id: this.id,
-                                                           turn_no: turnNo.toString()});
+                                                           turn_no: turnNo});
 
-    const ship = this.ships[remoteTurn.ship_index];
+    const turn = this.buildTurn(remoteTurn, turnNo);
+    this.saveTurn(turn);
 
-    const wind = new Wind(remoteTurn.wind_bearing, remoteTurn.wind_force);
-    const mvmt = ship.getMovingRange(wind).filter(cell => this.board.isOnMap(cell));
+    if (turn.ship.isWrecked()) { turn.ship.sink(); }
 
-    const date = this.calendar.add(turnNo);
-
-    // cannot move to already occupied cells
-    // cannot shoot into ports
-    const offLimitCells = this.getOffLimitCells(ship);
-
-    const turn = new Turn(turnNo, date, ship, wind, mvmt, offLimitCells);
-    this.turns[this.turns.length] = turn;
-
-    if (ship.isSunk()) {
-      return this.endTurn();
+    if (!turn.ship.isReady()) {
+      if (turn.finished) {
+        return await this.nextTurn();
+      } else {
+        return await this.endTurn();
+      }
     }
-
-    if (ship.isWrecked()) { ship.sink(); }
 
     return turn;
   }
 
-  public async endTurn(): Promise<Turn> {
+  // end current turn, save actions and
+
+  public endTurn() {
     const turn = this.getCurrentTurn();
-    const actions = JSON.stringify(turn.actions);
+    turn.finished = true;
 
     logger.debug(`saving turn ${turn.no.toString()}`);
-    logger.debug(actions);
+    logger.debug(turn.actions);
 
     new SaveActions(this.api).call({ game_id: this.id, turn_no: turn.no.toString() },
-                                   { actions: actions });
+                                   { actions: turn.actions });
 
     return this.nextTurn();
   }
@@ -199,6 +201,32 @@ class Game {
     }
   }
 
+  private buildTurn(remoteTurn: FetchTurnReponse, no: number) {
+    const ship = this.ships[remoteTurn.ship_index];
+
+    const wind = new Wind(remoteTurn.wind_bearing, remoteTurn.wind_force);
+    const mvmt = ship.getMovingRange(wind).filter(cell => this.board.isOnMap(cell));
+
+    const date = this.calendar.add(no);
+
+    // cannot move to already occupied cells
+    // cannot shoot into ports
+    const offLimitCells = this.getOffLimitCells(ship);
+
+    const turn = new Turn(no, date, ship, wind, mvmt, offLimitCells);
+
+    if (remoteTurn.finished) {
+      turn.finished = remoteTurn.finished;
+      turn.actions = this.actionBuilder.build(turn, remoteTurn.actions);
+    }
+
+    return turn;
+  }
+
+  private saveTurn(turn: Turn) {
+    this.turns[this.turns.length] = turn;
+  }
+
   private getEnemyFleet(): Fleet {
     return Fleet.getEnemyFleet(this.getCurrentShip().fleet);
   }
@@ -229,10 +257,25 @@ interface Reportable {
 interface Action {
   actionType: ActionType;
 
-  perform(): void;
-  toJSON(): Record<string, string>;
+  perform(persist?: boolean): void;
+  toJSON(): ActionRecord;
 }
 
-enum ActionType { abstract, storm, move, shot, capture, repair }
+interface ActionRecord {
+  type: ActionType;
+  game_id: string;
+  turn_no: number;
+  cellx?: number;
+  celly?: number;
+}
 
-export { Game, Reportable, Action, ActionType };
+enum ActionType {
+  abstract = 'abstract',
+  storm = 'storm',
+  move = 'move',
+  shot = 'shot',
+  capture = 'capture',
+  repair = 'repair'
+}
+
+export { Game, OffLimits, Reportable, Action, ActionRecord, ActionType };

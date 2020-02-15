@@ -1,6 +1,7 @@
 import { Action, ActionType, Game } from "../../game";
 import { Board } from "../../board";
 import { Turn } from "../turn";
+import { Coordinates } from "../../lib/coordinates";
 
 /*
 The game state is only to be changed via actions. Actions
@@ -14,7 +15,8 @@ class AbstractAction implements Action {
 
   constructor(public readonly game: Game,
               public readonly board: Board,
-              public readonly turn: Turn) {
+              public readonly turn: Turn,
+              public readonly cell?: Coordinates) {
   }
 
   public apply() {
@@ -25,9 +27,13 @@ class AbstractAction implements Action {
     throw new Error('Abstract actions cannot be displayed');
   }
 
-  public async perform() {
-    this.apply();
+  public persist() {
     this.turn.actions.push(this);
+  }
+
+  public async perform(persist = true) {
+    this.apply();
+    if (persist) { this.persist(); }
 
     // displays are often asynchronous
     await this.display();
@@ -36,8 +42,10 @@ class AbstractAction implements Action {
   public toJSON() {
     return {
       game_id: this.game.id,
-      turn_no: this.turn.no.toString(),
-      type: ActionType[this.actionType]
+      turn_no: this.turn.no,
+      type: ActionType[this.actionType],
+      cellx: this.cell.x,
+      celly: this.cell.y
     };
   }
 }

@@ -1,4 +1,5 @@
 import { APIAdapter } from '../adapters/api-adapter';
+import { Action } from '../../game';
 
 class SaveActions {
   public readonly PATH = '/api/game/$game_id/turns/$turn_no/actions';
@@ -7,7 +8,8 @@ class SaveActions {
   }
 
   public async call(params: {game_id: string, turn_no: string},
-                    body: {actions: string}) {
+                    body: {actions: Action[]}) {
+
     const response = await this.api.post(this.PATH, params, JSON.stringify(body.actions));
 
     return {};

@@ -17,10 +17,10 @@ class Storm extends AbstractAction implements Action {
   private readonly from: Coordinates;
   private readonly to: Coordinates;
 
-  constructor(game: Game, board: Board, turn: Turn, UI: UserInterface) {
+  constructor(game: Game, board: Board, turn: Turn) {
     super(game, board, turn);
 
-    this.UI = UI;
+    this.UI = game.UI;
     this.ship = turn.ship;
     this.caught = this.game.isCaughtInStorm(this.turn);
     this.from = this.turn.ship.coordinates;
@@ -35,19 +35,22 @@ class Storm extends AbstractAction implements Action {
     }
   }
 
-  public display() {
+  public display(silent = false) {
+    if (silent) { return; }
+
     const key = this.caught ? "messages.storm_caught" : "messages.storm_stranded";
 
     this.UI.sendMessage(t("messages.storm"),
                         t(key, {ship: this.turn.ship.name}));
   }
 
-  public async perform() {
+  // Storms do not persist
+  public async perform(persist = false, silent = false) {
     this.apply();
-    this.display();
+    this.display(silent);
 
     if (this.caught) {
-      await new Move(this.game, this.board, this.turn, this.to).perform();
+      await new Move(this.game, this.board, this.turn, this.to).perform(false);
     }
   }
 }
