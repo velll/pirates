@@ -29,4 +29,4 @@ interface Resources {
   anchor: CanvasImageSource
 }
 
-export { collectResources };
+export { collectResources, Resources };

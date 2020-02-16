@@ -3,7 +3,7 @@ import { GameMap } from "../board/gamemap";
 import { Wind } from "./wind";
 import { ShipView } from "../views/ship";
 import { getRange } from "./rules/moving";
-import { Design } from "../shipyard";
+import { Design } from "../initalizer/shipyard";
 import { Fleet } from "./fleet";
 import { assert } from "../lib/assert";
 

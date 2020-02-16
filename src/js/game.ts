@@ -15,7 +15,6 @@ import { Wind } from "./game/wind";
 
 import { HTTPAdapter } from "./api/adapters/api";
 import { logger } from "./lib/logger";
-import { Player } from "./player";
 import { UserInterface } from "./UI";
 import { ActionBuilder } from "./game/actions/action-builder";
 import { RemoteGame } from "./game/remote";
@@ -39,13 +38,10 @@ class Game {
 
   private actionBuilder: ActionBuilder;
 
-  private api: HTTPAdapter;
-
   private readonly CADIZ: Coordinates = {x: 38, y: 8};
   private readonly START_DATE = new Date(1634, 5, 1);
 
-  constructor(api: HTTPAdapter, id: string, player: Player, board: Board, ships: Ship[]) {
-    this.api = api;
+  constructor(api: HTTPAdapter, id: string, board: Board, ships: Ship[]) {
     this.id = id;
     this.remote = new RemoteGame(api, id);
 

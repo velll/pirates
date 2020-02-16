@@ -1,6 +1,6 @@
 import { Ship, ShipType } from '../../src/js/game/ship';
 import { pirates, spaniards } from '../../src/js/game/fleet';
-import { Design } from '../../src/js/shipyard';
+import { Design } from '../../src/js/initalizer/shipyard';
 
 let icons: Design[];
 const ship = new Ship(ShipType.brigantine, pirates, "Tester's rage", {x: 10, y: 10}, icons);

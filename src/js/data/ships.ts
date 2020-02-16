@@ -1,4 +1,4 @@
-import { Order } from '../shipyard';
+import { Order } from '../initalizer/shipyard';
 import { ShipType } from '../game/ship';
 import { spaniards, pirates } from '../game/fleet';
 import { t } from './i18n';

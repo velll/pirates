@@ -3,7 +3,7 @@ import { Capture } from "./capture";
 import { Repair } from "./repair";
 import { Shot } from "./shot";
 import { Storm } from "./storm";
-import { ActionType, ActionRecord, Action, Game } from "../../game";
+import { ActionRecord, Action, Game } from "../../game";
 import { Board } from "../../board";
 import { Turn } from "../turn";
 import { Coordinates } from "../../lib/coordinates";

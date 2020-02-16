@@ -1,4 +1,4 @@
-import { Board, Drawable, Moveable } from "../board";
+import { Drawable, Moveable } from "../board";
 import { CanvasAdapter, ColorStop } from "../lib/canvas/canvas-adapter";
 import { Grid } from "./grid";
 import { Coordinates } from "../lib/coordinates";

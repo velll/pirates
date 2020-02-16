@@ -19,7 +19,7 @@ class GameBuilder {
     const remoteGame = await new FetchGame(this.api).call({id: id});
     this.loadGold(ships, remoteGame.golden_ship);
 
-    return new Game(this.api, id, this.player, board, ships);
+    return new Game(this.api, id, board, ships);
   }
 
   public buildPlayer(playerFleet: string) {

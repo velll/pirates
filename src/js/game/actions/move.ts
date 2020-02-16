@@ -8,8 +8,6 @@ import { Ship } from "../ship";
 
 import { Capture } from "./capture";
 
-import { extend } from 'lodash';
-
 class Move extends AbstractAction implements Action {
   public readonly actionType = ActionType.move;
 

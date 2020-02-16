@@ -1,4 +1,4 @@
-import { Game, Action } from "../game";
+import { Action } from "../game";
 import { HTTPAdapter } from "../api/adapters/api";
 import { FetchTurn } from "../api/game/fetch-turn";
 import { SaveActions } from "../api/game/save-actions";

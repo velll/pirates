@@ -7,8 +7,6 @@ import { CannonballView } from "../../views/cannonball";
 import { Capture } from "./capture";
 import { AbstractAction } from "./abstract-action";
 
-import { extend } from 'lodash';
-
 class Shot extends AbstractAction implements Action {
   public readonly actionType = ActionType.shot;
 

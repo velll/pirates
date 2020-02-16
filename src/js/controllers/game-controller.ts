@@ -1,4 +1,4 @@
-import { Game, ActionType } from "../game";
+import { Game } from "../game";
 import { Fleet } from "../game/fleet";
 import { Board } from "../board";
 import { Coordinates } from "../lib/coordinates";
@@ -10,7 +10,6 @@ import { Storm } from "../game/actions/storm";
 import { Repair } from "../game/actions/repair";
 import { Turn } from "../game/turn";
 import { Player } from "../player";
-import { logger } from "../lib/logger";
 
 class GameController {
   private board: Board;

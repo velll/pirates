@@ -3,7 +3,6 @@ import * as React from "react";
 import { GamesTable } from "./lobby/components/games-table";
 import { $ } from "dollarsigns";
 import { APIAdapter } from './api/adapters/api-adapter';
-import { Fleet } from "./game/fleet";
 
 import { FetchOpenGames } from './api/lobby/fetch-open-games';
 import { CreateGame } from "./api/lobby/create-game";

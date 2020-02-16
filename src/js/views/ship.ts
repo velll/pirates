@@ -2,7 +2,7 @@ import { Drawable, Moveable } from "../board";
 import { CanvasAdapter } from "../lib/canvas/canvas-adapter";
 import { Position } from "../lib/position";
 import { Ship } from "../game/ship";
-import { Design } from "../shipyard";
+import { Design } from "../initalizer/shipyard";
 import { MovingImage } from "../lib/canvas/moving-image";
 
 class ShipView implements Drawable, Moveable {
