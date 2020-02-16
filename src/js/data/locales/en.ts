@@ -63,7 +63,8 @@ const en = {
   "messages": {
     storm: "Storm",
     storm_caught: "Storm moves your {{ ship }} 1 cell. You cannot move this turn.",
-    storm_stranded: "Storm is howling. {{ ship }} cannot exit the port this turn."
+    storm_stranded: "Storm is howling. {{ ship }} cannot exit the port this turn.",
+    turn: "{{ fleet }}' turn"
   },
   "game-over": {
     "won": "{{ winner }} have won!",

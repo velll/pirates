@@ -24,7 +24,7 @@ class GameController {
     this.board = game.board;
 
     this.UI = new UserInterface(game, game.board,
-                               {"button-next-turn": this.endTurn.bind(this),
+                               {"button-next-turn": this.clickEndTurn.bind(this),
                                 "button-repair": this.repair.bind(this),
                                 "button-surrender": this.surrender.bind(this),
                                 "button-help": this.showHelp.bind(this)},
@@ -70,7 +70,15 @@ class GameController {
     this.UI.toggleStatusPanel();
   }
 
+  public clickEndTurn() {
+    if (this.UI.isLocked()) { return false; }
+
+    this.endTurn();
+  }
+
   public repair() {
+    if (this.UI.isLocked()) { return false; }
+
     const turn = this.game.getCurrentTurn();
 
     if (this.game.canRepair()) {
@@ -130,8 +138,10 @@ class GameController {
     } else {
       if (this.player.canPlay(turn.ship.fleet)) {
         this.UI.unlock();
+        this.UI.hideWaitScreen();
       } else {
         this.UI.lock();
+        this.UI.showWaitScreen(turn.ship.fleet);
         await this.waitForEnemy();
       }
     }
@@ -148,11 +158,15 @@ class GameController {
   }
 
   public surrender() {
-    const enemy = Fleet.getEnemyFleet(this.game.getCurrentFleet());
+    const currentFleet = this.player.getFleet() || this.game.getCurrentFleet();
+
+    const enemy = Fleet.getEnemyFleet(currentFleet);
     this.UI.congratulate(enemy);
   }
 
   private async playFinishedTurn(turn: Turn) {
+    this.UI.showWaitScreen(turn.ship.fleet);
+
     await this.UI.scrollToActiveArea(this.WAIT_AFTER_SCROLL);
 
     for (const action of turn.actions) {

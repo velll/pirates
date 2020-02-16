@@ -22,6 +22,8 @@ import { GameOverScreen } from "./UI/components/game-over-screen/game-over-scree
 
 import { $ } from 'dollarsigns';
 import { LockableState } from "./UI/lockable-state";
+import { WaitScreen } from "./UI/components/wait-screen/wait-screen";
+import { Fleet } from "./game/fleet";
 
 class UserInterface {
   public preGameDialog: PreGameDialog;
@@ -31,6 +33,7 @@ class UserInterface {
   private cellTip: CellTip;
   private messenger: Message;
   private panel: StatusPanel;
+  private waitScreen: WaitScreen;
 
   private state: LockableState;
 
@@ -54,6 +57,8 @@ class UserInterface {
     this.panel = ReactDOM.render(e(StatusPanel,
                                   {buttonHandlers: statusButtonHandlers}),
                                  $("status"));
+
+    this.waitScreen = ReactDOM.render(e(WaitScreen, {}), $('wait'));
 
     this.protectPage();
   }
@@ -125,6 +130,15 @@ class UserInterface {
   public congratulate(winner: {name: string, code: string}) {
     this.revokePageProtection();
     ReactDOM.render(React.createElement(GameOverScreen, winner), $('game-over'));
+  }
+
+  // wait screen
+  public showWaitScreen(fleet: Fleet) {
+    this.waitScreen.show(fleet.code);
+  }
+
+  public hideWaitScreen() {
+    this.waitScreen.hide();
   }
 
   // lockable state
