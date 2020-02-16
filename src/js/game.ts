@@ -1,7 +1,7 @@
 import { Coordinates } from "./lib/coordinates";
 import { Board } from './board';
 
-import { Turn } from './game/turn';
+import { Turn, TurnRecord } from './game/turn';
 
 import { last } from 'lodash';
 import { includes } from './lib/includes';
@@ -14,12 +14,11 @@ import { Calendar } from "./game/calendar";
 import { Wind } from "./game/wind";
 
 import { HTTPAdapter } from "./api/adapters/api";
-import { FetchTurn, FetchTurnReponse } from "./api/game/fetch-turn";
-import { SaveActions } from "./api/game/save-actions";
 import { logger } from "./lib/logger";
 import { Player } from "./player";
 import { UserInterface } from "./UI";
 import { ActionBuilder } from "./game/actions/action-builder";
+import { RemoteGame } from "./game/remote";
 
 /*
 Main class holding the game state. The only changes to the game are done
@@ -28,6 +27,7 @@ via game Actions (game/actions/).
 
 class Game {
   public id: string;
+  public remote: RemoteGame;
 
   public board: Board;
   public ships: Ship[];
@@ -47,6 +47,7 @@ class Game {
   constructor(api: HTTPAdapter, id: string, player: Player, board: Board, ships: Ship[]) {
     this.api = api;
     this.id = id;
+    this.remote = new RemoteGame(api, id);
 
     this.board = board;
     this.ships = ships;
@@ -65,14 +66,20 @@ class Game {
 
   // ask a server for a next turn
 
+  public async refreshTurn() {
+    const currentTurn = this.getCurrentTurn();
+    const remoteTurn = await this.remote.fetchTurn(currentTurn.no);
+
+    return currentTurn.update(this.buildTurn(remoteTurn, currentTurn.no));
+  }
+
   public async nextTurn(): Promise<Turn> {
     const turnNo = this.turns.length;
 
-    const remoteTurn = await new FetchTurn(this.api).call({game_id: this.id,
-                                                           turn_no: turnNo});
+    const remoteTurn = await this.remote.fetchTurn(turnNo);
 
     const turn = this.buildTurn(remoteTurn, turnNo);
-    this.saveTurn(turn);
+    this.pushTurn(turn);
 
     if (turn.ship.isWrecked()) { turn.ship.sink(); }
 
@@ -96,8 +103,7 @@ class Game {
     logger.debug(`saving turn ${turn.no.toString()}`);
     logger.debug(turn.actions);
 
-    new SaveActions(this.api).call({ game_id: this.id, turn_no: turn.no.toString() },
-                                   { actions: turn.actions });
+    this.remote.saveActions(turn.no, turn.actions);
 
     return this.nextTurn();
   }
@@ -201,7 +207,7 @@ class Game {
     }
   }
 
-  private buildTurn(remoteTurn: FetchTurnReponse, no: number) {
+  private buildTurn(remoteTurn: TurnRecord, no: number) {
     const ship = this.ships[remoteTurn.ship_index];
 
     const wind = new Wind(remoteTurn.wind_bearing, remoteTurn.wind_force);
@@ -223,7 +229,7 @@ class Game {
     return turn;
   }
 
-  private saveTurn(turn: Turn) {
+  private pushTurn(turn: Turn) {
     this.turns[this.turns.length] = turn;
   }
 

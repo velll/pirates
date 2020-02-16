@@ -6,7 +6,7 @@ import { FetchTurn } from '../../src/js/api/game/fetch-turn';
 const adapter = new OfflineAdapter();
 const fetchTurn = new FetchTurn(adapter);
 const game_id = '22e04a30-0003-4339-9f3e-92d5f888ada9';
-const turn_no = '21';
+const turn_no = 21;
 
 // FetchTurn request
 

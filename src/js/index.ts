@@ -69,9 +69,10 @@ window.onload = async () => {
   board.drawPorts();
 
   const ships = shipyard.buildAll(shipOrders);
-  const game = await new GameBuilder(api).build(gameId, playerFleet, board, ships);
 
-  const gameController = new GameController(game, board);
+  const gameBuilder = new GameBuilder(api, playerFleet);
+  const game = await gameBuilder.build(gameId, board, ships);
+  const gameController = gameBuilder.buildController(game);
 
   canvasFG.element.addEventListener('click', gameController.click.bind(gameController));
   canvasFG.element.addEventListener('mousemove', gameController.mousemove.bind(gameController));

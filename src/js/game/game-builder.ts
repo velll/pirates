@@ -6,17 +6,20 @@ import { spaniards, pirates, Fleet } from './fleet';
 import { FetchGame } from '../api/game/fetch-game';
 import { Player } from '../player';
 import { logger } from '../lib/logger';
+import { GameController } from '../controllers/game-controller';
 
 class GameBuilder {
-  constructor(private readonly api: HTTPAdapter) {}
+  public readonly player: Player;
 
-  public async build(id: string, playerFleet: string, board: Board, ships: Ship[]): Promise<Game> {
+  constructor(private readonly api: HTTPAdapter, playerFleet: string) {
+    this.player = this.buildPlayer(playerFleet);
+  }
+
+  public async build(id: string, board: Board, ships: Ship[]): Promise<Game> {
     const remoteGame = await new FetchGame(this.api).call({id: id});
     this.loadGold(ships, remoteGame.golden_ship);
 
-    const player = this.buildPlayer(playerFleet);
-
-    return new Game(this.api, id, player, board, ships);
+    return new Game(this.api, id, this.player, board, ships);
   }
 
   public buildPlayer(playerFleet: string) {
@@ -24,6 +27,10 @@ class GameBuilder {
 
     const fleets = playerFleet ? [Fleet.find(playerFleet)] : [spaniards, pirates];
     return new Player(fleets);
+  }
+
+  public buildController(game: Game): GameController {
+    return new GameController(game, this.player);
   }
 
   private loadGold(ships: Ship[], goldenShip: number) {

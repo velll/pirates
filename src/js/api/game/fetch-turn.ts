@@ -1,5 +1,5 @@
 import { APIAdapter } from '../adapters/api-adapter';
-import { ActionRecord } from '../../game';
+import { TurnRecord } from '../../game/turn';
 
 class FetchTurn {
   public readonly PATH = '/api/game/$game_id/turn/$turn_no';
@@ -7,7 +7,7 @@ class FetchTurn {
   constructor(private readonly api: APIAdapter) {
   }
 
-  public processResponse(response: any): FetchTurnReponse {
+  public processResponse(response: any): TurnRecord {
     return {
       game_id: response.game_id,
       turn_no: response.no,
@@ -29,15 +29,4 @@ class FetchTurn {
   }
 }
 
-interface FetchTurnReponse {
-  game_id: string;
-  turn_no: number;
-  fleet: string;
-  ship_index: number;
-  wind_bearing: string;
-  wind_force: number;
-  finished: boolean;
-  actions: ActionRecord[]
-}
-
-export { FetchTurn, FetchTurnReponse };
+export { FetchTurn };

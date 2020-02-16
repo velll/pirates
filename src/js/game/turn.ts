@@ -4,7 +4,7 @@ import { Wind } from './wind';
 import { filterOut } from '../lib/filter-out';
 import { Ship } from './ship';
 import { GameMap } from '../board/gamemap';
-import { Action, ActionType, OffLimits } from '../game';
+import { Action, ActionType, OffLimits, ActionRecord } from '../game';
 
 class Turn {
   public no: number;
@@ -49,6 +49,25 @@ class Turn {
   public getCellsForShot(): Coordinates[] {
     return filterOut(this.ship.getShootingRange(), this.offLimitCells.shot);
   }
+
+  // Not much can actually change
+  public update(turn: Turn): Turn {
+    this.finished = turn.finished;
+    this.actions = turn.actions;
+
+    return this;
+  }
 }
 
-export { Turn, OffLimits };
+interface TurnRecord {
+  game_id: string;
+  turn_no: number;
+  fleet: string;
+  ship_index: number;
+  wind_bearing: string;
+  wind_force: number;
+  finished: boolean;
+  actions: ActionRecord[]
+}
+
+export { Turn, TurnRecord, OffLimits };

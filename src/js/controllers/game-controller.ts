@@ -9,20 +9,21 @@ import { Shot } from "../game/actions/shot";
 import { Storm } from "../game/actions/storm";
 import { Repair } from "../game/actions/repair";
 import { Turn } from "../game/turn";
+import { Player } from "../player";
+import { logger } from "../lib/logger";
 
 class GameController {
-  private game: Game;
   private board: Board;
 
   private UI: UserInterface;
 
   private readonly WAIT_AFTER_SCROLL = 500;
 
-  constructor(game: Game, board: Board) {
+  constructor(private readonly game: Game, private readonly player: Player) {
     this.game = game;
-    this.board = board;
+    this.board = game.board;
 
-    this.UI = new UserInterface(game, board,
+    this.UI = new UserInterface(game, game.board,
                                {"button-next-turn": this.endTurn.bind(this),
                                 "button-repair": this.repair.bind(this),
                                 "button-surrender": this.surrender.bind(this),
@@ -98,6 +99,17 @@ class GameController {
     await this.actOutTurn(turn);
   }
 
+  public async waitForEnemy() {
+    const refreshed = await this.game.refreshTurn();
+
+    if (refreshed.finished) {
+      await this.playFinishedTurn(refreshed);
+      await this.nextTurn();
+    } else {
+      setTimeout(this.waitForEnemy.bind(this), 5000);
+    }
+  }
+
   public async actOutTurn(turn: Turn) {
     this.drawShips(this.game.ships.filter(ship => (!ship.isSunk())));
 
@@ -115,6 +127,13 @@ class GameController {
     if (turn.finished) {
       await this.playFinishedTurn(turn);
       await this.nextTurn();
+    } else {
+      if (this.player.canPlay(turn.ship.fleet)) {
+        this.UI.unlock();
+      } else {
+        this.UI.lock();
+        await this.waitForEnemy();
+      }
     }
   }
 
