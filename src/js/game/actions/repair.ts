@@ -2,7 +2,7 @@ import { Action, ActionType, Game } from "../../game";
 import { Board } from "../../board";
 import { Turn } from "../turn";
 import { Ship } from "../ship";
-import { UserInterface } from '../../ui';
+import { UserInterface } from '../../UI';
 import { AbstractAction } from "./abstract-action";
 
 class Repair extends AbstractAction implements Action {
