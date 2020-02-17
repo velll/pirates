@@ -41,6 +41,7 @@ class UserInterface {
 
   constructor(private readonly game: Game,
               private readonly board: Board,
+              playerFleet: string,
               statusButtonHandlers: Record<string, Procedure>,
               preGameButtonHandlers: Record<string, Procedure>) {
 
@@ -55,7 +56,7 @@ class UserInterface {
     this.messenger = ReactDOM.render(e(Message, {container: $('message')}), $('message'));
     this.cellTip = ReactDOM.render(e(CellTip, {container: $("cell-tip")}), $("cell-tip"));
     this.panel = ReactDOM.render(e(StatusPanel,
-                                  {buttonHandlers: statusButtonHandlers}),
+                                  {fleet: playerFleet, buttonHandlers: statusButtonHandlers}),
                                  $("status"));
 
     this.waitScreen = ReactDOM.render(e(WaitScreen, {}), $('wait'));

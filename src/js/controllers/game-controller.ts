@@ -23,7 +23,7 @@ class GameController {
     this.game = game;
     this.board = game.board;
 
-    this.UI = new UserInterface(game, game.board,
+    this.UI = new UserInterface(game, game.board, player.getFleetCode(),
                                {"button-next-turn": this.clickEndTurn.bind(this),
                                 "button-repair": this.repair.bind(this),
                                 "button-surrender": this.surrender.bind(this),

@@ -29,7 +29,7 @@ class StatusPanel extends React.Component<Props, State>  {
       shipMaxHP: ship.maxHP.toString(),
       shipHPPercentage: shipHPPercentage,
       wind: turn.wind.description(),
-      roseImg: `img/wind-rose-${ship.fleet.code}.png`,
+      roseImg: `img/wind-rose-${this.props.fleet || ship.fleet.code}.png`,
       smallFlag: `img/flags/${ship.fleet.code}.png`,
       HPBarStyle: `linear-gradient(to top, rgba(51, 153, 0, 0.8) ${shipHPPercentage}%, red ${shipHPPercentage}%)`
     });
@@ -93,6 +93,7 @@ class StatusPanel extends React.Component<Props, State>  {
 
 interface Props {
   buttonHandlers: Record<string, () => void>;
+  fleet: string
 }
 
 interface State {
