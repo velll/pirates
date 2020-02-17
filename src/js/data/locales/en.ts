@@ -56,15 +56,24 @@ const en = {
     pirate5: "Ominous",
     pirate6: "Golden Hind"
   },
+  "wind" : {
+    calm: 'Calm',
+    storm: '{{ bearing }} (storm)',
+    breeze: '{{ bearing }} (breeze)'
+  },
   "cell-tip": {
     "occupied-by": "Occupied by",
     "HP": "HP"
   },
   "messages": {
-    storm: "Storm",
-    storm_caught: "Storm moves your {{ ship }} 1 cell. You cannot move this turn.",
-    storm_stranded: "Storm is howling. {{ ship }} cannot exit the port this turn.",
-    turn: "{{ fleet }}' turn"
+    "calm": 'Calm weather',
+    'calm-spaniards': 'Spanish galleon {{ ship }} cannot move this turn.',
+    'calm-pirates': 'Pirates on {{ ship }} can only move 1 cell this turn.',
+    "storm": "Storm",
+    "storm_caught": "Storm moves your {{ ship }} 1 cell. You cannot move this turn.",
+    "storm_stranded": "Storm is howling. {{ ship }} cannot exit the port this turn.",
+    "storm_left": "Storm is howling but {{ ship }} won't move — the cell is already occupied.",
+    "turn": "{{ fleet }}' turn"
   },
   "game-over": {
     "won": "{{ winner }} have won!",

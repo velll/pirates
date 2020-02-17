@@ -6,7 +6,9 @@
     "linterOptions": {
         "exclude": [
             "webpack.config.js",
-            "jest.config.js"
+            "jest.config.js",
+            "src/js/data/locales/en.ts",
+            "src/js/data/locales/ru.ts"
         ]
     },
     "jsRules": {},

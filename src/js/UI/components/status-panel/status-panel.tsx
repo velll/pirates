@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import './status-panel.css';
+import { i18next } from "../../../data/i18n";
 
 class StatusPanel extends React.Component<Props, State>  {
   constructor(props: Props) {
@@ -22,8 +23,10 @@ class StatusPanel extends React.Component<Props, State>  {
 
     this.setState({
       turnNo: turn.no.toString(),
-      dateWOYear: turn.date.toLocaleDateString('en', {month: 'short', day: 'numeric' }),
-      date: turn.date.toLocaleDateString('en', {year: 'numeric', month: 'short', day: 'numeric' }),
+      dateWOYear: turn.date.toLocaleDateString(i18next.options.lng,
+                                              {month: 'long', day: 'numeric' }),
+      date: turn.date.toLocaleDateString(i18next.options.lng,
+                                        {year: 'numeric', month: 'long', day: 'numeric' }),
       shipName: ship.name,
       shipHP: ship.HP.toString(),
       shipMaxHP: ship.maxHP.toString(),

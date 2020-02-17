@@ -29,12 +29,20 @@ class Turn {
     this.actions = [];
   }
 
+  public hasDone(what: ActionType): boolean {
+    return !!this.actions.find(act => act.actionType == what);
+  }
+
   public hasMoved(): boolean {
-    return !!this.actions.find(act => act.actionType == ActionType.move);
+    return this.hasDone(ActionType.move);
   }
 
   public hasShot(): boolean {
-    return !!this.actions.find(act => act.actionType == ActionType.shot);
+    return this.hasDone(ActionType.shot);
+  }
+
+  public hasRepaired(): boolean {
+    return this.hasDone(ActionType.repair);
   }
 
   // a move is valid if "to" is in the list of available moves

@@ -2,6 +2,7 @@ import { WindView } from "../views/wind";
 import { Vector2d } from "../lib/vector-2d";
 import { Coordinates } from "../lib/coordinates";
 import { assert } from "../lib/assert";
+import { t } from "../data/i18n";
 
 interface Direction {
   name: string;
@@ -63,7 +64,7 @@ class Wind {
   }
 
   public description() {
-    return this.force == ForceScale.calm ? this.getForce() : `${this.direction.name} (${this.getForce()})`;
+    return this.isCalm() ? t('wind.calm') : t(`wind.${this.getForce()}`, {bearing: this.bearing});
   }
 
   public isCalm() {
@@ -72,6 +73,10 @@ class Wind {
 
   public isStorm() {
     return this.force == ForceScale.storm;
+  }
+
+  public isSpecial() {
+    return this.isCalm() || this.isStorm();
   }
 
   public toVector(): Vector2d {

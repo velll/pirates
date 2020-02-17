@@ -12,6 +12,7 @@ class Surrender extends AbstractAction implements Action {
   }
 
   public apply() {
+    return;
   }
 
   public display() {

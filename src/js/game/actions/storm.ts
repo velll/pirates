@@ -38,7 +38,11 @@ class Storm extends AbstractAction implements Action {
   public display(silent = false) {
     if (silent) { return; }
 
-    const key = this.caught ? "messages.storm_caught" : "messages.storm_stranded";
+    let key: string;
+
+    if (this.caught) { key = "messages.storm_caught"; }
+    if (this.game.findShipByCoordinates(this.to)) { key = "messages.storm_left"; }
+    if (this.game.isInPort(this.ship)) { key = "messages.storm_stranded"; }
 
     this.UI.sendMessage(t("messages.storm"),
                         t(key, {ship: this.turn.ship.name}));

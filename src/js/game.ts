@@ -8,10 +8,10 @@ import { includes } from './lib/includes';
 import { GameMap } from "./board/gamemap";
 import { Fleet, spaniards, pirates, neutrals } from "./game/fleet";
 import { filterOut } from "./lib/filter-out";
-import { Ship } from "./game/ship";
+import { Ship, ShipType } from "./game/ship";
 import { Area } from "./board/area";
 import { Calendar } from "./game/calendar";
-import { Wind } from "./game/wind";
+import { Wind, ForceScale } from "./game/wind";
 
 import { HTTPAdapter } from "./api/adapters/api";
 import { logger } from "./lib/logger";
@@ -116,8 +116,14 @@ class Game {
   public getCurrentShip() { return this.getCurrentTurn().ship; }
   public getCurrentFleet() { return this.getCurrentShip().fleet; }
 
-  public isTurnFinished(turn: Turn) {
-    return turn.hasMoved() && (turn.hasShot() || this.getTargets(turn.ship).length == 0);
+  public isAnythingToDo(turn: Turn): boolean {
+    return this.canMove(turn) && !turn.hasMoved() ||
+           this.canShoot(turn) && !turn.hasShot() ||
+           this.canRepair(turn) && !turn.hasRepaired();
+  }
+
+  public isNothingToDo(turn: Turn) {
+    return !this.isAnythingToDo(turn);
   }
 
   public getOccupiedCells(): Coordinates[] {
@@ -175,8 +181,17 @@ class Game {
                    this.goldenShip.coordinates);
   }
 
-  public canRepair() {
-    return (this.isInPort(this.getCurrentShip()) && !this.getCurrentTurn().hasMoved());
+  public canMove(turn: Turn) {
+    return turn.wind.force == ForceScale.breeze ||
+           turn.wind.isCalm() && turn.ship.type == ShipType.brigantine;
+  }
+
+  public canShoot(turn: Turn) {
+    return this.getTargets(turn.ship).length > 0;
+  }
+
+  public canRepair(turn: Turn) {
+    return (this.isInPort(turn.ship) && !turn.hasMoved());
   }
 
   public captureGoldenShip(): Ship {
@@ -201,6 +216,10 @@ class Game {
     } else {
       return false;
     }
+  }
+
+  public isInPort(ship: Ship) {
+    return this.board.isPort(ship.coordinates);
   }
 
   private buildTurn(remoteTurn: TurnRecord, no: number) {
@@ -239,10 +258,6 @@ class Game {
 
   private getReadyEnemyShips(): Ship[] {
     return this.getEnemyShips().filter(ship => (ship.isReady()));
-  }
-
-  private isInPort(ship: Ship) {
-    return this.board.isPort(ship.coordinates);
   }
 }
 
