@@ -277,7 +277,8 @@ enum ActionType {
   move = 'move',
   shot = 'shot',
   capture = 'capture',
-  repair = 'repair'
+  repair = 'repair',
+  surrender = 'surrender'
 }
 
 export { Game, OffLimits, Reportable, Action, ActionRecord, ActionType };

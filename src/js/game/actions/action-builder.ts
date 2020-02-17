@@ -9,6 +9,7 @@ import { Turn } from "../turn";
 import { Coordinates } from "../../lib/coordinates";
 import { assert } from "../../lib/assert";
 import { logger } from "../../lib/logger";
+import { Surrender } from "./surrender";
 
 type DetailedBuilder = (game: Game, board: Board, turn: Turn, cell?: Coordinates) =>  Action;
 
@@ -19,7 +20,8 @@ class ActionBuilder {
       shot: this.buildShot,
       capture: this.buildCapture,
       repair: this.buildRepair,
-      storm: this.buildStorm
+      storm: this.buildStorm,
+      surrender: this.buildSurrender
   };
 
   constructor(private readonly game: Game,
@@ -58,6 +60,9 @@ class ActionBuilder {
   }
   public buildStorm(game: Game, board: Board, turn: Turn, cell: Coordinates) {
     return new Storm(game, board, turn);
+  }
+  public buildSurrender(game: Game, board: Board, turn: Turn) {
+    return new Surrender(game, board, turn);
   }
   public build(turn: Turn, details: ActionRecord[]): Action[] {
     return details.map(line => this.buildOne(turn, line));

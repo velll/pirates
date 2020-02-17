@@ -10,6 +10,7 @@ import { Storm } from "../game/actions/storm";
 import { Repair } from "../game/actions/repair";
 import { Turn } from "../game/turn";
 import { Player } from "../player";
+import { Surrender } from "../game/actions/surrender";
 
 class GameController {
   private board: Board;
@@ -156,11 +157,14 @@ class GameController {
     this.actOutTurn(await this.game.endTurn());
   }
 
-  public surrender() {
-    const currentFleet = this.player.getFleet() || this.game.getCurrentFleet();
-
-    const enemy = Fleet.getEnemyFleet(currentFleet);
-    this.UI.congratulate(enemy);
+  public async surrender() {
+    if (this.player.canPlay(this.game.getCurrentFleet())) {
+      new Surrender(this.game, this.board, this.game.getCurrentTurn()).perform();
+      this.game.endTurn();
+    } else {
+      await this.game.nextTurn();
+      this.surrender();
+    }
   }
 
   private async playFinishedTurn(turn: Turn) {
@@ -173,6 +177,8 @@ class GameController {
 
       await action.perform(false);
     }
+
+    if (this.game.isOver()) { this.UI.congratulate(turn.ship.fleet); }
   }
 
   // game actions

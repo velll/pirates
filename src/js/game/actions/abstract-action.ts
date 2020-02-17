@@ -44,8 +44,8 @@ class AbstractAction implements Action {
       game_id: this.game.id,
       turn_no: this.turn.no,
       type: ActionType[this.actionType],
-      cellx: this.cell.x,
-      celly: this.cell.y
+      cellx: this.cell && this.cell.x,
+      celly: this.cell && this.cell.y
     };
   }
 }
