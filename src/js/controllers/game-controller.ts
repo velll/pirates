@@ -79,7 +79,7 @@ class GameController {
 
     if (this.game.canRepair(turn)) {
       new Repair(this.game, this.board, turn).perform();
-      this.nextTurn(); // repair always ends the turn
+      this.endTurn(); // repair always ends the turn
     }
   }
 
