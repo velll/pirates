@@ -41,7 +41,7 @@ module.exports = {
     inline: false,
     proxy: {
       "/api": {
-          "target": "http://localhost:9393/",
+          "target": "http://localhost:8003/",
           "pathRewrite": {
                   "^/api" : ""
           },
