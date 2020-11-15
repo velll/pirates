@@ -2,7 +2,7 @@ import { APIAdapter } from '../adapters/api-adapter';
 import { Action } from '../../game';
 
 class SaveActions {
-  public readonly PATH = '/api/game/$game_id/turns/$turn_no/actions';
+  public readonly PATH = '/api/games/$game_id/turns/$turn_no/actions';
 
   constructor(private readonly api: APIAdapter) {
   }

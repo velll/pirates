@@ -7,12 +7,12 @@ import { offlineFetchTurn } from './offline/fetch-turn';
 class OfflineAdapter implements HTTPAdapter {
 
   public GET_RESPONSES: Record<string, any> = {
-    '/api/game/$id': () => ({id: 0, golden_ship: getRndInt(this.SPANISH_SHIPS)}),
-    '/api/game/$game_id/turn/$turn_no': offlineFetchTurn
+    '/api/games/$id': () => ({id: 0, golden_ship: getRndInt(this.SPANISH_SHIPS)}),
+    '/api/games/$game_id/turns/$turn_no': offlineFetchTurn
   };
 
   public POST_RESPONSES: Record<string, any> = {
-    '/api/game/$game_id/turns/$turn_no/actions': () => ({})
+    '/api/games/$game_id/turns/$turn_no/actions': () => ({})
   };
 
   private SPANISH_SHIPS = 3;

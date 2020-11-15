@@ -2,7 +2,7 @@ import { APIAdapter } from '../adapters/api-adapter';
 import { TurnRecord } from '../../game/turn';
 
 class FetchTurn {
-  public readonly PATH = '/api/game/$game_id/turn/$turn_no';
+  public readonly PATH = '/api/games/$game_id/turns/$turn_no';
 
   constructor(private readonly api: APIAdapter) {
   }

@@ -1,7 +1,7 @@
 import { APIAdapter } from '../adapters/api-adapter';
 
 class JoinGame {
-  private readonly PATH = '/api/game/$id/player';
+  private readonly PATH = '/api/games/$id/players';
 
   constructor(private readonly api: APIAdapter) {
   }
